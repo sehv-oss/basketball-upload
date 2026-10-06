@@ -3,26 +3,26 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 import {
-  DndBasketball,
-  type DndBasketballElement,
+  BasketballUpload,
+  type BasketballUploadElement,
   type FileType,
-} from '../src/dnd-basketball-react.ts';
+} from '../src/basketball-upload-react.ts';
 
 const pdf = (name = 'final_final_v7.pdf'): File =>
   new File([new Uint8Array(100)], name, { type: 'application/pdf' });
 
 function element(ref: {
-  current: DndBasketballElement | null;
-}): DndBasketballElement {
+  current: BasketballUploadElement | null;
+}): BasketballUploadElement {
   if (!ref.current) throw new Error('Not mounted');
   return ref.current;
 }
 
-describe('<DndBasketball>', () => {
+describe('<BasketballUpload>', () => {
   it('renders the custom element, with its props as attributes', async () => {
-    const ref = createRef<DndBasketballElement>();
+    const ref = createRef<BasketballUploadElement>();
     await render(
-      <DndBasketball
+      <BasketballUpload
         ref={ref}
         multiple
         accept=".pdf"
@@ -36,7 +36,7 @@ describe('<DndBasketball>', () => {
     );
 
     const hoop = element(ref);
-    expect(hoop.tagName).toBe('DND-BASKETBALL');
+    expect(hoop.tagName).toBe('BASKETBALL-UPLOAD');
     expect(hoop.multiple).toBe(true);
     expect(hoop.accept).toBe('.pdf');
     expect(hoop.getAttribute('max-size')).toBe('1000');
@@ -48,11 +48,11 @@ describe('<DndBasketball>', () => {
   });
 
   it('removes attributes when props go away', async () => {
-    const ref = createRef<DndBasketballElement>();
+    const ref = createRef<BasketballUploadElement>();
     const screen = await render(
-      <DndBasketball ref={ref} multiple theme="dark" maxSize={10} />
+      <BasketballUpload ref={ref} multiple theme="dark" maxSize={10} />
     );
-    await screen.rerender(<DndBasketball ref={ref} />);
+    await screen.rerender(<BasketballUpload ref={ref} />);
 
     const hoop = element(ref);
     expect(hoop.multiple).toBe(false);
@@ -61,14 +61,14 @@ describe('<DndBasketball>', () => {
   });
 
   it('calls the latest callbacks with the event details', async () => {
-    const ref = createRef<DndBasketballElement>();
+    const ref = createRef<BasketballUploadElement>();
     const first = vi.fn();
     const second = vi.fn();
     const screen = await render(
-      <DndBasketball ref={ref} accept=".pdf" onFileReject={first} />
+      <BasketballUpload ref={ref} accept=".pdf" onFileReject={first} />
     );
     await screen.rerender(
-      <DndBasketball ref={ref} accept=".pdf" onFileReject={second} />
+      <BasketballUpload ref={ref} accept=".pdf" onFileReject={second} />
     );
 
     const photo = new File(['x'], 'photo.png', { type: 'image/png' });
@@ -79,12 +79,12 @@ describe('<DndBasketball>', () => {
   });
 
   it('applies the uploader, messages and file types to the element', async () => {
-    const ref = createRef<DndBasketballElement>();
+    const ref = createRef<BasketballUploadElement>();
     const uploader = vi.fn(async () => 'ok');
     const fileTypes: FileType[] = [{ kind: 'figma', match: '.fig' }];
     const onUploadSuccess = vi.fn();
     await render(
-      <DndBasketball
+      <BasketballUpload
         ref={ref}
         uploader={uploader}
         messages={{ counter: 'Enviados' }}
@@ -106,11 +106,11 @@ describe('<DndBasketball>', () => {
   });
 
   it('passes children through as slotted content', async () => {
-    const ref = createRef<DndBasketballElement>();
+    const ref = createRef<BasketballUploadElement>();
     await render(
-      <DndBasketball ref={ref}>
+      <BasketballUpload ref={ref}>
         <span slot="title">Enviar arquivos</span>
-      </DndBasketball>
+      </BasketballUpload>
     );
 
     const slot =

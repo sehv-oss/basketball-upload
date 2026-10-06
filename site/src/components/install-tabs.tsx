@@ -6,8 +6,8 @@ const MANAGERS = ['npm', 'pnpm', 'yarn'] as const;
 type Manager = (typeof MANAGERS)[number];
 
 const PACKAGES = [
-  { name: '@sehv-oss/dnd-basketball', description: 'Web Component' },
-  { name: '@sehv-oss/dnd-basketball-react', description: 'React' },
+  { name: '@sehv-oss/basketball-upload', description: 'Web Component' },
+  { name: '@sehv-oss/basketball-upload-react', description: 'React' },
 ] as const;
 
 function command(manager: Manager, name: string): string {

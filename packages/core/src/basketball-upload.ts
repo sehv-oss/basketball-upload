@@ -1,13 +1,13 @@
 export {
-  DndBasketballElement,
-  type DndBasketballEventMap,
+  BasketballUploadElement,
+  type BasketballUploadEventMap,
   type ShotResult,
   type Theme,
-} from './element/DndBasketballElement.ts';
+} from './element/BasketballUploadElement.ts';
 export {
   DEFAULT_TAG_NAME,
-  registerDndBasketball,
-  type RegisterDndBasketballOptions,
+  registerBasketballUpload,
+  type RegisterBasketballUploadOptions,
 } from './element/register.ts';
 export {
   defaultMessages,

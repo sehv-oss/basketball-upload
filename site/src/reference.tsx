@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useRef, type ReactElement } from 'react';
 
 import {
-  DndBasketball,
-  type DndBasketballElement,
-} from '@sehv-oss/dnd-basketball-react';
+  BasketballUpload,
+  type BasketballUploadElement,
+} from '@sehv-oss/basketball-upload-react';
 
 import { designFile } from './demo/sample-files.ts';
 import { createSimulatedUploader } from './demo/simulated-uploader.ts';
 
 /** The element alone, 754 × 887 like the frame of the reference design. */
 export function Reference(): ReactElement {
-  const element = useRef<DndBasketballElement>(null);
+  const element = useRef<BasketballUploadElement>(null);
   const uploader = useMemo(() => createSimulatedUploader(), []);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export function Reference(): ReactElement {
   }, []);
 
   return (
-    <DndBasketball
+    <BasketballUpload
       ref={element}
       className="reference"
       theme="light"

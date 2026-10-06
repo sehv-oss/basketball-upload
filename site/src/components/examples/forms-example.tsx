@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactElement } from 'react';
 
-import { DndBasketball } from '@sehv-oss/dnd-basketball-react';
-import { formatBytes } from '@sehv-oss/dnd-basketball';
+import { BasketballUpload } from '@sehv-oss/basketball-upload-react';
+import { formatBytes } from '@sehv-oss/basketball-upload';
 
 import type { SiteTheme } from '../../hooks/use-site-theme.ts';
 import { CodeBlock } from '../code-block.tsx';
@@ -12,7 +12,7 @@ const HTML = `
   <input name="title" required />
 
   <!-- A form-associated custom element: no uploader needed. -->
-  <dnd-basketball name="attachments" multiple required></dnd-basketball>
+  <basketball-upload name="attachments" multiple required></basketball-upload>
 
   <button>Send</button>
 </form>
@@ -66,7 +66,7 @@ export function FormsExample({ theme }: { theme: SiteTheme }): ReactElement {
             <input name="title" required defaultValue="Scouting report" />
           </label>
           <div className="example-stage">
-            <DndBasketball
+            <BasketballUpload
               name="attachments"
               multiple
               required

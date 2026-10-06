@@ -1,6 +1,6 @@
 <!-- cspell:ignore baskteball memoizado sobrescrevíveis claude -->
 
-# Plano — `dnd-basketball`: upload por drag and drop com tema de basquete
+# Plano — `basketball-upload`: upload por drag and drop com tema de basquete
 
 ## Contexto
 
@@ -8,18 +8,18 @@ Implementação fiel, em código aberto, do design de upload de arquivos "basque
 
 No design, o dropzone é a tabela, o quadrado laranja é o alvo, o aro fica na borda inferior do dropzone e a rede pende abaixo dele. O usuário pode soltar arquivos ou **arremessar** um card de arquivo na cesta ("Drag and drop, or take the shot.").
 
-O repo já foi criado a partir do template da org e está em `~/dev/repositories/@sehv-oss/dnd-basketball`: remote `git@github.com:sehv-oss/dnd-basketball.git`, branch `main`, 1 commit. Ele contém `.github/ISSUE_TEMPLATE/*`, `.github/PULL_REQUEST_TEMPLATE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `LICENSE` (ISC), `SECURITY.md` e um `README.md` que ainda é o checklist do template.
+O repo já foi criado a partir do template da org e está em `~/dev/repositories/@sehv-oss/basketball-upload`: remote `git@github.com:sehv-oss/basketball-upload.git`, branch `main`, 1 commit. Ele contém `.github/ISSUE_TEMPLATE/*`, `.github/PULL_REQUEST_TEMPLATE.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `LICENSE` (ISC), `SECURITY.md` e um `README.md` que ainda é o checklist do template.
 
 **Entregáveis:**
 
-- **`@sehv-oss/dnd-basketball`** (core): Web Component `<dnd-basketball>`, Shadow DOM, CSS com cascade layers, tokens e temas.
-- **`@sehv-oss/dnd-basketball-react`**: wrapper React 19 que consome o core.
-- **`site/`**: site de demonstração no GitHub Pages (`https://sehv-oss.github.io/dnd-basketball/`), no formato do `sehv-oss/i18n`.
+- **`@sehv-oss/basketball-upload`** (core): Web Component `<basketball-upload>`, Shadow DOM, CSS com cascade layers, tokens e temas.
+- **`@sehv-oss/basketball-upload-react`**: wrapper React 19 que consome o core.
+- **`site/`**: site de demonstração no GitHub Pages (`https://sehv-oss.github.io/basketball-upload/`), no formato do `sehv-oss/i18n`.
 - **Ferramentas:** Node 26 + corepack + pnpm, e os pacotes da org (`@sehv-oss/typescript-config`, `@sehv-oss/cspell-config`, `@sehv-oss/prettier-config`).
 
 **Decisões tomadas com o usuário:**
 
-- **Nome:** `dnd-basketball`. A pasta local antiga `dnd-baskteball` (com erro de digitação) é só rascunho com os screenshots em `xd/`.
+- **Nome:** `basketball-upload`. A pasta local antiga `dnd-baskteball` (com erro de digitação) é só rascunho com os screenshots em `xd/`.
 - **Arremesso: estilingue.** O usuário puxa o card para trás, o arco pontilhado mostra a trajetória **exata** e o arremesso acontece ao soltar. Errar é possível.
 - **Dois pacotes + site**, no formato do `sehv-oss/i18n` (`packages/core`, `packages/react`, `site/`).
 - **Site com CSS moderno próprio**, sem Tailwind (diferente do i18n): `@layer`, nesting, tokens e `light-dark()`. O site usa a mesma abordagem que o componente defende.
@@ -52,7 +52,7 @@ O repo já foi criado a partir do template da org e está em `~/dev/repositories
 ## 1. Estrutura do repositório
 
 ```
-dnd-basketball/                       (repo já criado; ✚ = adicionar)
+basketball-upload/                       (repo já criado; ✚ = adicionar)
 ├── .changeset/ ✚          config.json (do i18n: ignore o site) + changeset inicial (minor) dos 2 pacotes
 ├── .github/
 │   ├── ISSUE_TEMPLATE/, PULL_REQUEST_TEMPLATE.md   (já existem)
@@ -62,11 +62,11 @@ dnd-basketball/                       (repo já criado; ✚ = adicionar)
 │   ├── adr/               0001…0007 + README
 │   └── design/reference/  os 8 screenshots de xd/, renomeados (§7)
 ├── packages/ ✚
-│   ├── core/              @sehv-oss/dnd-basketball        (src/, tests/, LICENSE, NOTICE.md, README.md)
-│   └── react/             @sehv-oss/dnd-basketball-react  (src/, tests/, LICENSE, NOTICE.md, README.md)
-├── site/ ✚                @sehv-oss/dnd-basketball-site (privado)
+│   ├── core/              @sehv-oss/basketball-upload        (src/, tests/, LICENSE, NOTICE.md, README.md)
+│   └── react/             @sehv-oss/basketball-upload-react  (src/, tests/, LICENSE, NOTICE.md, README.md)
+├── site/ ✚                @sehv-oss/basketball-upload-site (privado)
 ├── .cspell.config.ts .prettier.config.ts .prettierignore .gitignore .nvmrc(v26) ✚
-├── package.json ✚         @sehv-oss/dnd-basketball-monorepo, privado
+├── package.json ✚         @sehv-oss/basketball-upload-monorepo, privado
 ├── pnpm-workspace.yaml ✚  packages: [packages/core, packages/react, site] + allowBuilds + engineStrict + catalog
 ├── tsconfig.node.json ✚   node/app → vitest.config.ts, .cspell/.prettier configs, tsdown.config.ts, site/vite.config.ts
 ├── vitest.config.ts ✚
@@ -84,7 +84,7 @@ dnd-basketball/                       (repo já criado; ✚ = adicionar)
 "lint": "pnpm lint:cspell && pnpm lint:prettier",
 "lint:cspell": "cspell --config .cspell.config.ts .",
 "lint:prettier": "prettier --config .prettier.config.ts --check .",
-"site:dev": "pnpm --filter @sehv-oss/dnd-basketball-site dev",
+"site:dev": "pnpm --filter @sehv-oss/basketball-upload-site dev",
 "clean": "git clean -fdX",
 "changeset": "changeset", "changeset:version": "changeset version", "changeset:publish": "changeset publish"
 ```
@@ -101,7 +101,7 @@ dnd-basketball/                       (repo já criado; ✚ = adicionar)
 
 ---
 
-## 2. Pacote core — `@sehv-oss/dnd-basketball` (`packages/core`)
+## 2. Pacote core — `@sehv-oss/basketball-upload` (`packages/core`)
 
 ### 2.1 Arquivos
 
@@ -109,20 +109,20 @@ Convenções: o módulo de entrada tem o nome da pasta (nunca `index.ts`), impor
 
 ```
 packages/core/
-├── package.json     exports {".": dist/dnd-basketball.{js,d.ts}, "./package.json"} (alinhar com a saída real do tsdown),
+├── package.json     exports {".": dist/basketball-upload.{js,d.ts}, "./package.json"} (alinhar com a saída real do tsdown),
 │                    sideEffects:false, files:[dist, NOTICE.md], homepage/bugs/repository.directory, contributors (§7)
 ├── tsconfig.json    extends web/lib; include src
 ├── tsconfig.tests.json  web/lib + layer/test; include src, tests
-├── tsdown.config.ts entry {'dnd-basketball': 'src/dnd-basketball.ts'}, esm, platform browser, target es2022,
+├── tsdown.config.ts entry {'basketball-upload': 'src/basketball-upload.ts'}, esm, platform browser, target es2022,
 │                    dts+sourcemap, plugin cssText() (do pdf-viewer)
 ├── src/
-│   ├── dnd-basketball.ts           entrada pública
+│   ├── basketball-upload.ts           entrada pública
 │   ├── css.d.ts
 │   ├── game/      (puro)           config.ts, vector.ts, court.ts, simulate.ts, slingshot.ts
 │   ├── upload/    (puro)           types.ts, UploadQueue.ts, accept.ts, format.ts, xhr.ts
 │   ├── file-types/ (puro)          types.ts, defaults.ts, registry.ts (registerFileType + resolveFileType)
 │   └── element/
-│       ├── DndBasketballElement.ts, register.ts, labels.ts, dom.ts
+│       ├── BasketballUploadElement.ts, register.ts, labels.ts, dom.ts
 │       ├── views/                  Header, Hoop, FileCard, Trajectory, UploadList, ScorePop, LiveRegion
 │       ├── controllers/            ShotController, DropController, FormController
 │       └── styles/                 layers.css tokens.css reset.css layout.css hoop.css card.css list.css
@@ -135,7 +135,7 @@ packages/core/
 
 |                                              |                                                                                                                                                                                                                                                                                                                                                                 |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Tag/classe**                               | `<dnd-basketball>` / `DndBasketballElement`; `registerDndBasketball({ tagName })` é explícito, idempotente e não faz nada em SSR                                                                                                                                                                                                                                |
+| **Tag/classe**                               | `<basketball-upload>` / `BasketballUploadElement`; `registerBasketballUpload({ tagName })` é explícito, idempotente e não faz nada em SSR                                                                                                                                                                                                                       |
 | **Atributos** (refletidos)                   | `theme` (`light`/`dark`/`system`), `accept`, `multiple`, `max-size` (bytes), `max-files`, `name`, `required`, `disabled`, `instant` (sem arremesso: tudo entra direto), `concurrency` (padrão 3)                                                                                                                                                                |
 | **Propriedades-objeto**                      | `uploader: Uploader \| null`, `labels: Partial<Labels>`, `fileTypes: readonly FileType[]`                                                                                                                                                                                                                                                                       |
 | **Somente leitura**                          | `items`, `score`, `files`, `form`, `validity`, `validationMessage`                                                                                                                                                                                                                                                                                              |
@@ -222,7 +222,7 @@ export function resolveFileType(file: File, instanceTypes?: readonly FileType[])
 
   Ajuste as cores finais no site.
 
-- **Override só com CSS:** o card aplica `--_file-color: var(--dnd-basketball-file-<kind>, <color>)`, então `:root { --dnd-basketball-file-pdf: … }` funciona sem JS. Para o resto, use `::part(file-<kind>)` / `::part(item-icon-<kind>)`.
+- **Override só com CSS:** o card aplica `--_file-color: var(--basketball-upload-file-<kind>, <color>)`, então `:root { --basketball-upload-file-pdf: … }` funciona sem JS. Para o resto, use `::part(file-<kind>)` / `::part(item-icon-<kind>)`.
 - **Item da lista:** o ícone usa a mesma resolução (mesma cor/badge; miniatura no caso de imagens).
 - **Segurança:** o `label` entra via `textContent` e o nome do arquivo nunca vira HTML. A arte customizada é um `Node` do consumidor. Uma arte SVG em thumbnail é renderizada como `<img>`, que não executa script.
 
@@ -232,7 +232,7 @@ export function resolveFileType(file: File, instanceTypes?: readonly FileType[])
 - **Layers:** `@layer tokens, reset, layout, components, states, motion;`. `states` (custom states) fica acima de `components`; `motion` contém as keyframes e os overrides de reduced motion.
 - **Tokens em 3 camadas:**
   1. Primitivos privados, com a paleta medida.
-  2. Públicos `--dnd-basketball-*`, lidos **uma vez** em `:host` para privados `--_*` com o default como fallback (padrão do pdf-viewer: um override no elemento ou em qualquer ancestral, inclusive `:root`, funciona).
+  2. Públicos `--basketball-upload-*`, lidos **uma vez** em `:host` para privados `--_*` com o default como fallback (padrão do pdf-viewer: um override no elemento ou em qualquer ancestral, inclusive `:root`, funciona).
   3. Regras internas usam só `--_*`.
 - **Temas:** `color-scheme: light dark` + `light-dark()` nos defaults, e `:host([theme=light|dark])` força o esquema. Cada token é declarado uma vez. No escuro, o card do arquivo continua "papel" claro.
 - **Recursos modernos** (baseline): `@layer`, nesting nativo, `light-dark()`, `oklch()`/`color-mix(in oklab, …)`, propriedades lógicas, container queries/`cqi` (`container-type` no host), `translate`/`rotate`/`scale` individuais (o loop do jogo só escreve essas propriedades), `:state()`, `::part`, `@starting-style`, `:focus-visible`, `tabular-nums`, `text-wrap: balance`. Evitar `@property` dentro do shadow root (é ignorado ali).
@@ -281,16 +281,16 @@ export function resolveFileType(file: File, instanceTypes?: readonly FileType[])
 
 ---
 
-## 3. Pacote React — `@sehv-oss/dnd-basketball-react` (`packages/react`)
+## 3. Pacote React — `@sehv-oss/basketball-upload-react` (`packages/react`)
 
-Adapter fino, no padrão de `pdf-viewer/src/react/PdfViewer.tsx`. Fica em `src/{dnd-basketball-react.ts, DndBasketball.tsx}`.
+Adapter fino, no padrão de `pdf-viewer/src/react/PdfViewer.tsx`. Fica em `src/{basketball-upload-react.ts, BasketballUpload.tsx}`.
 
-- **Dependências:** `@sehv-oss/dnd-basketball: workspace:^`; peer deps `react`/`react-dom >=19`. O i18n põe `react` em `dependencies`; aqui fica peer, para não duplicar o React do consumidor.
+- **Dependências:** `@sehv-oss/basketball-upload: workspace:^`; peer deps `react`/`react-dom >=19`. O i18n põe `react` em `dependencies`; aqui fica peer, para não duplicar o React do consumidor.
 - **tsconfig:** `web/lib` + `layer/react`.
 - **Build:** tsdown com o core e o react como externals.
 - **`'use client'`:** o `dist` precisa começar com `'use client'` para RSC/Next.js. Usar `banner` se o rolldown remover a diretiva.
-- **`<DndBasketball>`:**
-  - Chama `registerDndBasketball({ tagName })` durante o render.
+- **`<BasketballUpload>`:**
+  - Chama `registerBasketballUpload({ tagName })` durante o render.
   - Usa `ref` como prop (React 19).
   - Props primitivas viram **atributos kebab-case** (`'max-size': maxSize`, …), o que funciona igual no cliente e no SSR.
   - `uploader`, `labels` e `fileTypes` são atribuídos em `useLayoutEffect`. Documentar que `fileTypes` deve ser memoizado.
@@ -300,9 +300,9 @@ Adapter fino, no padrão de `pdf-viewer/src/react/PdfViewer.tsx`. Fica em `src/{
 
 ---
 
-## 4. Site de demonstração — `site/` (`@sehv-oss/dnd-basketball-site`, privado)
+## 4. Site de demonstração — `site/` (`@sehv-oss/basketball-upload-site`, privado)
 
-- **Formato:** o mesmo do `i18n/site`: Vite + React, `base: '/dnd-basketball/'`, `shiki` para os blocos de código, header fixo com nav e link do GitHub, hero, install tabs (npm/pnpm/yarn × core/react, com botão de copiar), seções `Section` (badge + título + descrição + demo ao vivo + código) e footer.
+- **Formato:** o mesmo do `i18n/site`: Vite + React, `base: '/basketball-upload/'`, `shiki` para os blocos de código, header fixo com nav e link do GitHub, hero, install tabs (npm/pnpm/yarn × core/react, com botão de copiar), seções `Section` (badge + título + descrição + demo ao vivo + código) e footer.
 - **CSS:** moderno próprio, sem Tailwind. Fica em `site/src/styles/` com `@layer reset, tokens, base, layout, components, utilities;`, nesting, `light-dark()` e propriedades lógicas. O tema do site acompanha `prefers-color-scheme`, com toggle.
 - **Fontes:** Inter e JetBrains Mono via `@fontsource-variable/*`, sem request externo.
 - **Hero = a demo fiel:**
@@ -312,7 +312,7 @@ Adapter fino, no padrão de `pdf-viewer/src/react/PdfViewer.tsx`. Fica em `src/{
   - Controles: tema, `instant`, labels pt-BR, reset.
 - **Seções:**
   1. **Web Component:** HTML/JS puro, ao vivo.
-  2. **React:** `<DndBasketball>` + log de eventos.
+  2. **React:** `<BasketballUpload>` + log de eventos.
   3. **Theming:** override de tokens, parts e custom states.
   4. **File types:** botões que colocam na quadra exemplos de pdf/png (com miniatura)/mp4/zip, mais um tipo customizado registrado com `registerFileType` (ex.: `.fig` com cor e arte próprias).
   5. **Forms:** `name="files"` + `required` + submit mostrando o `FormData`.
@@ -353,7 +353,7 @@ Os projetos de browser usam aliases para o `src`, como o i18n.
   - `FormData(form)` contém os arquivos, e `required` invalida o form.
   - Parts `file-<kind>`, tokens por tipo e thumbnail de imagem.
 - **`react`:** props viram atributos/propriedades, callbacks disparam, `ref` é o elemento e `fileTypes` é aplicado.
-- **`react-ssr`:** `renderToString(<DndBasketball />)` não quebra sem DOM.
+- **`react-ssr`:** `renderToString(<BasketballUpload />)` não quebra sem DOM.
 - **CI:** `test:setup` instala o chromium (input `test-setup` do workflow).
 
 ---
@@ -395,7 +395,7 @@ Os projetos de browser usam aliases para o `src`, como o i18n.
 ## 8. Ordem de implementação
 
 0. **Mudança para o repo novo:**
-   - Em `~/dev/repositories/@sehv-oss/dnd-basketball`, criar a branch `feat/initial-implementation` (os rulesets da org pedem PR com squash).
+   - Em `~/dev/repositories/@sehv-oss/basketball-upload`, criar a branch `feat/initial-implementation` (os rulesets da org pedem PR com squash).
    - Copiar este plano para `docs/plan.md`.
    - Mover `xd/*.png` → `docs/design/reference/` com os nomes do §7.
    - Pedir confirmação antes de apagar a pasta antiga `dnd-baskteball`.
@@ -417,7 +417,7 @@ Os projetos de browser usam aliases para o `src`, como o i18n.
 8. **Docs:** READMEs no estilo do pdf-viewer (tabelas de atributos, tokens, parts, eventos e tipos; snippet `:not(:defined)`), ADRs, NOTICE, changeset inicial.
 9. **GitHub** (o usuário faz, pelo checklist do template):
    - Settings → Pages → Source = **GitHub Actions**.
-   - About → Website = `https://sehv-oss.github.io/dnd-basketball/`.
+   - About → Website = `https://sehv-oss.github.io/basketball-upload/`.
    - Depois, trocar o README de checklist pelo README do projeto.
 
 ## 9. Verificação
@@ -426,10 +426,10 @@ Os projetos de browser usam aliases para o `src`, como o i18n.
 2. `pnpm site:dev`: comparar o hero **lado a lado com cada screenshot** de 01 a 08 (mirar, soltar, voo com dropzone ativo, aro, rede, cesta com "+1" e lista em "Uploading…", progresso, "Uploaded" com o check). Usar o navegador via claude-in-chrome ou capturas e ajustar tokens, geometria e física até ficar igual.
 3. **Interações reais:** arrastar um PDF do sistema para o dropzone (dunk) e para a quadra (vira card); errar de propósito (quica e volta); acertar pelo quadrado e direto. Arrastar uma imagem (card com miniatura) e um tipo customizado (`.fig`).
 4. **Teclado:** Tab até o dropzone e Enter abre o picker; Tab até o card e Enter faz o arremesso assistido; Escape cancela a mira.
-5. **DevTools:** emular reduced motion; alternar os temas light/dark/system; override de `--dnd-basketball-file-pdf` via `:root`.
+5. **DevTools:** emular reduced motion; alternar os temas light/dark/system; override de `--basketball-upload-file-pdf` via `:root`.
 6. **Formulário:** submit com `FormData` correto; `required` bloqueia.
 7. **Tarballs:** `pnpm --filter "./packages/*" pack` e inspecionar `dist/`, README, LICENSE e NOTICE; `workspace:^` e `catalog:` substituídos por versões; `'use client'` no topo do dist do react.
-8. **Build e preview do site:** `pnpm --filter @sehv-oss/dnd-basketball-site build && … preview`, abrindo em `/dnd-basketball/` (base path correto, assets carregando).
+8. **Build e preview do site:** `pnpm --filter @sehv-oss/basketball-upload-site build && … preview`, abrindo em `/basketball-upload/` (base path correto, assets carregando).
 
 **Fora do escopo da v1:** adapters de Vue/Angular, efeitos sonoros, uploads resumíveis/em chunks, testes de regressão visual (bom próximo passo com o mesmo Playwright).
 

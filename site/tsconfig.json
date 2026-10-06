@@ -8,9 +8,11 @@
   "compilerOptions": {
     "types": ["vite/client"],
     "paths": {
-      "@sehv-oss/dnd-basketball": ["../packages/core/src/dnd-basketball.ts"],
-      "@sehv-oss/dnd-basketball-react": [
-        "../packages/react/src/dnd-basketball-react.ts"
+      "@sehv-oss/basketball-upload": [
+        "../packages/core/src/basketball-upload.ts"
+      ],
+      "@sehv-oss/basketball-upload-react": [
+        "../packages/react/src/basketball-upload-react.ts"
       ]
     }
   },

@@ -4,7 +4,7 @@ import { CodeBlock } from '../code-block.tsx';
 import { Section } from '../section.tsx';
 
 const XHR = `
-import { createXhrUploader } from '@sehv-oss/dnd-basketball';
+import { createXhrUploader } from '@sehv-oss/basketball-upload';
 
 // multipart/form-data, with upload progress.
 hoop.uploader = createXhrUploader({
@@ -15,7 +15,7 @@ hoop.uploader = createXhrUploader({
 `;
 
 const CUSTOM = `
-import type { Uploader } from '@sehv-oss/dnd-basketball';
+import type { Uploader } from '@sehv-oss/basketball-upload';
 
 // Any function works: resolve when stored, reject when it failed.
 const toS3: Uploader = async (file, { signal, onProgress }) => {

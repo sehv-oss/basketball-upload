@@ -11,21 +11,21 @@ import {
 
 import {
   DEFAULT_TAG_NAME,
-  registerDndBasketball,
-  type DndBasketballElement,
-  type DndBasketballEventMap,
+  registerBasketballUpload,
+  type BasketballUploadElement,
+  type BasketballUploadEventMap,
   type FileType,
   type Messages,
   type Theme,
   type Uploader,
-} from '@sehv-oss/dnd-basketball';
+} from '@sehv-oss/basketball-upload';
 
-type Detail<K extends keyof DndBasketballEventMap> =
-  DndBasketballEventMap[K]['detail'];
+type Detail<K extends keyof BasketballUploadEventMap> =
+  BasketballUploadEventMap[K]['detail'];
 
-export interface DndBasketballProps {
-  /** The `<dnd-basketball>` element, for its methods and properties. */
-  ref?: Ref<DndBasketballElement> | undefined;
+export interface BasketballUploadProps {
+  /** The `<basketball-upload>` element, for its methods and properties. */
+  ref?: Ref<BasketballUploadElement> | undefined;
   /** Defaults to `system`. */
   theme?: Theme | undefined;
   accept?: string | undefined;
@@ -64,7 +64,7 @@ export interface DndBasketballProps {
 }
 
 type Callbacks = Pick<
-  DndBasketballProps,
+  BasketballUploadProps,
   | 'onFileReject'
   | 'onShot'
   | 'onUploadStart'
@@ -74,7 +74,7 @@ type Callbacks = Pick<
   | 'onChange'
 >;
 
-const EVENTS: { [K in keyof DndBasketballEventMap]: keyof Callbacks } = {
+const EVENTS: { [K in keyof BasketballUploadEventMap]: keyof Callbacks } = {
   'file-reject': 'onFileReject',
   shot: 'onShot',
   'upload-start': 'onUploadStart',
@@ -85,12 +85,12 @@ const EVENTS: { [K in keyof DndBasketballEventMap]: keyof Callbacks } = {
 };
 
 /**
- * `<dnd-basketball>` for React 19. Plain values travel as attributes, which
+ * `<basketball-upload>` for React 19. Plain values travel as attributes, which
  * the server renders and the client upgrades; functions and objects
  * (`uploader`, `messages`, `fileTypes`) and the event callbacks are applied to
  * the element after it mounts.
  */
-export function DndBasketball({
+export function BasketballUpload({
   ref,
   theme,
   accept,
@@ -115,15 +115,15 @@ export function DndBasketball({
   onUploadError,
   onChange,
   ...props
-}: DndBasketballProps): ReactNode {
+}: BasketballUploadProps): ReactNode {
   // Idempotent and SSR-safe. Done during render so the element is upgraded
   // as soon as React creates it, before any property is assigned.
-  registerDndBasketball({ tagName });
+  registerBasketballUpload({ tagName });
 
-  const elementRef = useRef<DndBasketballElement>(null);
+  const elementRef = useRef<BasketballUploadElement>(null);
   useImperativeHandle(
     ref,
-    () => elementRef.current as DndBasketballElement,
+    () => elementRef.current as BasketballUploadElement,
     []
   );
 

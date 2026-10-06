@@ -32,8 +32,8 @@ export type Theme = 'light' | 'dark' | 'system';
 
 export type ShotResult = 'score' | 'miss';
 
-/** `CustomEvent`s dispatched by `<dnd-basketball>`, keyed by event name. They bubble. */
-export interface DndBasketballEventMap {
+/** `CustomEvent`s dispatched by `<basketball-upload>`, keyed by event name. They bubble. */
+export interface BasketballUploadEventMap {
   'file-reject': CustomEvent<{ file: File; reason: RejectReason }>;
   shot: CustomEvent<{ file: File; result: ShotResult }>;
   'upload-start': CustomEvent<{ item: UploadItem }>;
@@ -78,10 +78,10 @@ function numberAttribute(value: string | null): number | null {
 }
 
 /**
- * `<dnd-basketball>`: a file upload where the dropzone is a backboard. Drop
+ * `<basketball-upload>`: a file upload where the dropzone is a backboard. Drop
  * files on it, or drop them on the court and take the shot.
  */
-export class DndBasketballElement extends BaseElement {
+export class BasketballUploadElement extends BaseElement {
   static readonly formAssociated = true;
   static readonly observedAttributes = [
     'concurrency',
@@ -479,9 +479,9 @@ export class DndBasketballElement extends BaseElement {
     return this.disabled || this.#formDisabled;
   }
 
-  #emit<K extends keyof DndBasketballEventMap>(
+  #emit<K extends keyof BasketballUploadEventMap>(
     type: K,
-    detail: DndBasketballEventMap[K]['detail']
+    detail: BasketballUploadEventMap[K]['detail']
   ): void {
     this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true }));
   }
@@ -903,12 +903,12 @@ export class DndBasketballElement extends BaseElement {
 }
 
 // Typed `addEventListener` for the events dispatched above.
-export interface DndBasketballElement {
-  addEventListener<K extends keyof DndBasketballEventMap>(
+export interface BasketballUploadElement {
+  addEventListener<K extends keyof BasketballUploadEventMap>(
     type: K,
     listener: (
-      this: DndBasketballElement,
-      event: DndBasketballEventMap[K]
+      this: BasketballUploadElement,
+      event: BasketballUploadEventMap[K]
     ) => void,
     options?: boolean | AddEventListenerOptions
   ): void;
@@ -917,11 +917,11 @@ export interface DndBasketballElement {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions
   ): void;
-  removeEventListener<K extends keyof DndBasketballEventMap>(
+  removeEventListener<K extends keyof BasketballUploadEventMap>(
     type: K,
     listener: (
-      this: DndBasketballElement,
-      event: DndBasketballEventMap[K]
+      this: BasketballUploadElement,
+      event: BasketballUploadEventMap[K]
     ) => void,
     options?: boolean | EventListenerOptions
   ): void;
@@ -934,6 +934,6 @@ export interface DndBasketballElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'dnd-basketball': DndBasketballElement;
+    'basketball-upload': BasketballUploadElement;
   }
 }

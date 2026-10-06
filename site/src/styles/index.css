@@ -66,7 +66,7 @@
     --site-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 
     /* The element picks the site font up through its token. */
-    --dnd-basketball-font-family: var(--site-font);
+    --basketball-upload-font-family: var(--site-font);
   }
 
   :root[data-theme='light'] {
@@ -633,7 +633,7 @@
     border-radius: 1.25rem;
     box-shadow: var(--site-shadow);
 
-    & dnd-basketball {
+    & basketball-upload {
       min-block-size: 46rem;
     }
   }
@@ -727,34 +727,34 @@
 
   /* The theming example applies what its code shows. */
   #theming {
-    & dnd-basketball.hardwood {
-      --dnd-basketball-background: #f3e5cc;
-      --dnd-basketball-surface: #fff9ef;
-      --dnd-basketball-border: #cfae7b;
-      --dnd-basketball-accent: #c2410c;
-      --dnd-basketball-net: #8b6f4e;
+    & basketball-upload.hardwood {
+      --basketball-upload-background: #f3e5cc;
+      --basketball-upload-surface: #fff9ef;
+      --basketball-upload-border: #cfae7b;
+      --basketball-upload-accent: #c2410c;
+      --basketball-upload-net: #8b6f4e;
     }
 
-    & dnd-basketball.night-game {
-      --dnd-basketball-accent: light-dark(#0891b2, #22d3ee);
-      --dnd-basketball-background: light-dark(#e0f2fe, #0b1020);
+    & basketball-upload.night-game {
+      --basketball-upload-accent: light-dark(#0891b2, #22d3ee);
+      --basketball-upload-background: light-dark(#e0f2fe, #0b1020);
     }
 
-    & dnd-basketball::part(dropzone) {
+    & basketball-upload::part(dropzone) {
       box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
     }
 
-    & dnd-basketball:state(drop-target)::part(backboard-square) {
+    & basketball-upload:state(drop-target)::part(backboard-square) {
       border-style: dashed;
     }
   }
 
   #file-types {
-    & dnd-basketball {
-      --dnd-basketball-file-pdf: #e11d48;
+    & basketball-upload {
+      --basketball-upload-file-pdf: #e11d48;
     }
 
-    & dnd-basketball::part(file-image) {
+    & basketball-upload::part(file-image) {
       filter: drop-shadow(0 0.5rem 1rem rgb(47 124 246 / 0.35));
     }
   }

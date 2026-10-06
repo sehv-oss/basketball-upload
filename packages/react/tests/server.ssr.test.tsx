@@ -1,19 +1,19 @@
 import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { DndBasketball } from '../src/dnd-basketball-react.ts';
+import { BasketballUpload } from '../src/basketball-upload-react.ts';
 
-describe('<DndBasketball> on the server', () => {
+describe('<BasketballUpload> on the server', () => {
   it('renders the custom element with its attributes, without a DOM', () => {
     expect(typeof document).toBe('undefined');
 
     const html = renderToString(
-      <DndBasketball multiple maxSize={10} theme="dark" name="files">
+      <BasketballUpload multiple maxSize={10} theme="dark" name="files">
         <span slot="title">Enviar arquivos</span>
-      </DndBasketball>
+      </BasketballUpload>
     );
 
-    expect(html).toMatch(/^<dnd-basketball /);
+    expect(html).toMatch(/^<basketball-upload /);
     expect(html).toContain('multiple=""');
     expect(html).toContain('max-size="10"');
     expect(html).toContain('theme="dark"');
@@ -22,8 +22,8 @@ describe('<DndBasketball> on the server', () => {
   });
 
   it('leaves out the attributes that are not set', () => {
-    const html = renderToString(<DndBasketball theme="system" />);
+    const html = renderToString(<BasketballUpload theme="system" />);
 
-    expect(html).toBe('<dnd-basketball></dnd-basketball>');
+    expect(html).toBe('<basketball-upload></basketball-upload>');
   });
 });

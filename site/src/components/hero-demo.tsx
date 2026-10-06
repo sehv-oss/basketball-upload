@@ -8,10 +8,10 @@ import {
 } from 'react';
 
 import {
-  DndBasketball,
-  type DndBasketballElement,
+  BasketballUpload,
+  type BasketballUploadElement,
   type Theme,
-} from '@sehv-oss/dnd-basketball-react';
+} from '@sehv-oss/basketball-upload-react';
 
 import { portugueseMessages } from '../demo/messages.ts';
 import { designFile } from '../demo/sample-files.ts';
@@ -31,7 +31,7 @@ const LANGUAGES = [
 
 /** The reference design, live: one file on the court, ready for the shot. */
 export function HeroDemo(): ReactElement {
-  const element = useRef<DndBasketballElement>(null);
+  const element = useRef<BasketballUploadElement>(null);
   const [theme, setTheme] = useState<Theme>('light');
   const [language, setLanguage] = useState<'en' | 'pt-BR'>('en');
   const [instant, setInstant] = useState(false);
@@ -59,7 +59,7 @@ export function HeroDemo(): ReactElement {
   return (
     <div className="demo">
       <div className="demo-stage" lang={language}>
-        <DndBasketball
+        <BasketballUpload
           ref={element}
           className="demo-hoop"
           multiple

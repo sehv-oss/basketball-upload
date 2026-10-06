@@ -1,11 +1,14 @@
-export { DndBasketball, type DndBasketballProps } from './DndBasketball.ts';
+export {
+  BasketballUpload,
+  type BasketballUploadProps,
+} from './BasketballUpload.ts';
 export {
   createXhrUploader,
   defaultFileTypes,
   defaultMessages,
   registerFileType,
-  type DndBasketballElement,
-  type DndBasketballEventMap,
+  type BasketballUploadElement,
+  type BasketballUploadEventMap,
   type FileArtwork,
   type FileType,
   type Messages,
@@ -17,4 +20,4 @@ export {
   type UploadStatus,
   type Uploader,
   type XhrUploaderOptions,
-} from '@sehv-oss/dnd-basketball';
+} from '@sehv-oss/basketball-upload';

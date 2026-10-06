@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export type SiteTheme = 'system' | 'light' | 'dark';
 
-const STORAGE_KEY = 'dnd-basketball:site-theme';
+const STORAGE_KEY = 'basketball-upload:site-theme';
 
 function stored(): SiteTheme {
   try {

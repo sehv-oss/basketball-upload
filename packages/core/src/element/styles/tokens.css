@@ -1,7 +1,7 @@
 /*
  * Public theming API.
  *
- * Every `--dnd-basketball-*` token is read here, once, into a private `--_*`
+ * Every `--basketball-upload-*` token is read here, once, into a private `--_*`
  * variable whose fallback is the default. Internal rules only use the private
  * variables, so an override works whether it is set on the element or on any
  * ancestor, `:root` included.
@@ -16,62 +16,65 @@
     color-scheme: light dark;
 
     --_background: var(
-      --dnd-basketball-background,
+      --basketball-upload-background,
       light-dark(#eff1f5, #0f1115)
     );
     --_foreground: var(
-      --dnd-basketball-foreground,
+      --basketball-upload-foreground,
       light-dark(#0f1115, #f4f5f7)
     );
     --_muted-foreground: var(
-      --dnd-basketball-muted-foreground,
+      --basketball-upload-muted-foreground,
       light-dark(#6b6f78, #a3a8b2)
     );
     --_subtle-foreground: var(
-      --dnd-basketball-subtle-foreground,
+      --basketball-upload-subtle-foreground,
       light-dark(#989a9f, #7c818b)
     );
-    --_surface: var(--dnd-basketball-surface, light-dark(#ffffff, #181b21));
-    --_border: var(--dnd-basketball-border, light-dark(#cbccd1, #3a3f48));
-    --_radius: var(--dnd-basketball-radius, 1.125rem);
+    --_surface: var(--basketball-upload-surface, light-dark(#ffffff, #181b21));
+    --_border: var(--basketball-upload-border, light-dark(#cbccd1, #3a3f48));
+    --_radius: var(--basketball-upload-radius, 1.125rem);
 
-    --_accent: var(--dnd-basketball-accent, light-dark(#f0612e, #f26a39));
+    --_accent: var(--basketball-upload-accent, light-dark(#f0612e, #f26a39));
     --_accent-strong: var(
-      --dnd-basketball-accent-strong,
+      --basketball-upload-accent-strong,
       light-dark(#bd4d19, #c4521f)
     );
     --_accent-surface: var(
-      --dnd-basketball-accent-surface,
+      --basketball-upload-accent-surface,
       light-dark(#fff4ef, color-mix(in oklab, #f26a39 14%, #181b21))
     );
     --_trajectory: var(
-      --dnd-basketball-trajectory,
+      --basketball-upload-trajectory,
       color-mix(in oklab, var(--_accent) 60%, transparent)
     );
-    --_net: var(--dnd-basketball-net, light-dark(#a9abb3, #6b717c));
+    --_net: var(--basketball-upload-net, light-dark(#a9abb3, #6b717c));
 
     --_counter-background: var(
-      --dnd-basketball-counter-background,
+      --basketball-upload-counter-background,
       light-dark(#e3e7ed, #232730)
     );
-    --_track: var(--dnd-basketball-track, light-dark(#e6e8ec, #2a2e36));
-    --_success: var(--dnd-basketball-success, light-dark(#2fb06d, #34c07a));
-    --_danger: var(--dnd-basketball-danger, light-dark(#d8374e, #f0606f));
+    --_track: var(--basketball-upload-track, light-dark(#e6e8ec, #2a2e36));
+    --_success: var(--basketball-upload-success, light-dark(#2fb06d, #34c07a));
+    --_danger: var(--basketball-upload-danger, light-dark(#d8374e, #f0606f));
 
     /* Files stay paper white in both themes. */
-    --_file-surface: var(--dnd-basketball-file-surface, #ffffff);
-    --_file-line: var(--dnd-basketball-file-line, #e4e5e9);
-    --_file-fold: var(--dnd-basketball-file-fold, #e9eaee);
-    --_file-badge: var(--dnd-basketball-file-badge, #6b7280);
+    --_file-surface: var(--basketball-upload-file-surface, #ffffff);
+    --_file-line: var(--basketball-upload-file-line, #e4e5e9);
+    --_file-fold: var(--basketball-upload-file-fold, #e9eaee);
+    --_file-badge: var(--basketball-upload-file-badge, #6b7280);
 
     --_shadow: var(
-      --dnd-basketball-shadow,
+      --basketball-upload-shadow,
       0 1px 2px rgb(15 17 21 / 0.04),
       0 0.5rem 1.5rem rgb(15 17 21 / 0.07)
     );
-    --_focus-ring: var(--dnd-basketball-focus-ring, 2px solid var(--_accent));
+    --_focus-ring: var(
+      --basketball-upload-focus-ring,
+      2px solid var(--_accent)
+    );
     --_font-family: var(
-      --dnd-basketball-font-family,
+      --basketball-upload-font-family,
       Inter,
       ui-sans-serif,
       system-ui,
@@ -82,9 +85,9 @@
      * Sizes. `cqi` resolves against the host (a container), wherever these
      * are used: the gutter and the hoop follow the width of the element.
      */
-    --_gutter: var(--dnd-basketball-gutter, clamp(1.25rem, 8cqi, 3.75rem));
+    --_gutter: var(--basketball-upload-gutter, clamp(1.25rem, 8cqi, 3.75rem));
     --_hoop-size: var(
-      --dnd-basketball-hoop-size,
+      --basketball-upload-hoop-size,
       min(25rem, 100cqi - 2 * var(--_gutter))
     );
     --_card-width: calc(var(--_hoop-size) * 0.2375);

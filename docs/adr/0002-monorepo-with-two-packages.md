@@ -11,9 +11,9 @@
 A pnpm workspace in the layout of `sehv-oss/i18n`:
 
 ```text
-packages/core   @sehv-oss/dnd-basketball         the element; no dependencies
-packages/react  @sehv-oss/dnd-basketball-react   depends on the core (workspace:^), peer react >=19
-site            @sehv-oss/dnd-basketball-site    private demo, deployed to GitHub Pages
+packages/core   @sehv-oss/basketball-upload         the element; no dependencies
+packages/react  @sehv-oss/basketball-upload-react   depends on the core (workspace:^), peer react >=19
+site            @sehv-oss/basketball-upload-site    private demo, deployed to GitHub Pages
 ```
 
 Versions shared by the workspace live in the pnpm `catalog:` of `pnpm-workspace.yaml`. Changesets versions and publishes both packages and ignores the site. `pnpm --recursive build` builds them in dependency order: core, react, then the site, which consumes their `dist/`.

@@ -1,4 +1,4 @@
-import type { Messages } from '@sehv-oss/dnd-basketball';
+import type { Messages } from '@sehv-oss/basketball-upload';
 
 /** Brazilian Portuguese copy, to show the `messages` property at work. */
 export const portugueseMessages: Partial<Messages> = {

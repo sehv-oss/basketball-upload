@@ -18,25 +18,25 @@ const coreSources = `${packages}core/src/`;
 function librarySources(): Plugin[] {
   return [
     {
-      name: 'dnd-basketball:sources',
+      name: 'basketball-upload:sources',
       apply: 'serve',
       config: () => ({
         resolve: {
           alias: [
             {
-              find: /^@sehv-oss\/dnd-basketball$/,
-              replacement: `${coreSources}dnd-basketball.ts`,
+              find: /^@sehv-oss\/basketball-upload$/,
+              replacement: `${coreSources}basketball-upload.ts`,
             },
             {
-              find: /^@sehv-oss\/dnd-basketball-react$/,
-              replacement: `${packages}react/src/dnd-basketball-react.ts`,
+              find: /^@sehv-oss\/basketball-upload-react$/,
+              replacement: `${packages}react/src/basketball-upload-react.ts`,
             },
           ],
         },
       }),
     },
     {
-      name: 'dnd-basketball:css-text',
+      name: 'basketball-upload:css-text',
       apply: 'serve',
       enforce: 'pre',
       resolveId(source, importer) {
@@ -47,7 +47,7 @@ function librarySources(): Plugin[] {
       },
     },
     {
-      name: 'dnd-basketball:reload',
+      name: 'basketball-upload:reload',
       apply: 'serve',
       // A defined custom element cannot be swapped for a re-evaluated class,
       // so a change in a package reloads the page instead of hot-updating.
@@ -61,7 +61,7 @@ function librarySources(): Plugin[] {
 }
 
 export default defineConfig({
-  // Served from https://sehv-oss.github.io/dnd-basketball/
-  base: '/dnd-basketball/',
+  // Served from https://sehv-oss.github.io/basketball-upload/
+  base: '/basketball-upload/',
   plugins: [react(), librarySources()],
 });

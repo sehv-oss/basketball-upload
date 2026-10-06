@@ -1,10 +1,10 @@
-# dnd-basketball
+# basketball-upload
 
 Drag and drop, or take the shot.
 
 A file upload where the dropzone is a backboard. Drop your files on it, or pull a file back like a slingshot and score it into the basket: the dots show exactly where it is going. Every file that goes in is uploaded, with its progress in the list below.
 
-**[Live demo](https://sehv-oss.github.io/dnd-basketball/)**
+**[Live demo](https://sehv-oss.github.io/basketball-upload/)**
 
 <img src="docs/images/preview.png" alt="The element: a dropzone shaped like a backboard, a rim and net below it, and a PDF card pulled back with dotted aiming arc towards the hoop" width="377" />
 
@@ -16,28 +16,28 @@ This project is an independent, faithful code implementation of his basketball u
 
 ## Packages
 
-| Package                                            | What                                                   |
-| -------------------------------------------------- | ------------------------------------------------------ |
-| [`@sehv-oss/dnd-basketball`](packages/core)        | The `<dnd-basketball>` Web Component, for any stack    |
-| [`@sehv-oss/dnd-basketball-react`](packages/react) | `<DndBasketball>`, a thin React 19 component around it |
+| Package                                               | What                                                      |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| [`@sehv-oss/basketball-upload`](packages/core)        | The `<basketball-upload>` Web Component, for any stack    |
+| [`@sehv-oss/basketball-upload-react`](packages/react) | `<BasketballUpload>`, a thin React 19 component around it |
 
 ### Web Component
 
 ```bash
-npm install @sehv-oss/dnd-basketball
+npm install @sehv-oss/basketball-upload
 ```
 
 ```html
-<dnd-basketball multiple accept="image/*,.pdf"></dnd-basketball>
+<basketball-upload multiple accept="image/*,.pdf"></basketball-upload>
 
 <script type="module">
   import {
-    registerDndBasketball,
+    registerBasketballUpload,
     createXhrUploader,
-  } from '@sehv-oss/dnd-basketball';
+  } from '@sehv-oss/basketball-upload';
 
-  registerDndBasketball();
-  document.querySelector('dnd-basketball').uploader = createXhrUploader({
+  registerBasketballUpload();
+  document.querySelector('basketball-upload').uploader = createXhrUploader({
     url: '/api/uploads',
   });
 </script>
@@ -46,19 +46,21 @@ npm install @sehv-oss/dnd-basketball
 ### React
 
 ```bash
-npm install @sehv-oss/dnd-basketball-react
+npm install @sehv-oss/basketball-upload-react
 ```
 
 ```tsx
 import {
-  DndBasketball,
+  BasketballUpload,
   createXhrUploader,
-} from '@sehv-oss/dnd-basketball-react';
+} from '@sehv-oss/basketball-upload-react';
 
 const uploader = createXhrUploader({ url: '/api/uploads' });
 
 export function Uploads() {
-  return <DndBasketball multiple accept="image/*,.pdf" uploader={uploader} />;
+  return (
+    <BasketballUpload multiple accept="image/*,.pdf" uploader={uploader} />
+  );
 }
 ```
 
@@ -78,7 +80,7 @@ pnpm test            # unit tests (Node) and element/React tests (Chromium)
 pnpm lint            # cspell and prettier
 ```
 
-The site serves the element alone, at the size of the reference design, at `/dnd-basketball/?reference`: compare it with the screenshots in [`docs/design/reference`](docs/design/reference).
+The site serves the element alone, at the size of the reference design, at `/basketball-upload/?reference`: compare it with the screenshots in [`docs/design/reference`](docs/design/reference).
 
 Architecture decisions are recorded in [`docs/adr`](docs/adr).
 

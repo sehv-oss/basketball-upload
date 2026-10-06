@@ -1,5 +1,5 @@
 {
-  "name": "@sehv-oss/dnd-basketball-monorepo",
+  "name": "@sehv-oss/basketball-upload-monorepo",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "lint": "pnpm lint:cspell && pnpm lint:prettier",
     "lint:cspell": "cspell --config .cspell.config.ts .",
     "lint:prettier": "prettier --config .prettier.config.ts --check .",
-    "site:dev": "pnpm --filter @sehv-oss/dnd-basketball-site dev",
+    "site:dev": "pnpm --filter @sehv-oss/basketball-upload-site dev",
     "clean": "git clean -fdX",
     "changeset": "changeset",
     "changeset:version": "changeset version",

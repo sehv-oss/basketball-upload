@@ -11,7 +11,7 @@ export interface FileType {
   /**
    * Stable id: lowercase letters, digits and dashes, starting with a letter.
    * Becomes the `data-kind` attribute, the parts `file-<kind>` and
-   * `item-icon-<kind>`, and the token `--dnd-basketball-file-<kind>`.
+   * `item-icon-<kind>`, and the token `--basketball-upload-file-<kind>`.
    */
   readonly kind: string;
   /** `accept` syntax (`.pdf`, `application/pdf`, `image/*`, comma separated), or a predicate. */
@@ -27,7 +27,7 @@ export interface FileType {
 export interface ResolvedFileType {
   readonly kind: string;
   readonly label: string;
-  /** `null` uses the neutral `--dnd-basketball-file-badge` token. */
+  /** `null` uses the neutral `--basketball-upload-file-badge` token. */
   readonly color: string | null;
   readonly artwork: FileArtwork;
 }

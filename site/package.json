@@ -1,5 +1,5 @@
 {
-  "name": "@sehv-oss/dnd-basketball-site",
+  "name": "@sehv-oss/basketball-upload-site",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,8 +11,8 @@
   "dependencies": {
     "@fontsource-variable/inter": "catalog:",
     "@fontsource-variable/jetbrains-mono": "catalog:",
-    "@sehv-oss/dnd-basketball": "workspace:*",
-    "@sehv-oss/dnd-basketball-react": "workspace:*",
+    "@sehv-oss/basketball-upload": "workspace:*",
+    "@sehv-oss/basketball-upload-react": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
     "shiki": "catalog:"

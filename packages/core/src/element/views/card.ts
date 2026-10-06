@@ -4,7 +4,7 @@ import { poseStyle, type Pose } from '../motion.ts';
 
 /** The CSS color of a file type: its token when set, its own color otherwise. */
 export function fileColor(type: ResolvedFileType): string {
-  return `var(--dnd-basketball-file-${type.kind}, ${type.color ?? 'var(--_file-badge)'})`;
+  return `var(--basketball-upload-file-${type.kind}, ${type.color ?? 'var(--_file-badge)'})`;
 }
 
 export interface Artwork {

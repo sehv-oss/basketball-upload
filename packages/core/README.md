@@ -1,12 +1,12 @@
-# @sehv-oss/dnd-basketball
+# @sehv-oss/basketball-upload
 
 Drag and drop, or take the shot: a basketball-themed file upload Web Component.
 
-`<dnd-basketball>` is a dropzone shaped like a backboard. Files dropped on it go straight through the hoop; files dropped on the court (or picked with the file dialog) wait there as cards, to be pulled back like a slingshot and shot into the basket. Each file that scores is uploaded by your `uploader`, with its progress in a list.
+`<basketball-upload>` is a dropzone shaped like a backboard. Files dropped on it go straight through the hoop; files dropped on the court (or picked with the file dialog) wait there as cards, to be pulled back like a slingshot and shot into the basket. Each file that scores is uploaded by your `uploader`, with its progress in a list.
 
 It lives in a Shadow DOM, is themed with CSS custom properties, `::part()` and `:state()`, follows light, dark or system color schemes, and is a form-associated custom element.
 
-**[Live demo](https://sehv-oss.github.io/dnd-basketball/)** · React: [`@sehv-oss/dnd-basketball-react`](../react)
+**[Live demo](https://sehv-oss.github.io/basketball-upload/)** · React: [`@sehv-oss/basketball-upload-react`](../react)
 
 Design by **Jorge Molina** ([jm-fuster](https://github.com/jm-fuster), [@jm_fuster](https://www.figma.com/@jm_fuster) on Figma Community). This package is an independent implementation of his design; see [NOTICE.md](NOTICE.md).
 
@@ -14,13 +14,13 @@ Design by **Jorge Molina** ([jm-fuster](https://github.com/jm-fuster), [@jm_fust
 
 ```bash
 # npm
-npm install @sehv-oss/dnd-basketball
+npm install @sehv-oss/basketball-upload
 
 # pnpm
-pnpm add @sehv-oss/dnd-basketball
+pnpm add @sehv-oss/basketball-upload
 
 # yarn
-yarn add @sehv-oss/dnd-basketball
+yarn add @sehv-oss/basketball-upload
 ```
 
 The package is ESM-only and has no dependencies.
@@ -30,23 +30,23 @@ The package is ESM-only and has no dependencies.
 Registration is explicit: importing the package never defines an element on its own.
 
 ```ts
-import { registerDndBasketball } from '@sehv-oss/dnd-basketball';
+import { registerBasketballUpload } from '@sehv-oss/basketball-upload';
 
-registerDndBasketball();
+registerBasketballUpload();
 ```
 
 ```html
-<dnd-basketball multiple accept="image/*,.pdf"></dnd-basketball>
+<basketball-upload multiple accept="image/*,.pdf"></basketball-upload>
 ```
 
-`registerDndBasketball` is idempotent and does nothing where `customElements` does not exist, so it is safe to call from any module, including on the server. Pass `tagName` to register under another name: `registerDndBasketball({ tagName: 'my-upload' })`.
+`registerBasketballUpload` is idempotent and does nothing where `customElements` does not exist, so it is safe to call from any module, including on the server. Pass `tagName` to register under another name: `registerBasketballUpload({ tagName: 'my-upload' })`.
 
 The element is a block that grows with its content (at least `36rem` tall). Its width drives everything else: the hoop is up to `25rem` wide and the shot scales with it.
 
 To avoid a flash of unstyled content before registration:
 
 ```css
-dnd-basketball:not(:defined) {
+basketball-upload:not(:defined) {
   visibility: hidden;
 }
 ```
@@ -80,7 +80,7 @@ type Uploader = (
 ```
 
 ```ts
-const hoop = document.querySelector('dnd-basketball');
+const hoop = document.querySelector('basketball-upload');
 
 hoop.uploader = async (file, { signal, onProgress }) => {
   const response = await fetch(
@@ -100,7 +100,7 @@ hoop.uploader = async (file, { signal, onProgress }) => {
 `fetch` cannot report the progress of a request body, so the package ships an uploader built on `XMLHttpRequest`, which can:
 
 ```ts
-import { createXhrUploader } from '@sehv-oss/dnd-basketball';
+import { createXhrUploader } from '@sehv-oss/basketball-upload';
 
 hoop.uploader = createXhrUploader({
   url: '/api/uploads', // or (file) => url
@@ -118,11 +118,11 @@ Up to `concurrency` uploads (3 by default) run at a time; the others wait as `qu
 
 ## Forms
 
-`<dnd-basketball>` is a form-associated custom element:
+`<basketball-upload>` is a form-associated custom element:
 
 ```html
 <form method="post" enctype="multipart/form-data">
-  <dnd-basketball name="attachments" multiple required></dnd-basketball>
+  <basketball-upload name="attachments" multiple required></basketball-upload>
   <button>Send</button>
 </form>
 ```
@@ -202,7 +202,7 @@ hoop.addEventListener('upload-success', (event) => {
 });
 ```
 
-`DndBasketballEventMap` types `addEventListener` for these events.
+`BasketballUploadEventMap` types `addEventListener` for these events.
 
 ### Messages
 
@@ -228,10 +228,10 @@ See `Messages` and `defaultMessages` for every key: accessible names, statuses, 
 `title`, `description`, `prompt` and `hint` replace the corresponding copy with your own markup:
 
 ```html
-<dnd-basketball>
+<basketball-upload>
   <span slot="title">Attachments</span>
   <span slot="hint">PDF or images, up to 20 MB</span>
-</dnd-basketball>
+</basketball-upload>
 ```
 
 ## File types
@@ -256,7 +256,7 @@ The label defaults to the extension, in capitals (at most 4 characters). Image t
 Add your own types, for every element on the page:
 
 ```ts
-import { registerFileType } from '@sehv-oss/dnd-basketball';
+import { registerFileType } from '@sehv-oss/basketball-upload';
 
 const unregister = registerFileType({
   kind: 'figma', // lowercase letters, digits, dashes
@@ -278,11 +278,11 @@ hoop.fileTypes = [
 From CSS, every kind has a color token and parts:
 
 ```css
-dnd-basketball {
-  --dnd-basketball-file-pdf: #e11d48;
+basketball-upload {
+  --basketball-upload-file-pdf: #e11d48;
 }
 
-dnd-basketball::part(file-image) {
+basketball-upload::part(file-image) {
   filter: drop-shadow(0 0.5rem 1rem rgb(47 124 246 / 0.35));
 }
 ```
@@ -294,9 +294,9 @@ Labels are set as text, never as HTML. A custom artwork is your own node, placed
 ### Themes
 
 ```html
-<dnd-basketball theme="light"></dnd-basketball>
-<dnd-basketball theme="dark"></dnd-basketball>
-<dnd-basketball theme="system"></dnd-basketball>
+<basketball-upload theme="light"></basketball-upload>
+<basketball-upload theme="dark"></basketball-upload>
+<basketball-upload theme="system"></basketball-upload>
 <!-- no attribute: same as system -->
 ```
 
@@ -307,40 +307,40 @@ The attribute sets `color-scheme` on the element. Every default color is a `ligh
 Set them on the element or on any ancestor (`:root` included) — they are read once, inside, with their default as fallback. Use `light-dark()` to keep an override theme-aware.
 
 ```css
-dnd-basketball {
-  --dnd-basketball-accent: light-dark(#0891b2, #22d3ee);
-  --dnd-basketball-background: transparent;
+basketball-upload {
+  --basketball-upload-accent: light-dark(#0891b2, #22d3ee);
+  --basketball-upload-background: transparent;
 }
 ```
 
-| Token                                 | Default (light / dark)                                  |
-| ------------------------------------- | ------------------------------------------------------- |
-| `--dnd-basketball-background`         | `#eff1f5` / `#0f1115`                                   |
-| `--dnd-basketball-foreground`         | `#0f1115` / `#f4f5f7`                                   |
-| `--dnd-basketball-muted-foreground`   | `#6b6f78` / `#a3a8b2`                                   |
-| `--dnd-basketball-subtle-foreground`  | `#989a9f` / `#7c818b`                                   |
-| `--dnd-basketball-surface`            | `#ffffff` / `#181b21` (dropzone, list rows)             |
-| `--dnd-basketball-border`             | `#cbccd1` / `#3a3f48` (dashed outline)                  |
-| `--dnd-basketball-radius`             | `1.125rem`                                              |
-| `--dnd-basketball-accent`             | `#f0612e` / `#f26a39` (square, rim, "+1", progress)     |
-| `--dnd-basketball-accent-strong`      | `#bd4d19` / `#c4521f` (bracket, back of the rim)        |
-| `--dnd-basketball-accent-surface`     | `#fff4ef` / accent over surface (dropzone while active) |
-| `--dnd-basketball-trajectory`         | accent at 60%                                           |
-| `--dnd-basketball-net`                | `#a9abb3` / `#6b717c`                                   |
-| `--dnd-basketball-counter-background` | `#e3e7ed` / `#232730`                                   |
-| `--dnd-basketball-track`              | `#e6e8ec` / `#2a2e36` (progress track)                  |
-| `--dnd-basketball-success`            | `#2fb06d` / `#34c07a`                                   |
-| `--dnd-basketball-danger`             | `#d8374e` / `#f0606f`                                   |
-| `--dnd-basketball-file-surface`       | `#ffffff`                                               |
-| `--dnd-basketball-file-line`          | `#e4e5e9`                                               |
-| `--dnd-basketball-file-fold`          | `#e9eaee`                                               |
-| `--dnd-basketball-file-badge`         | `#6b7280` (types without a color)                       |
-| `--dnd-basketball-file-<kind>`        | the color of each file type                             |
-| `--dnd-basketball-shadow`             | soft shadow of the list rows                            |
-| `--dnd-basketball-focus-ring`         | `2px solid` accent                                      |
-| `--dnd-basketball-font-family`        | `Inter, ui-sans-serif, system-ui, sans-serif`           |
-| `--dnd-basketball-gutter`             | `clamp(1.25rem, 8cqi, 3.75rem)`                         |
-| `--dnd-basketball-hoop-size`          | `min(25rem, 100cqi - 2 * gutter)` (dropzone width)      |
+| Token                                    | Default (light / dark)                                  |
+| ---------------------------------------- | ------------------------------------------------------- |
+| `--basketball-upload-background`         | `#eff1f5` / `#0f1115`                                   |
+| `--basketball-upload-foreground`         | `#0f1115` / `#f4f5f7`                                   |
+| `--basketball-upload-muted-foreground`   | `#6b6f78` / `#a3a8b2`                                   |
+| `--basketball-upload-subtle-foreground`  | `#989a9f` / `#7c818b`                                   |
+| `--basketball-upload-surface`            | `#ffffff` / `#181b21` (dropzone, list rows)             |
+| `--basketball-upload-border`             | `#cbccd1` / `#3a3f48` (dashed outline)                  |
+| `--basketball-upload-radius`             | `1.125rem`                                              |
+| `--basketball-upload-accent`             | `#f0612e` / `#f26a39` (square, rim, "+1", progress)     |
+| `--basketball-upload-accent-strong`      | `#bd4d19` / `#c4521f` (bracket, back of the rim)        |
+| `--basketball-upload-accent-surface`     | `#fff4ef` / accent over surface (dropzone while active) |
+| `--basketball-upload-trajectory`         | accent at 60%                                           |
+| `--basketball-upload-net`                | `#a9abb3` / `#6b717c`                                   |
+| `--basketball-upload-counter-background` | `#e3e7ed` / `#232730`                                   |
+| `--basketball-upload-track`              | `#e6e8ec` / `#2a2e36` (progress track)                  |
+| `--basketball-upload-success`            | `#2fb06d` / `#34c07a`                                   |
+| `--basketball-upload-danger`             | `#d8374e` / `#f0606f`                                   |
+| `--basketball-upload-file-surface`       | `#ffffff`                                               |
+| `--basketball-upload-file-line`          | `#e4e5e9`                                               |
+| `--basketball-upload-file-fold`          | `#e9eaee`                                               |
+| `--basketball-upload-file-badge`         | `#6b7280` (types without a color)                       |
+| `--basketball-upload-file-<kind>`        | the color of each file type                             |
+| `--basketball-upload-shadow`             | soft shadow of the list rows                            |
+| `--basketball-upload-focus-ring`         | `2px solid` accent                                      |
+| `--basketball-upload-font-family`        | `Inter, ui-sans-serif, system-ui, sans-serif`           |
+| `--basketball-upload-gutter`             | `clamp(1.25rem, 8cqi, 3.75rem)`                         |
+| `--basketball-upload-hoop-size`          | `min(25rem, 100cqi - 2 * gutter)` (dropzone width)      |
 
 No stylesheet needs to be imported. The font is not bundled: load Inter yourself to match the design, or set your own.
 
@@ -349,7 +349,7 @@ No stylesheet needs to be imported. The font is not bundled: load Inter yourself
 For anything a token does not cover:
 
 ```css
-dnd-basketball::part(dropzone) {
+basketball-upload::part(dropzone) {
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
 }
 ```
@@ -388,7 +388,7 @@ The element exposes what it is doing as custom states, for `:state()`:
 | `disabled`    | The element or its fieldset is disabled                     |
 
 ```css
-dnd-basketball:state(drop-target)::part(backboard-square) {
+basketball-upload:state(drop-target)::part(backboard-square) {
   border-style: dashed;
 }
 ```
@@ -404,7 +404,7 @@ Parts, tokens and states are public API: removing or renaming one is a breaking 
 
 ## Server-side rendering
 
-The module can be imported where there is no DOM: the element class extends a stand-in, `registerDndBasketball` does nothing, and the stylesheet is created on first use. The React component renders the element with its attributes on the server.
+The module can be imported where there is no DOM: the element class extends a stand-in, `registerBasketballUpload` does nothing, and the stylesheet is created on first use. The React component renders the element with its attributes on the server.
 
 ## Browser support
 
@@ -412,7 +412,7 @@ Browsers released since mid 2024: Chrome and Edge 125, Firefox 129, Safari 17.5.
 
 ## Other exports
 
-`defaultMessages`, `defaultFileTypes`, `resolveFileType(file, types?)`, `matchesAccept(file, accept)` and `formatBytes(bytes, locale?)` are exported for building around the element; `DEFAULT_TAG_NAME` is `'dnd-basketball'`.
+`defaultMessages`, `defaultFileTypes`, `resolveFileType(file, types?)`, `matchesAccept(file, accept)` and `formatBytes(bytes, locale?)` are exported for building around the element; `DEFAULT_TAG_NAME` is `'basketball-upload'`.
 
 ## License
 

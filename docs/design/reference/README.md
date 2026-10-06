@@ -2,7 +2,7 @@
 
 Screenshots of the prototype this project implements, a design by **Jorge Molina** ([jm-fuster](https://github.com/jm-fuster), [@jm_fuster](https://www.figma.com/@jm_fuster) on Figma Community). See [NOTICE.md](../../../NOTICE.md).
 
-They are the reference for colors, geometry and motion. The site renders the element alone, at the size of these frames, at `?reference` (`pnpm site:dev`, then `/dnd-basketball/?reference`), for side-by-side comparisons.
+They are the reference for colors, geometry and motion. The site renders the element alone, at the size of these frames, at `?reference` (`pnpm site:dev`, then `/basketball-upload/?reference`), for side-by-side comparisons.
 
 | File                            | Moment                                                      |
 | ------------------------------- | ----------------------------------------------------------- |

@@ -1,10 +1,10 @@
-# @sehv-oss/dnd-basketball-react
+# @sehv-oss/basketball-upload-react
 
-React 19 component for [`<dnd-basketball>`](../core): drag and drop, or take the shot.
+React 19 component for [`<basketball-upload>`](../core): drag and drop, or take the shot.
 
-`<DndBasketball>` renders the Web Component; it is not a second implementation. Everything about the element — how files get in, uploads, forms, file types and theming — is documented in the [core README](../core/README.md).
+`<BasketballUpload>` renders the Web Component; it is not a second implementation. Everything about the element — how files get in, uploads, forms, file types and theming — is documented in the [core README](../core/README.md).
 
-**[Live demo](https://sehv-oss.github.io/dnd-basketball/)**
+**[Live demo](https://sehv-oss.github.io/basketball-upload/)**
 
 Design by **Jorge Molina** ([jm-fuster](https://github.com/jm-fuster), [@jm_fuster](https://www.figma.com/@jm_fuster) on Figma Community). See [NOTICE.md](NOTICE.md).
 
@@ -12,13 +12,13 @@ Design by **Jorge Molina** ([jm-fuster](https://github.com/jm-fuster), [@jm_fust
 
 ```bash
 # npm
-npm install @sehv-oss/dnd-basketball-react
+npm install @sehv-oss/basketball-upload-react
 
 # pnpm
-pnpm add @sehv-oss/dnd-basketball-react
+pnpm add @sehv-oss/basketball-upload-react
 
 # yarn
-yarn add @sehv-oss/dnd-basketball-react
+yarn add @sehv-oss/basketball-upload-react
 ```
 
 `react` 19 or newer is a peer dependency. The element comes along as a dependency.
@@ -27,21 +27,21 @@ yarn add @sehv-oss/dnd-basketball-react
 
 ```tsx
 import {
-  DndBasketball,
+  BasketballUpload,
   createXhrUploader,
-  type DndBasketballElement,
-} from '@sehv-oss/dnd-basketball-react';
+  type BasketballUploadElement,
+} from '@sehv-oss/basketball-upload-react';
 import { useRef } from 'react';
 
 // Stable across renders: module scope, useMemo or useCallback.
 const uploader = createXhrUploader({ url: '/api/uploads' });
 
 export function Uploads() {
-  const hoop = useRef<DndBasketballElement>(null);
+  const hoop = useRef<BasketballUploadElement>(null);
 
   return (
     <>
-      <DndBasketball
+      <BasketballUpload
         ref={hoop}
         multiple
         accept="image/*,.pdf"
@@ -51,7 +51,7 @@ export function Uploads() {
         onUploadSuccess={({ item }) => console.log('stored', item.response)}
       >
         <span slot="hint">PDF or images, up to 20 MB</span>
-      </DndBasketball>
+      </BasketballUpload>
 
       <button onClick={() => hoop.current?.clear()}>Clear</button>
     </>
@@ -68,7 +68,7 @@ The component registers the element itself (`tagName` when it was registered und
 | `theme`, `accept`, `multiple`, `maxSize`, `maxFiles`, `name`, `required`, `disabled`, `instant`, `concurrency` | attributes, rendered on the server too |
 | `uploader`, `messages`, `fileTypes`                                                                            | properties, applied after mount        |
 | `onFileReject`, `onShot`, `onUploadStart`, `onUploadProgress`, `onUploadSuccess`, `onUploadError`, `onChange`  | events; the callback gets the `detail` |
-| `ref`                                                                                                          | the `<dnd-basketball>` element         |
+| `ref`                                                                                                          | the `<basketball-upload>` element      |
 | `children`                                                                                                     | slotted content (`slot="title"`, …)    |
 | `id`, `className`, `style`, `tagName`                                                                          | the host element                       |
 

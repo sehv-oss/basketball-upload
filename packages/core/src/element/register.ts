@@ -1,18 +1,18 @@
-import { DndBasketballElement } from './DndBasketballElement.ts';
+import { BasketballUploadElement } from './BasketballUploadElement.ts';
 
-export interface RegisterDndBasketballOptions {
-  /** Custom element name. Defaults to `dnd-basketball`. */
+export interface RegisterBasketballUploadOptions {
+  /** Custom element name. Defaults to `basketball-upload`. */
   tagName?: string | undefined;
 }
 
-export const DEFAULT_TAG_NAME = 'dnd-basketball';
+export const DEFAULT_TAG_NAME = 'basketball-upload';
 
 /**
  * Defines the custom element. Idempotent, and a no-op where custom elements
  * do not exist (SSR), so it is safe to call from any module.
  */
-export function registerDndBasketball(
-  options: RegisterDndBasketballOptions = {}
+export function registerBasketballUpload(
+  options: RegisterBasketballUploadOptions = {}
 ): void {
   const tagName = options.tagName ?? DEFAULT_TAG_NAME;
 
@@ -23,7 +23,7 @@ export function registerDndBasketball(
   customElements.define(
     tagName,
     tagName === DEFAULT_TAG_NAME
-      ? DndBasketballElement
-      : class extends DndBasketballElement {}
+      ? BasketballUploadElement
+      : class extends BasketballUploadElement {}
   );
 }

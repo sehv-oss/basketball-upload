@@ -14,9 +14,9 @@ An open Shadow DOM with one constructed `CSSStyleSheet`, shared by all instances
 @layer tokens, reset, layout, components, states, motion;
 ```
 
-- **tokens**: every public `--dnd-basketball-*` token is read once on `:host` into a private `--_*` variable, with the default as fallback (the pattern of `sehv-oss/pdf-viewer`, ADR 0004). Internal rules only use private variables, so a token set on the element or any ancestor wins. Primitive colors are the ones measured on the reference screenshots, paired with dark values in `light-dark()`; `color-scheme` on the host (`light dark`, or the `theme` attribute) picks the pair.
+- **tokens**: every public `--basketball-upload-*` token is read once on `:host` into a private `--_*` variable, with the default as fallback (the pattern of `sehv-oss/pdf-viewer`, ADR 0004). Internal rules only use private variables, so a token set on the element or any ancestor wins. Primitive colors are the ones measured on the reference screenshots, paired with dark values in `light-dark()`; `color-scheme` on the host (`light dark`, or the `theme` attribute) picks the pair.
 - **layout**: the host is a container (`container-type: inline-size`); sizes derive from `cqi`, so the hoop and the gutter follow the element's width. Container containment also makes the host the stacking context in which the hoop layers (dropzone 0, back of the rim 1, card layer 2, front of the rim and net 3, "+1" 4) interleave — which is why `.frame` and `.hoop` must never create a stacking context of their own.
-- **states**: `ElementInternals.states` exposes `dragging`, `drop-target`, `aiming`, `flying`, `scoring`, `rejected` and `disabled`, styled internally with `:host(:state(…))` and available to consumers as `dnd-basketball:state(…)`.
+- **states**: `ElementInternals.states` exposes `dragging`, `drop-target`, `aiming`, `flying`, `scoring`, `rejected` and `disabled`, styled internally with `:host(:state(…))` and available to consumers as `basketball-upload:state(…)`.
 - **motion**: keyframes and `prefers-reduced-motion` overrides, last.
 
 Outside, the compatibility surface is: tokens, parts (`::part(dropzone)`, `::part(file-pdf)`, …), states and slots.

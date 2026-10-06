@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  entry: { 'dnd-basketball-react': 'src/dnd-basketball-react.ts' },
+  entry: { 'basketball-upload-react': 'src/basketball-upload-react.ts' },
   format: 'esm',
   platform: 'browser',
   target: 'es2022',

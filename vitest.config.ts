@@ -16,7 +16,7 @@ const coreSources = fileURLToPath(
 /** The core's `.css` files as strings, the way its tsdown build loads them. */
 function cssText(): Plugin {
   return {
-    name: 'dnd-basketball:css-text',
+    name: 'basketball-upload:css-text',
     enforce: 'pre',
     resolveId(source, importer) {
       if (!source.endsWith('.css') || !importer?.startsWith(coreSources)) {
@@ -29,7 +29,7 @@ function cssText(): Plugin {
 
 /** React tests run against the core sources: no build needed. */
 const alias = {
-  '@sehv-oss/dnd-basketball': `${coreSources}dnd-basketball.ts`,
+  '@sehv-oss/basketball-upload': `${coreSources}basketball-upload.ts`,
 };
 
 /** A fresh object per project: Vitest names the instances it is given. */

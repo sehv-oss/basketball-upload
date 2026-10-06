@@ -1,6 +1,6 @@
 /*
  * Custom states (`:state()`), set by the element. They are public too:
- * `dnd-basketball:state(drop-target)` works from the outside.
+ * `basketball-upload:state(drop-target)` works from the outside.
  */
 
 @layer states {

@@ -1,4 +1,4 @@
-import type { Uploader } from '@sehv-oss/dnd-basketball';
+import type { Uploader } from '@sehv-oss/basketball-upload';
 
 export interface SimulatedUploaderOptions {
   /** How long an upload takes, ms. */

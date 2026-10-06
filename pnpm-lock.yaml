@@ -140,7 +140,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@sehv-oss/dnd-basketball':
+      '@sehv-oss/basketball-upload':
         specifier: workspace:^
         version: link:../core
     devDependencies:
@@ -177,10 +177,10 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: 'catalog:'
         version: 5.3.0
-      '@sehv-oss/dnd-basketball':
+      '@sehv-oss/basketball-upload':
         specifier: workspace:*
         version: link:../packages/core
-      '@sehv-oss/dnd-basketball-react':
+      '@sehv-oss/basketball-upload-react':
         specifier: workspace:*
         version: link:../packages/react
       react:

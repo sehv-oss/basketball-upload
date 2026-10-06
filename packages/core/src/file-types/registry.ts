@@ -17,7 +17,7 @@ export function assertFileType(type: FileType): void {
 }
 
 /**
- * Adds a file type for every `<dnd-basketball>` on the page. It wins over the
+ * Adds a file type for every `<basketball-upload>` on the page. It wins over the
  * built-in types and over the ones registered before it; types set on an
  * element (`fileTypes`) still win over it. Returns a function that removes it.
  */

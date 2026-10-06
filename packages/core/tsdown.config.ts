@@ -40,7 +40,7 @@ function cssText(): TsdownPlugin {
 }
 
 export default defineConfig({
-  entry: { 'dnd-basketball': 'src/dnd-basketball.ts' },
+  entry: { 'basketball-upload': 'src/basketball-upload.ts' },
   format: 'esm',
   platform: 'browser',
   target: 'es2022',

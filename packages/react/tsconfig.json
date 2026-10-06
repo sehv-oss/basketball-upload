@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "_comment": "Types of @sehv-oss/dnd-basketball come from its build (dist), the way consumers get them: build the core first (`pnpm build` does).",
+  "_comment": "Types of @sehv-oss/basketball-upload come from its build (dist), the way consumers get them: build the core first (`pnpm build` does).",
   "extends": [
     "@sehv-oss/typescript-config/web/lib",
     "@sehv-oss/typescript-config/layer/react"

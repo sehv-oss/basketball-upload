@@ -1,12 +1,12 @@
-import type { DndBasketballElement } from '../../src/dnd-basketball.ts';
+import type { BasketballUploadElement } from '../../src/basketball-upload.ts';
 
 /** An element at the size of the reference design, at the top left of the page. */
 export function mount(
   attributes: Record<string, string> = {},
   parent: HTMLElement = document.body
-): DndBasketballElement {
+): BasketballUploadElement {
   document.body.style.margin = '0';
-  const element = document.createElement('dnd-basketball');
+  const element = document.createElement('basketball-upload');
   for (const [name, value] of Object.entries(attributes)) {
     element.setAttribute(name, value);
   }
@@ -17,13 +17,13 @@ export function mount(
   return element;
 }
 
-export function shadow(element: DndBasketballElement): ShadowRoot {
+export function shadow(element: BasketballUploadElement): ShadowRoot {
   if (!element.shadowRoot) throw new Error('No shadow root');
   return element.shadowRoot;
 }
 
 export function query<T extends Element = HTMLElement>(
-  element: DndBasketballElement,
+  element: BasketballUploadElement,
   selector: string
 ): T {
   const found = shadow(element).querySelector<T>(selector);

@@ -1,13 +1,13 @@
 {
-  "name": "@sehv-oss/dnd-basketball-react",
+  "name": "@sehv-oss/basketball-upload-react",
   "version": "0.0.0",
-  "description": "React component for <dnd-basketball>, the basketball-themed drag and drop file upload.",
+  "description": "React component for <basketball-upload>, the basketball-themed drag and drop file upload.",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/dnd-basketball-react.d.ts",
-      "default": "./dist/dnd-basketball-react.js"
+      "types": "./dist/basketball-upload-react.d.ts",
+      "default": "./dist/basketball-upload-react.js"
     },
     "./package.json": "./package.json"
   },
@@ -37,18 +37,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sehv-oss/dnd-basketball.git",
+    "url": "git+https://github.com/sehv-oss/basketball-upload.git",
     "directory": "packages/react"
   },
-  "homepage": "https://sehv-oss.github.io/dnd-basketball/",
+  "homepage": "https://sehv-oss.github.io/basketball-upload/",
   "bugs": {
-    "url": "https://github.com/sehv-oss/dnd-basketball/issues"
+    "url": "https://github.com/sehv-oss/basketball-upload/issues"
   },
   "engines": {
     "node": ">=24 <27"
   },
   "dependencies": {
-    "@sehv-oss/dnd-basketball": "workspace:^"
+    "@sehv-oss/basketball-upload": "workspace:^"
   },
   "peerDependencies": {
     "react": ">=19"

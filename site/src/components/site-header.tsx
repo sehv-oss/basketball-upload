@@ -54,7 +54,7 @@ export function SiteHeader({
         <a className="brand" href="#top">
           <span className="brand-scope">@sehv-oss</span>
           <span className="brand-slash">/</span>
-          <span>dnd-basketball</span>
+          <span>basketball-upload</span>
         </a>
 
         <nav className="site-nav" aria-label="Sections">
@@ -88,7 +88,7 @@ export function SiteHeader({
           </div>
           <a
             className="icon-button"
-            href="https://github.com/sehv-oss/dnd-basketball"
+            href="https://github.com/sehv-oss/basketball-upload"
             aria-label="GitHub repository"
             title="GitHub repository"
           >

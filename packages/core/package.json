@@ -1,13 +1,13 @@
 {
-  "name": "@sehv-oss/dnd-basketball",
+  "name": "@sehv-oss/basketball-upload",
   "version": "0.0.0",
   "description": "Basketball-themed drag and drop file upload Web Component: drop your files, or take the shot.",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/dnd-basketball.d.ts",
-      "default": "./dist/dnd-basketball.js"
+      "types": "./dist/basketball-upload.d.ts",
+      "default": "./dist/basketball-upload.js"
     },
     "./package.json": "./package.json"
   },
@@ -37,12 +37,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sehv-oss/dnd-basketball.git",
+    "url": "git+https://github.com/sehv-oss/basketball-upload.git",
     "directory": "packages/core"
   },
-  "homepage": "https://sehv-oss.github.io/dnd-basketball/",
+  "homepage": "https://sehv-oss.github.io/basketball-upload/",
   "bugs": {
-    "url": "https://github.com/sehv-oss/dnd-basketball/issues"
+    "url": "https://github.com/sehv-oss/basketball-upload/issues"
   },
   "engines": {
     "node": ">=24 <27"

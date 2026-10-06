@@ -1,10 +1,10 @@
 import { useMemo, useRef, type ReactElement } from 'react';
 
 import {
-  DndBasketball,
-  type DndBasketballElement,
+  BasketballUpload,
+  type BasketballUploadElement,
   type FileType,
-} from '@sehv-oss/dnd-basketball-react';
+} from '@sehv-oss/basketball-upload-react';
 
 import { figmaFile, sampleFiles } from '../../demo/sample-files.ts';
 import { createSimulatedUploader } from '../../demo/simulated-uploader.ts';
@@ -13,11 +13,11 @@ import { CodeBlock } from '../code-block.tsx';
 import { Section } from '../section.tsx';
 
 const CODE = `
-import { registerFileType } from '@sehv-oss/dnd-basketball';
+import { registerFileType } from '@sehv-oss/basketball-upload';
 
-// For every <dnd-basketball> on the page. Returns an unregister function.
+// For every <basketball-upload> on the page. Returns an unregister function.
 registerFileType({
-  kind: 'figma',                 // → ::part(file-figma), --dnd-basketball-file-figma
+  kind: 'figma',                 // → ::part(file-figma), --basketball-upload-file-figma
   match: '.fig',                 // accept syntax, or (file) => boolean
   label: 'FIG',                  // defaults to the extension
   color: '#a259ff',
@@ -30,11 +30,11 @@ hoop.fileTypes = [{ kind: 'contract', match: (file) => file.name.startsWith('con
 
 const CSS = `
 /* Built-in kinds: pdf, image, video, audio, sheet, doc, slides, archive, code. */
-dnd-basketball {
-  --dnd-basketball-file-pdf: #e11d48;
+basketball-upload {
+  --basketball-upload-file-pdf: #e11d48;
 }
 
-dnd-basketball::part(file-image) {
+basketball-upload::part(file-image) {
   filter: drop-shadow(0 0.5rem 1rem rgb(47 124 246 / 0.35));
 }
 `;
@@ -70,7 +70,7 @@ export function FileTypesExample({
 }: {
   theme: SiteTheme;
 }): ReactElement {
-  const element = useRef<DndBasketballElement>(null);
+  const element = useRef<BasketballUploadElement>(null);
   const uploader = useMemo(
     () => createSimulatedUploader({ duration: 2500 }),
     []
@@ -136,7 +136,7 @@ export function FileTypesExample({
             </button>
           </div>
           <div className="example-stage">
-            <DndBasketball
+            <BasketballUpload
               ref={element}
               multiple
               theme={theme}

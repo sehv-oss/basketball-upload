@@ -1,11 +1,11 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-  DndBasketballElement,
-  registerDndBasketball,
+  BasketballUploadElement,
+  registerBasketballUpload,
   registerFileType,
   type UploadItem,
-} from '../../src/dnd-basketball.ts';
+} from '../../src/basketball-upload.ts';
 import {
   center,
   fileDrag,
@@ -21,7 +21,7 @@ type ItemsEvent = CustomEvent<{ items: readonly UploadItem[] }>;
 type ShotEvent = CustomEvent<{ file: File; result: 'score' | 'miss' }>;
 
 beforeAll(() => {
-  registerDndBasketball();
+  registerBasketballUpload();
 });
 
 afterEach(() => {
@@ -33,12 +33,14 @@ const basketHas = (count: number) => (event: ItemsEvent) =>
 
 describe('registration', () => {
   it('is idempotent, and supports other tag names', () => {
-    expect(() => registerDndBasketball()).not.toThrow();
-    registerDndBasketball({ tagName: 'my-hoop' });
+    expect(() => registerBasketballUpload()).not.toThrow();
+    registerBasketballUpload({ tagName: 'my-hoop' });
 
     const custom = document.createElement('my-hoop');
-    expect(custom).toBeInstanceOf(DndBasketballElement);
-    expect(customElements.get('dnd-basketball')).toBe(DndBasketballElement);
+    expect(custom).toBeInstanceOf(BasketballUploadElement);
+    expect(customElements.get('basketball-upload')).toBe(
+      BasketballUploadElement
+    );
   });
 });
 
@@ -368,7 +370,7 @@ describe('file types', () => {
 
   it('lets a token recolor a built-in type', () => {
     const element = mount();
-    element.style.setProperty('--dnd-basketball-file-pdf', 'rgb(0, 128, 0)');
+    element.style.setProperty('--basketball-upload-file-pdf', 'rgb(0, 128, 0)');
     element.stage([pdf()]);
 
     expect(

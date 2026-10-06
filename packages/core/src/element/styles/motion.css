@@ -1,5 +1,5 @@
 @layer motion {
-  @keyframes dnd-basketball-shake {
+  @keyframes basketball-upload-shake {
     0%,
     100% {
       translate: 0 0;
@@ -19,7 +19,7 @@
   }
 
   :host(:state(rejected)) .dropzone {
-    animation: dnd-basketball-shake 420ms ease-in-out;
+    animation: basketball-upload-shake 420ms ease-in-out;
   }
 
   @media (prefers-reduced-motion: reduce) {

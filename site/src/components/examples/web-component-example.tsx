@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactElement } from 'react';
 
-import { registerDndBasketball } from '@sehv-oss/dnd-basketball';
+import { registerBasketballUpload } from '@sehv-oss/basketball-upload';
 
 import { designFile } from '../../demo/sample-files.ts';
 import { createSimulatedUploader } from '../../demo/simulated-uploader.ts';
@@ -8,17 +8,17 @@ import { CodeBlock } from '../code-block.tsx';
 import { Section } from '../section.tsx';
 
 const HTML = `
-<dnd-basketball multiple accept="image/*,.pdf" max-size="20000000"></dnd-basketball>
+<basketball-upload multiple accept="image/*,.pdf" max-size="20000000"></basketball-upload>
 
 <script type="module">
   import {
-    registerDndBasketball,
+    registerBasketballUpload,
     createXhrUploader,
-  } from '@sehv-oss/dnd-basketball';
+  } from '@sehv-oss/basketball-upload';
 
-  registerDndBasketball();
+  registerBasketballUpload();
 
-  const hoop = document.querySelector('dnd-basketball');
+  const hoop = document.querySelector('basketball-upload');
   hoop.uploader = createXhrUploader({ url: '/api/uploads' });
 
   hoop.addEventListener('shot', (event) => {
@@ -30,13 +30,13 @@ const HTML = `
 </script>
 `;
 
-/** `<dnd-basketball>` created with plain DOM calls: no framework involved. */
+/** `<basketball-upload>` created with plain DOM calls: no framework involved. */
 function VanillaHoop(): ReactElement {
   const host = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    registerDndBasketball();
-    const hoop = document.createElement('dnd-basketball');
+    registerBasketballUpload();
+    const hoop = document.createElement('basketball-upload');
     hoop.multiple = true;
     hoop.uploader = createSimulatedUploader();
     host.current?.append(hoop);
@@ -55,8 +55,8 @@ export function WebComponentExample(): ReactElement {
       title="One element, any framework"
       description={
         <>
-          <code>&lt;dnd-basketball&gt;</code> is a standard custom element in a
-          Shadow DOM. Registration is explicit and safe on the server.
+          <code>&lt;basketball-upload&gt;</code> is a standard custom element in
+          a Shadow DOM. Registration is explicit and safe on the server.
           Attributes, properties, methods and bubbling <code>CustomEvent</code>s
           are its whole API.
         </>
