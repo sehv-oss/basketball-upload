@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    if: "${{ startsWith(github.event.head_commit.message, 'chore: release') }}"
+    steps:
+      - run: echo "Conditions met. Proceeding with publish."
+
+  packages:
+    needs: check
+    uses: sehv-oss/actions/.github/workflows/publish-node-pnpm.yaml@v1
+    secrets: inherit
+
+  pages:
+    needs: check
+    uses: sehv-oss/actions/.github/workflows/deploy-pages-node-pnpm.yaml@v1
+    with:
+      build-script: pnpm build
+      output-path: ./site/dist/
+    secrets: inherit

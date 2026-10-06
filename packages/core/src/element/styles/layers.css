@@ -1,0 +1,8 @@
+/*
+ * Cascade layers of the Shadow DOM, lowest priority first.
+ *
+ * Every internal rule lives in one of them. From the outside, the element is
+ * styled through its tokens (tokens.css) and its parts, which win over
+ * anything in here.
+ */
+@layer tokens, reset, layout, components, states, motion;

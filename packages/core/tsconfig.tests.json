@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "_comment": "Type checks the tests together with the sources they exercise. Node tests and browser tests share it: the DOM libraries come from web/lib.",
+  "extends": [
+    "@sehv-oss/typescript-config/web/lib",
+    "@sehv-oss/typescript-config/layer/test"
+  ],
+  "compilerOptions": {
+    "types": ["vitest/globals", "node", "@vitest/browser-playwright"]
+  },
+  "include": ["src", "tests"]
+}

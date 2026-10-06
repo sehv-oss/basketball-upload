@@ -1,0 +1,98 @@
+/*
+ * Structure of the Shadow DOM. Nothing here is public API: consumers style
+ * the element through its tokens and parts.
+ *
+ * The hoop is drawn in layers that must interleave with the cards (z-index):
+ * dropzone 0 · back of the rim 1 · card layer 2 · front of the rim and net 3
+ * · "+1" 4. They all share the stacking context of the host, so `.frame` and
+ * `.hoop` must never create one (no transform, opacity, filter, contain or
+ * container-type on them).
+ */
+
+@layer layout {
+  :host {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* The container `cqi` sizes refer to, and the shared stacking context. */
+    container-type: inline-size;
+    min-block-size: 36rem;
+    font-family: var(--_font-family);
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--_foreground);
+    background: var(--_background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :host([hidden]) {
+    display: none;
+  }
+
+  .frame {
+    /* Containing block of the card layer. */
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: var(--_gutter);
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+
+  .hoop {
+    position: relative;
+    flex: none;
+    align-self: center;
+    inline-size: var(--_hoop-size);
+    aspect-ratio: 400 / 268;
+    margin-block-start: calc(var(--_hoop-size) * 0.1125);
+  }
+
+  /* Room for the net, and for the cards waiting to be shot. */
+  .court {
+    position: relative;
+    flex: 1 1 auto;
+    min-block-size: calc(var(--_hoop-size) * 0.96);
+  }
+
+  /* With files in the basket, the list takes the bottom of the frame. */
+  .frame:has(.list:not([hidden])) {
+    padding-block-end: calc(var(--_gutter) * 0.65);
+
+    & .court {
+      min-block-size: calc(var(--_hoop-size) * 0.8);
+    }
+  }
+
+  /* Where a staged card rests. Measured by the element, never painted. */
+  .spot {
+    position: absolute;
+    inset-inline-start: calc(var(--_hoop-size) * 0.13);
+    inset-block-end: calc(var(--_hoop-size) * 0.3);
+    inline-size: var(--_card-width);
+    block-size: var(--_card-height);
+    pointer-events: none;
+  }
+
+  .list {
+    display: grid;
+    flex: none;
+    gap: 0.75rem;
+  }
+
+  /* Cards and aiming dots, drawn over the whole frame. */
+  .layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}

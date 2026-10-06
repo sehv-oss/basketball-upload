@@ -1,0 +1,141 @@
+@layer components {
+  /*
+   * A file on the court. Resting cards are placed by CSS at the rest spot the
+   * element measures (`--_rest-x`, `--_rest-y`); while aimed or flying, the
+   * element writes `translate`, `rotate` and `scale` inline. Physical `top`
+   * and `left` on purpose: the physics works in screen coordinates.
+   */
+  .card {
+    --_depth: 0;
+    --_fold: calc(var(--_card-width) * 0.2);
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    inline-size: var(--_card-width);
+    block-size: var(--_card-height);
+    translate: calc(var(--_rest-x, 0px) - 50% - var(--_depth) * 0.45rem)
+      calc(var(--_rest-y, 0px) - 50% + var(--_depth) * 0.2rem);
+    /* Keep -6deg in sync with REST_ROTATION in ShotController.ts. */
+    rotate: calc(-6deg - var(--_depth) * 7deg);
+    pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+    filter: drop-shadow(0 0.5rem 0.75rem rgb(15 17 21 / 0.13));
+
+    &[data-depth='1'] {
+      --_depth: 1;
+    }
+
+    &[data-depth='2'] {
+      --_depth: 2;
+    }
+
+    &[data-depth='hidden'] {
+      visibility: hidden;
+    }
+
+    &:focus-visible {
+      outline: var(--_focus-ring);
+      outline-offset: 4px;
+      border-radius: calc(var(--_card-width) * 0.1);
+    }
+  }
+
+  .card-paper {
+    position: absolute;
+    inset: 0;
+    border-radius: calc(var(--_card-width) * 0.1);
+    background: var(--_file-surface);
+    /* The dog-ear: the top right corner is cut, the fold drawn below. */
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--_fold)) 0,
+      100% var(--_fold),
+      100% 100%,
+      0 100%
+    );
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      inline-size: var(--_fold);
+      block-size: var(--_fold);
+      border-end-start-radius: calc(var(--_fold) * 0.22);
+      background: linear-gradient(
+        to bottom left,
+        transparent 50%,
+        var(--_file-fold) 50%
+      );
+    }
+  }
+
+  .card-artwork {
+    position: absolute;
+    inset: 22% 18% 40% 14%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: calc(var(--_card-height) * 0.06);
+
+    &[data-artwork='thumbnail'] {
+      inset: 12% 12% 34% 12%;
+    }
+  }
+
+  .line {
+    display: block;
+    block-size: calc(var(--_card-height) * 0.05);
+    border-radius: 999px;
+    background: var(--_file-line);
+
+    &:nth-child(2) {
+      inline-size: 82%;
+    }
+
+    &:nth-child(3) {
+      inline-size: 92%;
+    }
+  }
+
+  .thumbnail {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    border-radius: calc(var(--_card-width) * 0.05);
+  }
+
+  .card-badge {
+    position: absolute;
+    inset-inline-start: 12%;
+    inset-block-end: 12.5%;
+    padding: 0.18em 0.55em;
+    border-radius: 0.32em;
+    font-size: calc(var(--_card-width) * 0.12);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    background: var(--_file-color, var(--_file-badge));
+    white-space: nowrap;
+  }
+
+  /* Aiming dots */
+
+  .trajectory {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    z-index: 0;
+    overflow: visible;
+  }
+
+  .dot {
+    fill: var(--_trajectory);
+  }
+}

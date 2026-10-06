@@ -1,0 +1,29 @@
+{
+  "name": "@sehv-oss/dnd-basketball-site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --project tsconfig.json && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
+    "@sehv-oss/dnd-basketball": "workspace:*",
+    "@sehv-oss/dnd-basketball-react": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "shiki": "catalog:"
+  },
+  "devDependencies": {
+    "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@sehv-oss/dnd-basketball-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --project tsconfig.node.json && pnpm --recursive build",
+    "test": "vitest run",
+    "test:setup": "pnpm exec playwright install chromium --with-deps",
+    "test:coverage": "vitest run --coverage",
+    "lint": "pnpm lint:cspell && pnpm lint:prettier",
+    "lint:cspell": "cspell --config .cspell.config.ts .",
+    "lint:prettier": "prettier --config .prettier.config.ts --check .",
+    "site:dev": "pnpm --filter @sehv-oss/dnd-basketball-site dev",
+    "clean": "git clean -fdX",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "catalog:",
+    "@sehv-oss/cspell-config": "catalog:",
+    "@sehv-oss/prettier-config": "catalog:",
+    "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "cspell": "catalog:",
+    "playwright": "catalog:",
+    "prettier": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "packageManager": "pnpm@11.26.0+sha512.fc0e2bf890b9f983611f1ab68c0637bce914390653699f83c1a78b005ed25f2c81e77920c8fd8eee2ecf0b58b28cdcb00a84d97f69bcf7c56b2f344710238664"
+}

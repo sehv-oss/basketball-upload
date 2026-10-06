@@ -1,0 +1,19 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    uses: sehv-oss/actions/.github/workflows/release-node-pnpm.yaml@v1
+    secrets: inherit
+    with:
+      eslint: false

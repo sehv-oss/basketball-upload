@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "_comment": "Type checks the Node.js side of the repository: build, test and lint configuration files.",
+  "extends": "@sehv-oss/typescript-config/node/app",
+  "include": [
+    ".cspell.config.ts",
+    ".prettier.config.ts",
+    "vitest.config.ts",
+    "packages/*/tsdown.config.ts",
+    "site/vite.config.ts"
+  ]
+}

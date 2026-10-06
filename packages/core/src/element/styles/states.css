@@ -1,0 +1,39 @@
+/*
+ * Custom states (`:state()`), set by the element. They are public too:
+ * `dnd-basketball:state(drop-target)` works from the outside.
+ */
+
+@layer states {
+  :host(:state(drop-target)) .dropzone {
+    background: var(--_accent-surface);
+
+    & .dropzone-outline rect {
+      stroke: var(--_accent);
+    }
+  }
+
+  :host(:state(aiming)) {
+    cursor: grabbing;
+
+    & .card {
+      cursor: grabbing;
+    }
+  }
+
+  :host(:state(aiming)),
+  :host(:state(flying)) {
+    user-select: none;
+  }
+
+  :host(:state(disabled)) {
+    & .frame {
+      cursor: not-allowed;
+    }
+
+    & .dropzone,
+    & .card {
+      filter: grayscale(1);
+      opacity: 0.55;
+    }
+  }
+}
