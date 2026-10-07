@@ -23,13 +23,26 @@
     --_radius: var(--basketball-upload-radius, 1.125rem);
 
     --_accent: var(--basketball-upload-accent, light-dark(#f0612e, #f26a39));
+    /* Shades of a custom accent. Invalid while the accent is not set, which keeps the shades of the reference. */
+    --_custom-accent-strong: color-mix(
+      in oklab,
+      var(--basketball-upload-accent) 84%,
+      black
+    );
+    --_custom-accent-surface: light-dark(
+      color-mix(in oklab, var(--basketball-upload-accent) 8%, var(--_surface)),
+      color-mix(in oklab, var(--basketball-upload-accent) 14%, var(--_surface))
+    );
     --_accent-strong: var(
       --basketball-upload-accent-strong,
-      light-dark(#bd4d19, #c4521f)
+      var(--_custom-accent-strong, light-dark(#bd4d19, #c4521f))
     );
     --_accent-surface: var(
       --basketball-upload-accent-surface,
-      light-dark(#fff4ef, color-mix(in oklab, #f26a39 14%, #181b21))
+      var(
+        --_custom-accent-surface,
+        light-dark(#fff4ef, color-mix(in oklab, #f26a39 14%, #181b21))
+      )
     );
     --_trajectory: var(
       --basketball-upload-trajectory,
