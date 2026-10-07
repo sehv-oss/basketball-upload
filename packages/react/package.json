@@ -1,6 +1,6 @@
 {
   "name": "@sehv-oss/basketball-upload-react",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "React component for <basketball-upload>, the basketball-themed drag and drop file upload.",
   "type": "module",
   "exports": {
