@@ -86,6 +86,10 @@ export function AccessibilityExample({
 
   React.useEffect(reset, [reset]);
 
+  const handleOnClick = (): void => {
+    reset();
+  };
+
   return (
     <Section
       id="accessibility"
@@ -148,7 +152,7 @@ export function AccessibilityExample({
         </div>
         <div className="example-live">
           <div className="button-row">
-            <button type="button" className="button" onClick={reset}>
+            <button type="button" className="button" onClick={handleOnClick}>
               Reset
             </button>
           </div>

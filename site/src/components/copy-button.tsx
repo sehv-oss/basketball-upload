@@ -17,15 +17,17 @@ export function CopyButton({
     return () => clearTimeout(timer);
   }, [copied]);
 
+  const handleOnClick = (): void => {
+    void navigator.clipboard.writeText(text).then(() => setCopied(true));
+  };
+
   return (
     <button
       type="button"
       className="icon-button"
       aria-label={label}
       title={copied ? 'Copied' : label}
-      onClick={() => {
-        void navigator.clipboard.writeText(text).then(() => setCopied(true));
-      }}
+      onClick={handleOnClick}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         {copied ? (

@@ -21,16 +21,20 @@ export function InstallTabs(): React.ReactElement {
     <div className="install">
       <h2 className="install-title">Installation</h2>
       <div className="segmented" role="group" aria-label="Package manager">
-        {MANAGERS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            aria-pressed={option === manager}
-            onClick={() => setManager(option)}
-          >
-            {option}
-          </button>
-        ))}
+        {MANAGERS.map((option) => {
+          const handleOnClick = (): void => setManager(option);
+
+          return (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={option === manager}
+              onClick={handleOnClick}
+            >
+              {option}
+            </button>
+          );
+        })}
       </div>
       <ul className="install-commands">
         {PACKAGES.map(({ name, description }) => (

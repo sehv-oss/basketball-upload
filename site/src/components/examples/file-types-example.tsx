@@ -86,6 +86,13 @@ export function FileTypesExample({
     []
   );
 
+  const handleOnAddSampleFilesClick = (): void => {
+    void sampleFiles().then((files) => element.current?.stage(files));
+  };
+  const handleOnAddFigmaFileClick = (): void =>
+    element.current?.stage([figmaFile()]);
+  const handleOnClearClick = (): void => element.current?.clear();
+
   return (
     <Section
       id="file-types"
@@ -114,25 +121,21 @@ export function FileTypesExample({
             <button
               type="button"
               className="button"
-              onClick={() => {
-                void sampleFiles().then((files) =>
-                  element.current?.stage(files)
-                );
-              }}
+              onClick={handleOnAddSampleFilesClick}
             >
               Add sample files
             </button>
             <button
               type="button"
               className="button"
-              onClick={() => element.current?.stage([figmaFile()])}
+              onClick={handleOnAddFigmaFileClick}
             >
               Add a .fig file
             </button>
             <button
               type="button"
               className="button"
-              onClick={() => element.current?.clear()}
+              onClick={handleOnClearClick}
             >
               Clear
             </button>

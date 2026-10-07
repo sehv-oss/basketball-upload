@@ -15,16 +15,20 @@ export function Segmented<TValue extends string>({
 }: SegmentedProps<TValue>): React.ReactElement {
   return (
     <div className="segmented" role="group" aria-label={label}>
-      {options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          aria-pressed={option.value === value}
-          onClick={() => onChange(option.value)}
-        >
-          {option.label}
-        </button>
-      ))}
+      {options.map((option) => {
+        const handleOnClick = (): void => onChange(option.value);
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={option.value === value}
+            onClick={handleOnClick}
+          >
+            {option.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

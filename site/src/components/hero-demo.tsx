@@ -58,6 +58,14 @@ export function HeroDemo(): React.ReactElement {
 
   React.useEffect(reset, [reset]);
 
+  const handleOnInstantChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => setInstant(event.target.checked);
+  const handleOnFailingChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => setFailing(event.target.checked);
+  const handleOnClick = (): void => reset();
+
   return (
     <div className="demo">
       <div className="demo-stage" lang={language}>
@@ -89,7 +97,7 @@ export function HeroDemo(): React.ReactElement {
           <input
             type="checkbox"
             checked={instant}
-            onChange={(event) => setInstant(event.target.checked)}
+            onChange={handleOnInstantChange}
           />
           Instant
         </label>
@@ -97,11 +105,11 @@ export function HeroDemo(): React.ReactElement {
           <input
             type="checkbox"
             checked={failing}
-            onChange={(event) => setFailing(event.target.checked)}
+            onChange={handleOnFailingChange}
           />
           Failing uploads
         </label>
-        <button type="button" className="button" onClick={reset}>
+        <button type="button" className="button" onClick={handleOnClick}>
           Reset
         </button>
       </div>

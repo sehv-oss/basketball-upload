@@ -30,6 +30,7 @@ import {
   BasketballUpload,
   createXhrUploader,
   type BasketballUploadElement,
+  type BasketballUploadProps,
 } from '@sehv-oss/basketball-upload-react';
 import * as React from 'react';
 
@@ -39,6 +40,13 @@ const uploader = createXhrUploader({ url: '/api/uploads' });
 export function Uploads() {
   const hoop = React.useRef<BasketballUploadElement>(null);
 
+  const handleOnShot: BasketballUploadProps['onShot'] = ({ file, result }) =>
+    console.log(file.name, result);
+  const handleOnUploadSuccess: BasketballUploadProps['onUploadSuccess'] = ({
+    item,
+  }) => console.log('stored', item.response);
+  const handleOnClick = () => hoop.current?.clear();
+
   return (
     <>
       <BasketballUpload
@@ -47,13 +55,13 @@ export function Uploads() {
         accept="image/*,.pdf"
         maxSize={20_000_000}
         uploader={uploader}
-        onShot={({ file, result }) => console.log(file.name, result)}
-        onUploadSuccess={({ item }) => console.log('stored', item.response)}
+        onShot={handleOnShot}
+        onUploadSuccess={handleOnUploadSuccess}
       >
         <span slot="hint">PDF or images, up to 20 MB</span>
       </BasketballUpload>
 
-      <button onClick={() => hoop.current?.clear()}>Clear</button>
+      <button onClick={handleOnClick}>Clear</button>
     </>
   );
 }

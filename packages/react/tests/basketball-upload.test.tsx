@@ -63,34 +63,45 @@ describe('<BasketballUpload>', () => {
 
   it('calls the latest callbacks with the event details', async () => {
     const ref = React.createRef<BasketballUploadElement>();
-    const first = vi.fn();
-    const second = vi.fn();
+    const handleOnFirstFileReject = vi.fn();
+    const handleOnSecondFileReject = vi.fn();
     const screen = await render(
-      <BasketballUpload ref={ref} accept=".pdf" onFileReject={first} />
+      <BasketballUpload
+        ref={ref}
+        accept=".pdf"
+        onFileReject={handleOnFirstFileReject}
+      />
     );
     await screen.rerender(
-      <BasketballUpload ref={ref} accept=".pdf" onFileReject={second} />
+      <BasketballUpload
+        ref={ref}
+        accept=".pdf"
+        onFileReject={handleOnSecondFileReject}
+      />
     );
 
     const photo = new File(['x'], 'photo.png', { type: 'image/png' });
     element(ref).stage([photo]);
 
-    expect(first).not.toHaveBeenCalled();
-    expect(second).toHaveBeenCalledWith({ file: photo, reason: 'type' });
+    expect(handleOnFirstFileReject).not.toHaveBeenCalled();
+    expect(handleOnSecondFileReject).toHaveBeenCalledWith({
+      file: photo,
+      reason: 'type',
+    });
   });
 
   it('applies the uploader, messages and file types to the element', async () => {
     const ref = React.createRef<BasketballUploadElement>();
     const uploader = vi.fn(async () => 'ok');
     const fileTypes: FileType[] = [{ kind: 'figma', match: '.fig' }];
-    const onUploadSuccess = vi.fn();
+    const handleOnUploadSuccess = vi.fn();
     await render(
       <BasketballUpload
         ref={ref}
         uploader={uploader}
         messages={{ counter: 'Sent' }}
         fileTypes={fileTypes}
-        onUploadSuccess={onUploadSuccess}
+        onUploadSuccess={handleOnUploadSuccess}
       />
     );
 
@@ -100,7 +111,7 @@ describe('<BasketballUpload>', () => {
     expect(hoop.fileTypes).toBe(fileTypes);
 
     hoop.dunk([pdf()]);
-    await vi.waitFor(() => expect(onUploadSuccess).toHaveBeenCalled(), {
+    await vi.waitFor(() => expect(handleOnUploadSuccess).toHaveBeenCalled(), {
       timeout: 4000,
     });
     expect(uploader).toHaveBeenCalledOnce();
@@ -126,9 +137,13 @@ describe('<BasketballUpload>', () => {
 
   it('stops calling a callback once removed, and after unmounting', async () => {
     const ref = React.createRef<BasketballUploadElement>();
-    const onFileReject = vi.fn();
+    const handleOnFileReject = vi.fn();
     const screen = await render(
-      <BasketballUpload ref={ref} accept=".pdf" onFileReject={onFileReject} />
+      <BasketballUpload
+        ref={ref}
+        accept=".pdf"
+        onFileReject={handleOnFileReject}
+      />
     );
     const hoop = element(ref);
     const photo = new File(['x'], 'photo.png', { type: 'image/png' });
@@ -136,12 +151,16 @@ describe('<BasketballUpload>', () => {
     await screen.rerender(<BasketballUpload ref={ref} accept=".pdf" />);
     hoop.stage([photo]);
     await screen.rerender(
-      <BasketballUpload ref={ref} accept=".pdf" onFileReject={onFileReject} />
+      <BasketballUpload
+        ref={ref}
+        accept=".pdf"
+        onFileReject={handleOnFileReject}
+      />
     );
     await screen.unmount();
     hoop.dispatchEvent(new CustomEvent('file-reject', { detail: {} }));
 
-    expect(onFileReject).not.toHaveBeenCalled();
+    expect(handleOnFileReject).not.toHaveBeenCalled();
   });
 
   it('renders the tag name it is given, registering it', async () => {

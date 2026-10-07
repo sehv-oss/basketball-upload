@@ -73,20 +73,24 @@ export function SiteHeader({
             role="group"
             aria-label="Theme"
           >
-            {THEMES.map(({ value, label, icon }) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={theme === value}
-                aria-label={label}
-                title={label}
-                onClick={() => onThemeChange(value)}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  {icon}
-                </svg>
-              </button>
-            ))}
+            {THEMES.map(({ value, label, icon }) => {
+              const handleOnClick = (): void => onThemeChange(value);
+
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={theme === value}
+                  aria-label={label}
+                  title={label}
+                  onClick={handleOnClick}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    {icon}
+                  </svg>
+                </button>
+              );
+            })}
           </div>
           <a
             className="icon-button"

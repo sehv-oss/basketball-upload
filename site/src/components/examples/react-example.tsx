@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   BasketballUpload,
   type BasketballUploadElement,
+  type BasketballUploadProps,
 } from '@sehv-oss/basketball-upload-react';
 
 import { designFile } from '../../demo/sample-files.ts';
@@ -15,19 +16,26 @@ const CODE = `
 import {
   BasketballUpload,
   createXhrUploader,
+  type BasketballUploadProps,
 } from '@sehv-oss/basketball-upload-react';
 
 // Stable across renders: module scope, useMemo or useCallback.
 const uploader = createXhrUploader({ url: '/api/uploads' });
 
 export function Uploads() {
+  const handleOnShot: BasketballUploadProps['onShot'] = ({ file, result }) =>
+    console.log(file.name, result);
+  const handleOnUploadSuccess: BasketballUploadProps['onUploadSuccess'] = ({
+    item,
+  }) => console.log('stored', item.response);
+
   return (
     <BasketballUpload
       multiple
       accept="image/*,.pdf"
       uploader={uploader}
-      onShot={({ file, result }) => console.log(file.name, result)}
-      onUploadSuccess={({ item }) => console.log('stored', item.response)}
+      onShot={handleOnShot}
+      onUploadSuccess={handleOnUploadSuccess}
     >
       <span slot="title">Upload files</span>
     </BasketballUpload>
@@ -65,6 +73,19 @@ export function ReactExample({
     element.current?.stage([designFile()]);
   }, []);
 
+  const handleOnShot: BasketballUploadProps['onShot'] = ({ file, result }) =>
+    write('shot', `${file.name}: ${result}`);
+  const handleOnUploadStart: BasketballUploadProps['onUploadStart'] = ({
+    item,
+  }) => write('upload-start', item.file.name);
+  const handleOnUploadSuccess: BasketballUploadProps['onUploadSuccess'] = ({
+    item,
+  }) => write('upload-success', item.file.name);
+  const handleOnFileReject: BasketballUploadProps['onFileReject'] = ({
+    file,
+    reason,
+  }) => write('file-reject', `${file.name}: ${reason}`);
+
   return (
     <Section
       id="react"
@@ -88,18 +109,10 @@ export function ReactExample({
               multiple
               theme={theme}
               uploader={uploader}
-              onShot={({ file, result }) =>
-                write('shot', `${file.name}: ${result}`)
-              }
-              onUploadStart={({ item }) =>
-                write('upload-start', item.file.name)
-              }
-              onUploadSuccess={({ item }) =>
-                write('upload-success', item.file.name)
-              }
-              onFileReject={({ file, reason }) =>
-                write('file-reject', `${file.name}: ${reason}`)
-              }
+              onShot={handleOnShot}
+              onUploadStart={handleOnUploadStart}
+              onUploadSuccess={handleOnUploadSuccess}
+              onFileReject={handleOnFileReject}
             />
           </div>
           <ol className="event-log" aria-label="Events" aria-live="polite">

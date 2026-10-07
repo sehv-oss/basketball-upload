@@ -30,7 +30,7 @@ export function FormsExample({
 }): React.ReactElement {
   const [entries, setEntries] = React.useState<Entry[] | null>(null);
 
-  const submit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setEntries(
@@ -43,6 +43,7 @@ export function FormsExample({
       }))
     );
   };
+  const handleOnReset = (): void => setEntries(null);
 
   return (
     <Section
@@ -62,8 +63,8 @@ export function FormsExample({
         <CodeBlock code={HTML} language="html" filename="ticket.html" />
         <form
           className="example-live form-demo"
-          onSubmit={submit}
-          onReset={() => setEntries(null)}
+          onSubmit={handleOnSubmit}
+          onReset={handleOnReset}
         >
           <label className="field">
             <span>Title</span>
