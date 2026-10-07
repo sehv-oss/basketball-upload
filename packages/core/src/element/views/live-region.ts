@@ -1,4 +1,4 @@
-import { el } from '../dom.ts';
+import { createElement } from '../dom.ts';
 
 export interface LiveRegionView {
   readonly element: HTMLElement;
@@ -9,7 +9,7 @@ export interface LiveRegionView {
  * Polite announcements for what only shows as motion: scores, misses, uploads.
  */
 export function createLiveRegion(): LiveRegionView {
-  const element = el('div', {
+  const element = createElement('div', {
     class: 'visually-hidden',
     role: 'status',
     'aria-live': 'polite',

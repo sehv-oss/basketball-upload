@@ -1,18 +1,18 @@
 import type { ReactElement } from 'react';
 
-interface SegmentedProps<T extends string> {
+interface SegmentedProps<TValue extends string> {
   label: string;
-  value: T;
-  options: readonly { value: T; label: string }[];
-  onChange: (value: T) => void;
+  value: TValue;
+  options: readonly { value: TValue; label: string }[];
+  onChange: (value: TValue) => void;
 }
 
-export function Segmented<T extends string>({
+export function Segmented<TValue extends string>({
   label,
   value,
   options,
   onChange,
-}: SegmentedProps<T>): ReactElement {
+}: SegmentedProps<TValue>): ReactElement {
   return (
     <div className="segmented" role="group" aria-label={label}>
       {options.map((option) => (

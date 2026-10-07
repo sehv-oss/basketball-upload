@@ -63,7 +63,7 @@ export function WebComponentExample(): ReactElement {
       }
     >
       <div className="example">
-        <CodeBlock code={HTML} lang="html" filename="index.html" />
+        <CodeBlock code={HTML} language="html" filename="index.html" />
         <VanillaHoop />
       </div>
     </Section>

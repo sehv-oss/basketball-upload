@@ -69,7 +69,7 @@ export function ThemingExample(): ReactElement {
       }
     >
       <div className="example">
-        <CodeBlock code={CSS} lang="css" filename="theme.css" />
+        <CodeBlock code={CSS} language="css" filename="theme.css" />
         <div className="example-live">
           <Segmented
             label="Look"

@@ -38,23 +38,23 @@ describe('UploadQueue', () => {
   it('runs at most `concurrency` uploads at a time', async () => {
     const { uploader, calls } = controlledUploader();
     const queue = new UploadQueue({ uploader, concurrency: 2 });
-    const [a, b, c] = ['a.pdf', 'b.pdf', 'c.pdf'].map((name) =>
+    const [first, second, third] = ['a.pdf', 'b.pdf', 'c.pdf'].map((name) =>
       queue.add(file(name))
     );
 
     expect(calls).toHaveLength(2);
-    expect(queue.get(c!.id)?.status).toBe('queued');
+    expect(queue.get(third!.id)?.status).toBe('queued');
 
     calls[0]!.resolve({ ok: true });
     await flush();
 
-    expect(queue.get(a!.id)).toMatchObject({
+    expect(queue.get(first!.id)).toMatchObject({
       status: 'uploaded',
       progress: 1,
       response: { ok: true },
     });
-    expect(queue.get(b!.id)?.status).toBe('uploading');
-    expect(queue.get(c!.id)?.status).toBe('uploading');
+    expect(queue.get(second!.id)?.status).toBe('uploading');
+    expect(queue.get(third!.id)?.status).toBe('uploading');
     expect(calls).toHaveLength(3);
   });
 

@@ -1,4 +1,4 @@
-import { el, icon, setFallback, svg } from '../dom.ts';
+import { createElement, createSvgElement, icon, setFallback } from '../dom.ts';
 import type { Messages } from '../messages.ts';
 import { play } from '../motion.ts';
 
@@ -43,8 +43,15 @@ function netLines(): SVGElement[] {
   const [topY, bottomY] = [2, 102];
   const lines: SVGElement[] = [];
 
-  const line = (x1: number, y1: number, x2: number, y2: number): void => {
-    lines.push(svg('line', { x1, y1, x2, y2 }));
+  const line = (
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number
+  ): void => {
+    lines.push(
+      createSvgElement('line', { x1: fromX, y1: fromY, x2: toX, y2: toY })
+    );
   };
 
   for (let index = 0; index < top.length; index += 1) {
@@ -66,14 +73,14 @@ function netLines(): SVGElement[] {
 }
 
 export function createHoop(): HoopView {
-  const prompt = el('slot', { name: 'prompt' });
-  const hint = el('slot', { name: 'hint' });
+  const prompt = createElement('slot', { name: 'prompt' });
+  const hint = createElement('slot', { name: 'hint' });
 
-  const outline = svg(
+  const outline = createSvgElement(
     'svg',
     { class: 'dropzone-outline', 'aria-hidden': 'true' },
     [
-      svg('rect', {
+      createSvgElement('rect', {
         x: 0,
         y: 0,
         width: '100%',
@@ -84,20 +91,23 @@ export function createHoop(): HoopView {
     ]
   );
 
-  const dropzone = el(
+  const dropzone = createElement(
     'button',
     { type: 'button', class: 'dropzone', part: 'dropzone' },
     [
       outline,
       icon('upload', { class: 'icon dropzone-icon', part: 'dropzone-icon' }),
-      el('span', { class: 'prompt', part: 'prompt' }, [prompt]),
-      el('span', { class: 'hint', part: 'hint' }, [hint]),
+      createElement('span', { class: 'prompt', part: 'prompt' }, [prompt]),
+      createElement('span', { class: 'hint', part: 'hint' }, [hint]),
     ]
   );
 
-  const square = el('div', { class: 'square', part: 'backboard-square' });
+  const square = createElement('div', {
+    class: 'square',
+    part: 'backboard-square',
+  });
 
-  const rimBack = svg(
+  const rimBack = createSvgElement(
     'svg',
     {
       class: 'rim rim-back',
@@ -106,8 +116,11 @@ export function createHoop(): HoopView {
       'aria-hidden': 'true',
     },
     [
-      svg('path', { class: 'rim-arc', d: 'M3 10 A79 6.5 0 0 1 161 10' }),
-      svg('rect', {
+      createSvgElement('path', {
+        class: 'rim-arc',
+        d: 'M3 10 A79 6.5 0 0 1 161 10',
+      }),
+      createSvgElement('rect', {
         class: 'rim-bracket',
         x: 70,
         y: 0.5,
@@ -117,7 +130,7 @@ export function createHoop(): HoopView {
       }),
     ]
   );
-  const rim = svg(
+  const rim = createSvgElement(
     'svg',
     {
       class: 'rim rim-front',
@@ -125,10 +138,15 @@ export function createHoop(): HoopView {
       viewBox: '0 0 164 18',
       'aria-hidden': 'true',
     },
-    [svg('path', { class: 'rim-arc', d: 'M3 10 A79 6.5 0 0 0 161 10' })]
+    [
+      createSvgElement('path', {
+        class: 'rim-arc',
+        d: 'M3 10 A79 6.5 0 0 0 161 10',
+      }),
+    ]
   );
 
-  const net = svg(
+  const net = createSvgElement(
     'svg',
     {
       class: 'net',
@@ -140,13 +158,13 @@ export function createHoop(): HoopView {
     netLines()
   );
 
-  const scorePop = el(
+  const scorePop = createElement(
     'span',
     { class: 'score-pop', part: 'score-pop', 'aria-hidden': 'true' },
     ['+1']
   );
 
-  const element = el('div', { class: 'hoop', part: 'hoop' }, [
+  const element = createElement('div', { class: 'hoop', part: 'hoop' }, [
     dropzone,
     square,
     rimBack,

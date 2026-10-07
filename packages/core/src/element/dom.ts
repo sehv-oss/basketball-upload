@@ -1,8 +1,8 @@
-export function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
+export function createElement<TTagName extends keyof HTMLElementTagNameMap>(
+  tag: TTagName,
   attributes: Record<string, string> = {},
   children: readonly (Node | string)[] = []
-): HTMLElementTagNameMap[K] {
+): HTMLElementTagNameMap[TTagName] {
   const element = document.createElement(tag);
   for (const [name, value] of Object.entries(attributes)) {
     element.setAttribute(name, value);
@@ -11,14 +11,14 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
-export function svg<K extends keyof SVGElementTagNameMap>(
-  tag: K,
+export function createSvgElement<TTagName extends keyof SVGElementTagNameMap>(
+  tag: TTagName,
   attributes: Record<string, string | number> = {},
   children: readonly SVGElement[] = []
-): SVGElementTagNameMap[K] {
-  const element = document.createElementNS(SVG_NS, tag);
+): SVGElementTagNameMap[TTagName] {
+  const element = document.createElementNS(SVG_NAMESPACE, tag);
   for (const [name, value] of Object.entries(attributes)) {
     element.setAttribute(name, String(value));
   }
@@ -42,7 +42,7 @@ export function icon(
   name: IconName,
   attributes: Record<string, string> = {}
 ): SVGSVGElement {
-  return svg(
+  return createSvgElement(
     'svg',
     {
       viewBox: '0 0 24 24',
@@ -51,7 +51,7 @@ export function icon(
       class: 'icon',
       ...attributes,
     },
-    [svg('path', { d: icons[name] })]
+    [createSvgElement('path', { d: icons[name] })]
   );
 }
 

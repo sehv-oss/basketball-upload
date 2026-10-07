@@ -76,7 +76,7 @@ describe('registerFileType', () => {
   it('loses to the types of an element', () => {
     cleanups.push(registerFileType({ kind: 'global', match: '.fig' }));
     const types = [
-      { kind: 'local', match: (f: File) => f.name.endsWith('.fig') },
+      { kind: 'local', match: (file: File) => file.name.endsWith('.fig') },
     ];
 
     expect(resolveFileType(file('board.fig'), types).kind).toBe('local');
@@ -87,7 +87,7 @@ describe('registerFileType', () => {
       registerFileType({
         kind: 'figma',
         match: '.fig',
-        label: (f) => f.name.split('.')[0]!.slice(0, 3).toUpperCase(),
+        label: (file) => file.name.split('.')[0]!.slice(0, 3).toUpperCase(),
         artwork: () => new Text('custom') as unknown as Node,
       })
     );

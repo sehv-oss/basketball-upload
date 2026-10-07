@@ -1,5 +1,5 @@
 import type { ResolvedFileType } from '../../file-types/types.ts';
-import { el } from '../dom.ts';
+import { createElement } from '../dom.ts';
 import { poseStyle, type Pose } from '../motion.ts';
 
 /**
@@ -15,7 +15,9 @@ export interface Artwork {
 }
 
 function lines(): HTMLElement[] {
-  return Array.from({ length: 3 }, () => el('span', { class: 'line' }));
+  return Array.from({ length: 3 }, () =>
+    createElement('span', { class: 'line' })
+  );
 }
 
 /**
@@ -26,7 +28,7 @@ export function createArtwork(
   type: ResolvedFileType,
   attributes: Record<string, string>
 ): Artwork {
-  const element = el('span', attributes);
+  const element = createElement('span', attributes);
   let url: string | null = null;
 
   if (
@@ -34,7 +36,7 @@ export function createArtwork(
     typeof URL.createObjectURL === 'function'
   ) {
     url = URL.createObjectURL(file);
-    const image = el('img', {
+    const image = createElement('img', {
       class: 'thumbnail',
       alt: '',
       src: url,
@@ -100,7 +102,7 @@ export function createCard(
     class: 'card-artwork',
     part: 'file-artwork',
   });
-  const element = el(
+  const element = createElement(
     'button',
     {
       type: 'button',
@@ -110,9 +112,11 @@ export function createCard(
       'aria-label': label,
     },
     [
-      el('span', { class: 'card-paper' }, [
+      createElement('span', { class: 'card-paper' }, [
         artwork.element,
-        el('span', { class: 'card-badge', part: 'file-badge' }, [type.label]),
+        createElement('span', { class: 'card-badge', part: 'file-badge' }, [
+          type.label,
+        ]),
       ]),
     ]
   );

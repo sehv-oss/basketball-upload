@@ -56,9 +56,9 @@ function figmaLogo(): Node {
     ['M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z', '#f24e1e'],
     ['M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z', '#a259ff'],
   ];
-  for (const [d, fill] of shapes) {
+  for (const [pathData, fill] of shapes) {
     const path = document.createElementNS(namespace, 'path');
-    path.setAttribute('d', d);
+    path.setAttribute('d', pathData);
     path.setAttribute('fill', fill);
     logo.append(path);
   }
@@ -104,8 +104,12 @@ export function FileTypesExample({
     >
       <div className="example">
         <div className="example-code">
-          <CodeBlock code={CODE} lang="typescript" filename="file-types.ts" />
-          <CodeBlock code={CSS} lang="css" filename="file-types.css" />
+          <CodeBlock
+            code={CODE}
+            language="typescript"
+            filename="file-types.ts"
+          />
+          <CodeBlock code={CSS} language="css" filename="file-types.css" />
         </div>
         <div className="example-live">
           <div className="button-row">

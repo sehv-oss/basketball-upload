@@ -1,6 +1,6 @@
 import { PHYSICS } from './config.ts';
 import { contains, rimCenter, type Court } from './court.ts';
-import type { Vec } from './vector.ts';
+import type { Vector } from './vector.ts';
 
 /**
  * State of a card in the air. Plain data: the same body always steps the same way.
@@ -10,9 +10,9 @@ export interface Body {
 
   readonly y: number;
 
-  readonly vx: number;
+  readonly velocityX: number;
 
-  readonly vy: number;
+  readonly velocityY: number;
 
   /**
    * Number of steps taken since launch. Time is `steps * PHYSICS.step`.
@@ -38,12 +38,12 @@ export interface StepResult {
   readonly events: readonly ShotEvent[];
 }
 
-export function launch(position: Vec, velocity: Vec): Body {
+export function launch(position: Vector, velocity: Vector): Body {
   return {
     x: position.x,
     y: position.y,
-    vx: velocity.x,
-    vy: velocity.y,
+    velocityX: velocity.x,
+    velocityY: velocity.y,
     steps: 0,
     boarded: false,
   };
@@ -57,85 +57,85 @@ export function timeOf(body: Body): number {
  * Advances a body by one fixed step (`PHYSICS.step`).
  */
 export function step(body: Body, court: Court): StepResult {
-  const dt = PHYSICS.step;
-  const u = court.unit;
+  const timeStep = PHYSICS.step;
+  const { unit } = court;
   const events: ShotEvent[] = [];
 
-  let vx = body.vx;
-  let vy = body.vy + PHYSICS.gravity * u * dt;
-  let x = body.x + vx * dt;
-  let y = body.y + vy * dt;
+  let velocityX = body.velocityX;
+  let velocityY = body.velocityY + PHYSICS.gravity * unit * timeStep;
+  let x = body.x + velocityX * timeStep;
+  let y = body.y + velocityY * timeStep;
   let boarded = body.boarded;
   const steps = body.steps + 1;
 
   const { left, right, y: rimY } = court.rim;
   const center = rimCenter(court).x;
-  const hit = PHYSICS.hitRadius * u;
+  const hit = PHYSICS.hitRadius * unit;
 
-  const atHoopDepth = body.vy > -PHYSICS.hoopDepthRise * u;
+  const atHoopDepth = body.velocityY > -PHYSICS.hoopDepthRise * unit;
 
   if (body.y < rimY && y >= rimY) {
-    const t = (rimY - body.y) / (y - body.y);
-    const crossX = body.x + (x - body.x) * t;
+    const fraction = (rimY - body.y) / (y - body.y);
+    const crossX = body.x + (x - body.x) * fraction;
     if (Math.abs(crossX - center) < (right - left) / 2 - hit * 0.6) {
       return {
-        body: { x: crossX, y: rimY, vx, vy, steps, boarded },
+        body: { x: crossX, y: rimY, velocityX, velocityY, steps, boarded },
         events: ['score'],
       };
     }
   }
 
-  const reach = hit + PHYSICS.rimRadius * u;
+  const reach = hit + PHYSICS.rimRadius * unit;
   for (const end of atHoopDepth ? [left, right] : []) {
-    const dx = x - end;
-    const dy = y - rimY;
-    const distance = Math.hypot(dx, dy);
+    const offsetX = x - end;
+    const offsetY = y - rimY;
+    const distance = Math.hypot(offsetX, offsetY);
     if (distance >= reach || distance === 0) continue;
 
-    const nx = dx / distance;
-    const ny = dy / distance;
-    x = end + nx * reach;
-    y = rimY + ny * reach;
-    const along = vx * nx + vy * ny;
+    const normalX = offsetX / distance;
+    const normalY = offsetY / distance;
+    x = end + normalX * reach;
+    y = rimY + normalY * reach;
+    const along = velocityX * normalX + velocityY * normalY;
     if (along < 0) {
-      vx -= (1 + PHYSICS.restitution.rim) * along * nx;
-      vy -= (1 + PHYSICS.restitution.rim) * along * ny;
+      velocityX -= (1 + PHYSICS.restitution.rim) * along * normalX;
+      velocityY -= (1 + PHYSICS.restitution.rim) * along * normalY;
     }
     events.push('rim');
   }
 
   if (!boarded && atHoopDepth && contains(court.square, { x, y })) {
     boarded = true;
-    vx *= PHYSICS.board.x;
-    vy *= PHYSICS.board.y;
+    velocityX *= PHYSICS.board.x;
+    velocityY *= PHYSICS.board.y;
     events.push('board');
   }
 
   const { bounds } = court;
-  const edge = PHYSICS.floorRadius * u;
+  const edge = PHYSICS.floorRadius * unit;
   const floor = bounds.y + bounds.height - edge;
   if (y > floor) {
     y = floor;
-    if (vy > 0) vy = -vy * PHYSICS.restitution.floor;
-    vx *= PHYSICS.floorFriction;
+    if (velocityY > 0) velocityY = -velocityY * PHYSICS.restitution.floor;
+    velocityX *= PHYSICS.floorFriction;
     events.push('floor');
   }
   if (x < bounds.x + edge) {
     x = bounds.x + edge;
-    vx = Math.abs(vx) * PHYSICS.restitution.wall;
+    velocityX = Math.abs(velocityX) * PHYSICS.restitution.wall;
     events.push('wall');
   } else if (x > bounds.x + bounds.width - edge) {
     x = bounds.x + bounds.width - edge;
-    vx = -Math.abs(vx) * PHYSICS.restitution.wall;
+    velocityX = -Math.abs(velocityX) * PHYSICS.restitution.wall;
     events.push('wall');
   }
-  if (y < bounds.y + edge && vy < 0) {
+  if (y < bounds.y + edge && velocityY < 0) {
     y = bounds.y + edge;
-    vy = Math.abs(vy) * PHYSICS.restitution.wall;
+    velocityY = Math.abs(velocityY) * PHYSICS.restitution.wall;
     events.push('wall');
   }
 
-  return { body: { x, y, vx, vy, steps, boarded }, events };
+  return { body: { x, y, velocityX, velocityY, steps, boarded }, events };
 }
 
 export interface PreviewDot {

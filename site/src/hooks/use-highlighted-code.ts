@@ -31,7 +31,10 @@ function getHighlighter(): Promise<HighlighterCore> {
  * CSS variables (`--shiki-light`, `--shiki-dark`); the stylesheet picks one
  * with `light-dark()`.
  */
-export function useHighlightedCode(code: string, lang: CodeLanguage): string {
+export function useHighlightedCode(
+  code: string,
+  language: CodeLanguage
+): string {
   const [html, setHtml] = useState('');
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export function useHighlightedCode(code: string, lang: CodeLanguage): string {
       if (!current) return;
       setHtml(
         instance.codeToHtml(code.trim(), {
-          lang,
+          lang: language,
           themes: {
             light: 'github-light-default',
             dark: 'github-dark-default',
@@ -52,7 +55,7 @@ export function useHighlightedCode(code: string, lang: CodeLanguage): string {
     return () => {
       current = false;
     };
-  }, [code, lang]);
+  }, [code, language]);
 
   return html;
 }

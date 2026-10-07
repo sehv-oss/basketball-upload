@@ -63,9 +63,9 @@ describe('pullToVelocity', () => {
   });
 
   it('stops adding speed beyond the maximum pull', () => {
-    const max = pullToVelocity({ x: 0, y: unit }, unit, 12);
+    const atMaxPull = pullToVelocity({ x: 0, y: unit }, unit, 12);
     const beyond = pullToVelocity({ x: 0, y: unit * 3 }, unit, 12);
-    expect(beyond).toEqual(max);
+    expect(beyond).toEqual(atMaxPull);
   });
 });
 

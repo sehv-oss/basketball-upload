@@ -11,7 +11,7 @@ In the reference design, a card is held at the bottom left of the court and a do
 The physics lives in `src/game/`, free of DOM:
 
 - A **fixed step** of 1/120 s. The preview (`previewPath`) and the flight run the same `step()` from the same initial body, so the dots are where the card will be. The flight advances with an accumulator on `requestAnimationFrame`.
-- **Rim units**: lengths are in `u`, the rim width in pixels, measured from the rendered elements at each shot (`courtFromRects`). The layout is pure CSS; the game only reads rectangles, and behaves the same at any size.
+- **Rim units**: lengths are in `u`, the rim width in pixels, measured from the rendered elements at each shot (`courtFromRectangles`). The layout is pure CSS; the game only reads rectangles, and behaves the same at any size.
 - **Constants calibrated on the reference**: gravity 21 u/s², dots 1/15 s apart (the design's dots advance ≈0.116 u and lose ≈0.095 u of rise per dot). The launch velocity is the opposite of the pull times a power that `launchPower` sizes per layout: at least 12/s, and enough for a full pull to reach the hoop from the rest spot with 40% to spare.
 - **Pseudo depth**: seen from the front, a rising card is still in front of the hoop. The board (the orange square) and the ends of the rim only stop a card around the top of its arc or when it falls. The card shrinks to 0.7 of its size by the time it reaches the hoop, and spins.
 - **Events**: entering the square takes most of the speed away, once (the card drops along the board, "aim for the square"); the ends of the rim are round obstacles; going down through the rim between its ends scores; the floor and walls bounce. The preview stops at the first event, drawing a last dot there.

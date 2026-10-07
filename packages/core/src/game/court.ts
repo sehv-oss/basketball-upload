@@ -1,6 +1,6 @@
-import type { Vec } from './vector.ts';
+import type { Vector } from './vector.ts';
 
-export interface Rect {
+export interface Rectangle {
   readonly x: number;
   readonly y: number;
   readonly width: number;
@@ -20,7 +20,7 @@ export interface Rim {
 
 /**
  * The layout as the simulation sees it, in pixels relative to the element.
- * CSS owns the layout; the game only measures it (see `courtFromRects`).
+ * CSS owns the layout; the game only measures it (see `courtFromRectangles`).
  */
 export interface Court {
   /**
@@ -31,17 +31,17 @@ export interface Court {
   /**
    * Play area: walls, ceiling and floor.
    */
-  readonly bounds: Rect;
+  readonly bounds: Rectangle;
 
   /**
    * The dropzone, which doubles as the backboard.
    */
-  readonly board: Rect;
+  readonly board: Rectangle;
 
   /**
    * The orange target square on the board.
    */
-  readonly square: Rect;
+  readonly square: Rectangle;
 
   readonly rim: Rim;
 
@@ -53,67 +53,67 @@ export interface Court {
   /**
    * Center of a staged card.
    */
-  readonly rest: Vec;
+  readonly rest: Vector;
 }
 
-export interface CourtRects {
-  readonly host: Rect;
+export interface CourtRectangles {
+  readonly host: Rectangle;
 
-  readonly board: Rect;
+  readonly board: Rectangle;
 
-  readonly square: Rect;
+  readonly square: Rectangle;
 
   /**
    * Bounding box of the rim drawing: the rim plane is its vertical center.
    */
-  readonly rim: Rect;
+  readonly rim: Rectangle;
 
-  readonly net: Rect;
+  readonly net: Rectangle;
 
   /**
    * Box a staged card rests in.
    */
-  readonly spot: Rect;
+  readonly spot: Rectangle;
 }
 
-function relative(rect: Rect, origin: Rect): Rect {
+function relative(rectangle: Rectangle, origin: Rectangle): Rectangle {
   return {
-    x: rect.x - origin.x,
-    y: rect.y - origin.y,
-    width: rect.width,
-    height: rect.height,
+    x: rectangle.x - origin.x,
+    y: rectangle.y - origin.y,
+    width: rectangle.width,
+    height: rectangle.height,
   };
 }
 
 /**
  * Builds a court from client rectangles (`getBoundingClientRect`).
  */
-export function courtFromRects(rects: CourtRects): Court {
-  const { host } = rects;
-  const rim = relative(rects.rim, host);
-  const net = relative(rects.net, host);
-  const spot = relative(rects.spot, host);
+export function courtFromRectangles(rectangles: CourtRectangles): Court {
+  const { host } = rectangles;
+  const rim = relative(rectangles.rim, host);
+  const net = relative(rectangles.net, host);
+  const spot = relative(rectangles.spot, host);
 
   return {
     unit: rim.width,
     bounds: { x: 0, y: 0, width: host.width, height: host.height },
-    board: relative(rects.board, host),
-    square: relative(rects.square, host),
+    board: relative(rectangles.board, host),
+    square: relative(rectangles.square, host),
     rim: { left: rim.x, right: rim.x + rim.width, y: rim.y + rim.height / 2 },
     netBottom: net.y + net.height,
     rest: { x: spot.x + spot.width / 2, y: spot.y + spot.height / 2 },
   };
 }
 
-export function rimCenter(court: Court): Vec {
+export function rimCenter(court: Court): Vector {
   return { x: (court.rim.left + court.rim.right) / 2, y: court.rim.y };
 }
 
-export function contains(rect: Rect, point: Vec): boolean {
+export function contains(rectangle: Rectangle, point: Vector): boolean {
   return (
-    point.x >= rect.x &&
-    point.x <= rect.x + rect.width &&
-    point.y >= rect.y &&
-    point.y <= rect.y + rect.height
+    point.x >= rectangle.x &&
+    point.x <= rectangle.x + rectangle.width &&
+    point.y >= rectangle.y &&
+    point.y <= rectangle.y + rectangle.height
   );
 }

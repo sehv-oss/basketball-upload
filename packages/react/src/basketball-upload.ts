@@ -20,8 +20,8 @@ import {
   type Uploader,
 } from '@sehv-oss/basketball-upload';
 
-type Detail<K extends keyof BasketballUploadEventMap> =
-  BasketballUploadEventMap[K]['detail'];
+type Detail<TType extends keyof BasketballUploadEventMap> =
+  BasketballUploadEventMap[TType]['detail'];
 
 export interface BasketballUploadProps {
   /**
@@ -121,7 +121,7 @@ type Callbacks = Pick<
   | 'onChange'
 >;
 
-const EVENTS: { [K in keyof BasketballUploadEventMap]: keyof Callbacks } = {
+const EVENTS: { [TType in keyof BasketballUploadEventMap]: keyof Callbacks } = {
   'file-reject': 'onFileReject',
   shot: 'onShot',
   'upload-start': 'onUploadStart',

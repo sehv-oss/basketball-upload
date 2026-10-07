@@ -7,8 +7,8 @@ import { createXhrUploader, UploadError } from '../../src/upload/xhr.ts';
 /**
  * Records what the uploader asks of `XMLHttpRequest`; the tests play the server.
  */
-class FakeXhr extends EventTarget {
-  static readonly requests: FakeXhr[] = [];
+class FakeXMLHttpRequest extends EventTarget {
+  static readonly requests: FakeXMLHttpRequest[] = [];
 
   readonly upload = new EventTarget();
   readonly headers: Record<string, string> = {};
@@ -23,7 +23,7 @@ class FakeXhr extends EventTarget {
 
   constructor() {
     super();
-    FakeXhr.requests.push(this);
+    FakeXMLHttpRequest.requests.push(this);
   }
 
   open(method: string, url: string): void {
@@ -82,16 +82,16 @@ function context(signal = new AbortController().signal): UploadContext {
   return { signal, onProgress: vi.fn() };
 }
 
-function lastRequest(): FakeXhr {
-  const request = FakeXhr.requests.at(-1);
+function lastRequest(): FakeXMLHttpRequest {
+  const request = FakeXMLHttpRequest.requests.at(-1);
   if (!request) throw new Error('No request was sent');
 
   return request;
 }
 
 beforeEach(() => {
-  FakeXhr.requests.length = 0;
-  vi.stubGlobal('XMLHttpRequest', FakeXhr);
+  FakeXMLHttpRequest.requests.length = 0;
+  vi.stubGlobal('XMLHttpRequest', FakeXMLHttpRequest);
 });
 
 afterEach(() => {
@@ -249,7 +249,7 @@ describe('createXhrUploader', () => {
     );
 
     await expect(upload).rejects.toBe('too late');
-    expect(FakeXhr.requests).toHaveLength(0);
+    expect(FakeXMLHttpRequest.requests).toHaveLength(0);
   });
 
   it('is aborted when its item leaves the queue', () => {

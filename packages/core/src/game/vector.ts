@@ -1,28 +1,20 @@
-export interface Vec {
+export interface Vector {
   readonly x: number;
   readonly y: number;
 }
 
-export function add(a: Vec, b: Vec): Vec {
-  return { x: a.x + b.x, y: a.y + b.y };
+export function scale(vector: Vector, factor: number): Vector {
+  return { x: vector.x * factor, y: vector.y * factor };
 }
 
-export function subtract(a: Vec, b: Vec): Vec {
-  return { x: a.x - b.x, y: a.y - b.y };
-}
-
-export function scale(v: Vec, factor: number): Vec {
-  return { x: v.x * factor, y: v.y * factor };
-}
-
-export function length(v: Vec): number {
-  return Math.hypot(v.x, v.y);
+export function length(vector: Vector): number {
+  return Math.hypot(vector.x, vector.y);
 }
 
 /**
- * `v` shortened to `max` when longer; unchanged otherwise.
+ * `vector` shortened to `max` when longer; unchanged otherwise.
  */
-export function limit(v: Vec, max: number): Vec {
-  const size = length(v);
-  return size > max ? scale(v, max / size) : v;
+export function limit(vector: Vector, max: number): Vector {
+  const size = length(vector);
+  return size > max ? scale(vector, max / size) : vector;
 }

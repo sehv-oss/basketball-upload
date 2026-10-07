@@ -1,13 +1,13 @@
 import { PHYSICS } from '../game/config.ts';
-import { courtFromRects, rimCenter, type Court } from '../game/court.ts';
-import type { Vec } from '../game/vector.ts';
+import { courtFromRectangles, rimCenter, type Court } from '../game/court.ts';
+import type { Vector } from '../game/vector.ts';
 import { assertFileType, resolveFileType } from '../file-types/registry.ts';
 import type { FileType, ResolvedFileType } from '../file-types/types.ts';
 import { matchesAccept } from '../upload/accept.ts';
 import { DEFAULT_CONCURRENCY, UploadQueue } from '../upload/upload-queue.ts';
 import type { UploadItem, Uploader } from '../upload/types.ts';
 import { ShotController } from './controllers/shot-controller.ts';
-import { el } from './dom.ts';
+import { createElement } from './dom.ts';
 import {
   defaultMessages,
   type Messages,
@@ -102,7 +102,7 @@ export class BasketballUploadElement extends BaseElement {
   readonly #header = createHeader();
   readonly #hoop = createHoop();
   readonly #trajectory = createTrajectory();
-  readonly #live = createLiveRegion();
+  readonly #liveRegion = createLiveRegion();
   readonly #list: UploadListView;
   readonly #layer: HTMLElement;
   readonly #court: HTMLElement;
@@ -154,10 +154,12 @@ export class BasketballUploadElement extends BaseElement {
       locale: () => this.closest('[lang]')?.getAttribute('lang') ?? undefined,
     });
 
-    this.#spot = el('div', { class: 'spot', 'aria-hidden': 'true' });
-    this.#court = el('div', { class: 'court' }, [this.#spot]);
-    this.#layer = el('div', { class: 'layer' }, [this.#trajectory.element]);
-    this.#input = el('input', {
+    this.#spot = createElement('div', { class: 'spot', 'aria-hidden': 'true' });
+    this.#court = createElement('div', { class: 'court' }, [this.#spot]);
+    this.#layer = createElement('div', { class: 'layer' }, [
+      this.#trajectory.element,
+    ]);
+    this.#input = createElement('input', {
       type: 'file',
       hidden: '',
       tabindex: '-1',
@@ -167,14 +169,14 @@ export class BasketballUploadElement extends BaseElement {
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [getStyleSheet()];
     root.append(
-      el('div', { class: 'frame', part: 'frame' }, [
+      createElement('div', { class: 'frame', part: 'frame' }, [
         this.#header.element,
         this.#hoop.element,
         this.#court,
         this.#list.element,
         this.#layer,
       ]),
-      this.#live.element,
+      this.#liveRegion.element,
       this.#input
     );
 
@@ -212,11 +214,11 @@ export class BasketballUploadElement extends BaseElement {
     );
     this.#queue.on('success', (item) => {
       this.#emit('upload-success', { item });
-      this.#live.announce(this.#messages.complete(item.file.name));
+      this.#liveRegion.announce(this.#messages.complete(item.file.name));
     });
     this.#queue.on('error', (item) => {
       this.#emit('upload-error', { item });
-      this.#live.announce(this.#messages.error(item.file.name));
+      this.#liveRegion.announce(this.#messages.error(item.file.name));
     });
 
     this.#applyMessages();
@@ -531,9 +533,9 @@ export class BasketballUploadElement extends BaseElement {
     return this.disabled || this.#formDisabled;
   }
 
-  #emit<K extends keyof BasketballUploadEventMap>(
-    type: K,
-    detail: BasketballUploadEventMap[K]['detail']
+  #emit<TType extends keyof BasketballUploadEventMap>(
+    type: TType,
+    detail: BasketballUploadEventMap[TType]['detail']
   ): void {
     this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true }));
   }
@@ -563,16 +565,18 @@ export class BasketballUploadElement extends BaseElement {
   }
 
   #syncStates(): void {
-    const s = this.#states;
-    this.#toggleState('dragging', s.dragging);
+    const states = this.#states;
+    this.#toggleState('dragging', states.dragging);
     this.#toggleState(
       'drop-target',
-      (s.dragging && s.dropOverBoard) || s.flightOverBoard || s.scoring > 0
+      (states.dragging && states.dropOverBoard) ||
+        states.flightOverBoard ||
+        states.scoring > 0
     );
-    this.#toggleState('aiming', s.aiming);
-    this.#toggleState('flying', s.flying);
-    this.#toggleState('scoring', s.scoring > 0);
-    this.#toggleState('rejected', s.rejected);
+    this.#toggleState('aiming', states.aiming);
+    this.#toggleState('flying', states.flying);
+    this.#toggleState('scoring', states.scoring > 0);
+    this.#toggleState('rejected', states.rejected);
     this.#toggleState('disabled', this.#isDisabled);
   }
 
@@ -627,7 +631,7 @@ export class BasketballUploadElement extends BaseElement {
 
   #reject(file: File, reason: RejectReason): void {
     this.#emit('file-reject', { file, reason });
-    this.#live.announce(this.#messages.rejected(file.name, reason));
+    this.#liveRegion.announce(this.#messages.rejected(file.name, reason));
     this.#states.rejected = true;
     this.#syncStates();
     clearTimeout(this.#rejectedTimer);
@@ -663,7 +667,7 @@ export class BasketballUploadElement extends BaseElement {
     return card;
   }
 
-  #stage(files: readonly File[], clientPoint?: Vec): void {
+  #stage(files: readonly File[], clientPoint?: Vector): void {
     const accepted = this.#admit(files);
     if (accepted.length === 0) return;
 
@@ -680,17 +684,20 @@ export class BasketballUploadElement extends BaseElement {
     for (const card of this.#staged.slice(-accepted.length)) {
       const rest = card.element.getBoundingClientRect();
       const layer = this.#layer.getBoundingClientRect();
-      const dx = origin.x - (rest.left - layer.left + rest.width / 2);
-      const dy = origin.y - (rest.top - layer.top + rest.height / 2);
+      const offsetX = origin.x - (rest.left - layer.left + rest.width / 2);
+      const offsetY = origin.y - (rest.top - layer.top + rest.height / 2);
       void play(
         card.element,
-        [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }],
+        [
+          { transform: `translate(${offsetX}px, ${offsetY}px)` },
+          { transform: 'none' },
+        ],
         { duration: 380, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
       );
     }
   }
 
-  #dunk(files: readonly File[], clientPoint?: Vec): void {
+  #dunk(files: readonly File[], clientPoint?: Vector): void {
     const accepted = this.#admit(files);
     accepted.forEach((file, index) => {
       const card = this.#createCard(file);
@@ -705,7 +712,7 @@ export class BasketballUploadElement extends BaseElement {
     });
   }
 
-  async #runDunk(card: CardView, clientPoint?: Vec): Promise<void> {
+  async #runDunk(card: CardView, clientPoint?: Vector): Promise<void> {
     if (!this.#inPlay.has(card)) return;
     const court = this.#measure();
     if (!court) {
@@ -764,7 +771,7 @@ export class BasketballUploadElement extends BaseElement {
     this.#staged.push(card);
     this.#renderStack();
     this.#emit('shot', { file: card.file, result: 'miss' });
-    this.#live.announce(this.#messages.missed(card.file.name));
+    this.#liveRegion.announce(this.#messages.missed(card.file.name));
   }
 
   /**
@@ -805,7 +812,7 @@ export class BasketballUploadElement extends BaseElement {
     this.#leaving.add(card);
     this.#queue.add(card.file);
     this.#emit('shot', { file: card.file, result: 'score' });
-    this.#live.announce(this.#messages.scored(card.file.name));
+    this.#liveRegion.announce(this.#messages.scored(card.file.name));
 
     await play(
       card.element,
@@ -874,7 +881,7 @@ export class BasketballUploadElement extends BaseElement {
   /**
    * Converts client coordinates to the card layer's.
    */
-  #toLayer(point: Vec): Vec {
+  #toLayer(point: Vector): Vector {
     const layer = this.#layer.getBoundingClientRect();
     return { x: point.x - layer.left, y: point.y - layer.top };
   }
@@ -882,7 +889,7 @@ export class BasketballUploadElement extends BaseElement {
   #measure(): Court | null {
     const host = this.#layer.getBoundingClientRect();
     if (host.width === 0 || host.height === 0) return null;
-    const court = courtFromRects({
+    const court = courtFromRectangles({
       host,
       board: this.#hoop.dropzone.getBoundingClientRect(),
       square: this.#hoop.square.getBoundingClientRect(),
@@ -906,7 +913,7 @@ export class BasketballUploadElement extends BaseElement {
     this.#layer.style.setProperty('--_rest-y', `${y}px`);
   }
 
-  #isOverBoard(point: Vec): boolean {
+  #isOverBoard(point: Vector): boolean {
     const board = this.#hoop.dropzone.getBoundingClientRect();
     return (
       point.x >= board.left &&
@@ -964,11 +971,11 @@ export class BasketballUploadElement extends BaseElement {
 
 // Typed `addEventListener` for the events dispatched above.
 export interface BasketballUploadElement {
-  addEventListener<K extends keyof BasketballUploadEventMap>(
-    type: K,
+  addEventListener<TType extends keyof BasketballUploadEventMap>(
+    type: TType,
     listener: (
       this: BasketballUploadElement,
-      event: BasketballUploadEventMap[K]
+      event: BasketballUploadEventMap[TType]
     ) => void,
     options?: boolean | AddEventListenerOptions
   ): void;
@@ -977,11 +984,11 @@ export interface BasketballUploadElement {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions
   ): void;
-  removeEventListener<K extends keyof BasketballUploadEventMap>(
-    type: K,
+  removeEventListener<TType extends keyof BasketballUploadEventMap>(
+    type: TType,
     listener: (
       this: BasketballUploadElement,
-      event: BasketballUploadEventMap[K]
+      event: BasketballUploadEventMap[TType]
     ) => void,
     options?: boolean | EventListenerOptions
   ): void;

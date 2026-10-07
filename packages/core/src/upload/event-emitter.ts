@@ -6,9 +6,9 @@ export type Listener<TDetail> = (detail: TDetail) => void;
 export class EventEmitter<TEvents extends object> {
   readonly #listeners = new Map<keyof TEvents, Set<Listener<never>>>();
 
-  on<K extends keyof TEvents>(
-    type: K,
-    listener: Listener<TEvents[K]>
+  on<TType extends keyof TEvents>(
+    type: TType,
+    listener: Listener<TEvents[TType]>
   ): () => void {
     let listeners = this.#listeners.get(type);
     if (!listeners) {
@@ -21,11 +21,11 @@ export class EventEmitter<TEvents extends object> {
     };
   }
 
-  emit<K extends keyof TEvents>(type: K, detail: TEvents[K]): void {
+  emit<TType extends keyof TEvents>(type: TType, detail: TEvents[TType]): void {
     const listeners = this.#listeners.get(type);
     if (!listeners) return;
     for (const listener of [...listeners]) {
-      (listener as Listener<TEvents[K]>)(detail);
+      (listener as Listener<TEvents[TType]>)(detail);
     }
   }
 }

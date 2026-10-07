@@ -1,12 +1,12 @@
 import { PHYSICS } from './config.ts';
 import { rimCenter, type Court } from './court.ts';
-import { length, limit, scale, type Vec } from './vector.ts';
+import { length, limit, scale, type Vector } from './vector.ts';
 
 /**
  * Where the card is drawn while pulled: it follows the pointer up to the
  * maximum pull, then only by a fraction of the extra distance.
  */
-export function stretchPull(pull: Vec, unit: number): Vec {
+export function stretchPull(pull: Vector, unit: number): Vector {
   const max = PHYSICS.maxPull * unit;
   const size = length(pull);
   if (size <= max) return pull;
@@ -16,14 +16,18 @@ export function stretchPull(pull: Vec, unit: number): Vec {
 /**
  * Pulls shorter than this cancel the shot.
  */
-export function isPullEnough(pull: Vec, unit: number): boolean {
+export function isPullEnough(pull: Vector, unit: number): boolean {
   return length(pull) >= PHYSICS.minPull * unit;
 }
 
 /**
  * Launch velocity of a pull, in px/s: opposite to the pull, like a slingshot.
  */
-export function pullToVelocity(pull: Vec, unit: number, power: number): Vec {
+export function pullToVelocity(
+  pull: Vector,
+  unit: number,
+  power: number
+): Vector {
   return scale(limit(pull, PHYSICS.maxPull * unit), -power);
 }
 
@@ -32,7 +36,7 @@ export function pullToVelocity(pull: Vec, unit: number, power: number): Vec {
  * comes down on the center of the rim. Used for keyboard shots, and to size
  * the slingshot to the layout.
  */
-export function solveAssistedShot(start: Vec, court: Court): Vec {
+export function solveAssistedShot(start: Vector, court: Court): Vector {
   const gravity = PHYSICS.gravity * court.unit;
   const target = rimCenter(court);
   const apex =
@@ -64,7 +68,7 @@ export function launchPower(court: Court): number {
 /**
  * Spin in degrees per second for a launch velocity in px/s.
  */
-export function spinFor(velocity: Vec, unit: number): number {
+export function spinFor(velocity: Vector, unit: number): number {
   const speed = (Math.abs(velocity.x) / unit) * PHYSICS.spin.factor;
   const spin = Math.min(PHYSICS.spin.max, Math.max(PHYSICS.spin.min, speed));
   return velocity.x < 0 ? -spin : spin;

@@ -83,7 +83,7 @@ export function ReactExample({ theme }: { theme: SiteTheme }): ReactElement {
       }
     >
       <div className="example">
-        <CodeBlock code={CODE} lang="tsx" filename="uploads.tsx" />
+        <CodeBlock code={CODE} language="tsx" filename="uploads.tsx" />
         <div className="example-live">
           <div className="example-stage">
             <BasketballUpload

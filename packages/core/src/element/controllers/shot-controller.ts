@@ -15,7 +15,7 @@ import {
   spinFor,
   stretchPull,
 } from '../../game/slingshot.ts';
-import type { Vec } from '../../game/vector.ts';
+import type { Vector } from '../../game/vector.ts';
 import { play, poseStyle, prefersReducedMotion, type Pose } from '../motion.ts';
 import type { CardView } from '../views/card.ts';
 import type { TrajectoryView } from '../views/trajectory.ts';
@@ -102,8 +102,8 @@ export class ShotController {
     this.#host.setAiming(true);
 
     const power = launchPower(court);
-    const origin: Vec = { x: event.clientX, y: event.clientY };
-    let pull: Vec = { x: 0, y: 0 };
+    const origin: Vector = { x: event.clientX, y: event.clientY };
+    let pull: Vector = { x: 0, y: 0 };
     let pose: Pose = {
       ...court.rest,
       rotation: REST_ROTATION,
@@ -259,7 +259,7 @@ export class ShotController {
 
     let body = start;
     let angle = rotation;
-    let spin = spinFor({ x: start.vx, y: start.vy }, court.unit);
+    let spin = spinFor({ x: start.velocityX, y: start.velocityY }, court.unit);
     let bounces = 0;
     let carry = 0;
     let last = performance.now();

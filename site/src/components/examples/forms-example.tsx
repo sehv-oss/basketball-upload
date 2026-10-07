@@ -55,7 +55,7 @@ export function FormsExample({ theme }: { theme: SiteTheme }): ReactElement {
       }
     >
       <div className="example">
-        <CodeBlock code={HTML} lang="html" filename="ticket.html" />
+        <CodeBlock code={HTML} language="html" filename="ticket.html" />
         <form
           className="example-live form-demo"
           onSubmit={submit}

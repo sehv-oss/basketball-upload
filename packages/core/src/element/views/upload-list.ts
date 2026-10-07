@@ -1,7 +1,7 @@
 import type { ResolvedFileType } from '../../file-types/types.ts';
 import { formatBytes } from '../../upload/format.ts';
 import type { UploadItem } from '../../upload/types.ts';
-import { el, icon } from '../dom.ts';
+import { createElement, icon } from '../dom.ts';
 import type { Messages } from '../messages.ts';
 import { createArtwork, fileColor } from './card.ts';
 
@@ -45,7 +45,7 @@ function createRow(
 ): Row {
   const { file } = item;
   const artwork = createArtwork(file, type, { class: 'item-artwork' });
-  const thumbnail = el(
+  const thumbnail = createElement(
     'span',
     {
       class: 'item-icon',
@@ -53,17 +53,20 @@ function createRow(
       'aria-hidden': 'true',
     },
     [
-      el('span', { class: 'item-paper' }, [
+      createElement('span', { class: 'item-paper' }, [
         artwork.element,
-        el('span', { class: 'item-badge' }, [type.label]),
+        createElement('span', { class: 'item-badge' }, [type.label]),
       ]),
     ]
   );
   thumbnail.style.setProperty('--_file-color', fileColor(type));
 
-  const status = el('span', { class: 'item-status', part: 'item-status' });
-  const bar = el('span', { class: 'progress-bar' });
-  const progress = el(
+  const status = createElement('span', {
+    class: 'item-status',
+    part: 'item-status',
+  });
+  const bar = createElement('span', { class: 'progress-bar' });
+  const progress = createElement(
     'span',
     {
       class: 'progress',
@@ -74,29 +77,33 @@ function createRow(
     },
     [bar]
   );
-  const check = el('span', { class: 'item-check', 'aria-hidden': 'true' }, [
-    icon('check'),
-  ]);
-  const retry = el(
+  const check = createElement(
+    'span',
+    { class: 'item-check', 'aria-hidden': 'true' },
+    [icon('check')]
+  );
+  const retry = createElement(
     'button',
     { type: 'button', class: 'item-retry', part: 'retry' },
     [icon('retry')]
   );
   retry.addEventListener('click', () => options.onRetry(item.id));
 
-  const element = el(
+  const element = createElement(
     'li',
     { class: 'item', part: 'item', 'data-kind': type.kind },
     [
       thumbnail,
-      el('span', { class: 'item-meta' }, [
-        el('span', { class: 'item-name', part: 'item-name' }, [file.name]),
-        el('span', { class: 'item-size', part: 'item-size' }, [
+      createElement('span', { class: 'item-meta' }, [
+        createElement('span', { class: 'item-name', part: 'item-name' }, [
+          file.name,
+        ]),
+        createElement('span', { class: 'item-size', part: 'item-size' }, [
           formatBytes(file.size, options.locale()),
         ]),
       ]),
-      el('span', { class: 'item-progress' }, [status, progress]),
-      el('span', { class: 'item-end' }, [check, retry]),
+      createElement('span', { class: 'item-progress' }, [status, progress]),
+      createElement('span', { class: 'item-end' }, [check, retry]),
     ]
   );
 
@@ -125,7 +132,11 @@ function createRow(
  * The list of files in the basket, with their upload progress.
  */
 export function createUploadList(options: UploadListOptions): UploadListView {
-  const element = el('ul', { class: 'list', part: 'list', role: 'list' });
+  const element = createElement('ul', {
+    class: 'list',
+    part: 'list',
+    role: 'list',
+  });
   element.hidden = true;
   const rows = new Map<string, Row>();
 

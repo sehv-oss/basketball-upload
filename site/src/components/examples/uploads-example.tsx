@@ -50,8 +50,12 @@ export function UploadsExample(): ReactElement {
       }
     >
       <div className="example">
-        <CodeBlock code={XHR} lang="typescript" filename="xhr.ts" />
-        <CodeBlock code={CUSTOM} lang="typescript" filename="presigned.ts" />
+        <CodeBlock code={XHR} language="typescript" filename="xhr.ts" />
+        <CodeBlock
+          code={CUSTOM}
+          language="typescript"
+          filename="presigned.ts"
+        />
       </div>
     </Section>
   );

@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 
 import type { SiteTheme } from '../hooks/use-site-theme.ts';
 
-const NAV = [
+const SECTIONS = [
   { id: 'web-component', label: 'Web Component' },
   { id: 'react', label: 'React' },
   { id: 'theming', label: 'Theming' },
@@ -58,7 +58,7 @@ export function SiteHeader({
         </a>
 
         <nav className="site-nav" aria-label="Sections">
-          {NAV.map(({ id, label }) => (
+          {SECTIONS.map(({ id, label }) => (
             <a key={id} href={`#${id}`}>
               {label}
             </a>

@@ -52,19 +52,22 @@ export class UploadError extends Error {
   }
 }
 
-function resolve<T>(value: T | ((file: File) => T), file: File): T {
+function resolve<TValue>(
+  value: TValue | ((file: File) => TValue),
+  file: File
+): TValue {
   return typeof value === 'function'
-    ? (value as (file: File) => T)(file)
+    ? (value as (file: File) => TValue)(file)
     : value;
 }
 
-function parseResponse(xhr: XMLHttpRequest): unknown {
-  const type = xhr.getResponseHeader('content-type') ?? '';
-  if (!type.includes('json')) return xhr.responseText;
+function parseResponse(request: XMLHttpRequest): unknown {
+  const type = request.getResponseHeader('content-type') ?? '';
+  if (!type.includes('json')) return request.responseText;
   try {
-    return JSON.parse(xhr.responseText) as unknown;
+    return JSON.parse(request.responseText) as unknown;
   } catch {
-    return xhr.responseText;
+    return request.responseText;
   }
 }
 
@@ -81,36 +84,39 @@ export function createXhrUploader(options: XhrUploaderOptions): Uploader {
         return;
       }
 
-      const xhr = new XMLHttpRequest();
-      xhr.open(options.method ?? 'POST', String(resolve(options.url, file)));
-      xhr.withCredentials = options.withCredentials ?? false;
+      const request = new XMLHttpRequest();
+      request.open(
+        options.method ?? 'POST',
+        String(resolve(options.url, file))
+      );
+      request.withCredentials = options.withCredentials ?? false;
       for (const [name, value] of Object.entries(
         resolve(options.headers ?? {}, file)
       )) {
-        xhr.setRequestHeader(name, value);
+        request.setRequestHeader(name, value);
       }
 
-      xhr.upload.addEventListener('progress', (event) => {
+      request.upload.addEventListener('progress', (event) => {
         onProgress(
           event.loaded,
           event.lengthComputable ? event.total : undefined
         );
       });
-      xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolvePromise(parseResponse(xhr));
+      request.addEventListener('load', () => {
+        if (request.status >= 200 && request.status < 300) {
+          resolvePromise(parseResponse(request));
         } else {
-          reject(new UploadError(xhr.status, xhr.responseText));
+          reject(new UploadError(request.status, request.responseText));
         }
       });
-      xhr.addEventListener('error', () => reject(new UploadError(0, '')));
-      xhr.addEventListener('abort', () => reject(signal.reason));
-      signal.addEventListener('abort', () => xhr.abort(), { once: true });
+      request.addEventListener('error', () => reject(new UploadError(0, '')));
+      request.addEventListener('abort', () => reject(signal.reason));
+      signal.addEventListener('abort', () => request.abort(), { once: true });
 
       const fieldName =
         options.fieldName === undefined ? 'file' : options.fieldName;
       if (fieldName === null) {
-        xhr.send(file);
+        request.send(file);
         return;
       }
       const body = new FormData();
@@ -120,6 +126,6 @@ export function createXhrUploader(options: XhrUploaderOptions): Uploader {
         body.append(name, value);
       }
       body.append(fieldName, file, file.name);
-      xhr.send(body);
+      request.send(body);
     });
 }

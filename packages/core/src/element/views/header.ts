@@ -1,4 +1,4 @@
-import { el, setFallback } from '../dom.ts';
+import { createElement, setFallback } from '../dom.ts';
 import type { Messages } from '../messages.ts';
 import { play } from '../motion.ts';
 
@@ -13,24 +13,26 @@ export interface HeaderView {
 }
 
 export function createHeader(): HeaderView {
-  const title = el('slot', { name: 'title' });
-  const description = el('slot', { name: 'description' });
-  const counterLabel = el('span', {
+  const title = createElement('slot', { name: 'title' });
+  const description = createElement('slot', { name: 'description' });
+  const counterLabel = createElement('span', {
     class: 'counter-label',
     part: 'counter-label',
   });
-  const counterValue = el(
+  const counterValue = createElement(
     'span',
     { class: 'counter-value', part: 'counter-value' },
     ['0']
   );
 
-  const element = el('header', { class: 'header', part: 'header' }, [
-    el('div', { class: 'heading' }, [
-      el('h2', { class: 'title', part: 'title' }, [title]),
-      el('p', { class: 'description', part: 'description' }, [description]),
+  const element = createElement('header', { class: 'header', part: 'header' }, [
+    createElement('div', { class: 'heading' }, [
+      createElement('h2', { class: 'title', part: 'title' }, [title]),
+      createElement('p', { class: 'description', part: 'description' }, [
+        description,
+      ]),
     ]),
-    el('p', { class: 'counter', part: 'counter' }, [
+    createElement('p', { class: 'counter', part: 'counter' }, [
       counterLabel,
       counterValue,
     ]),

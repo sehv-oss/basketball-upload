@@ -1,5 +1,5 @@
 import type { PreviewDot } from '../../game/simulate.ts';
-import { svg } from '../dom.ts';
+import { createSvgElement } from '../dom.ts';
 
 /**
  * Dot radius, in rim units: 3.6 px on the 164 px rim of the design.
@@ -23,7 +23,7 @@ export interface TrajectoryView {
 }
 
 export function createTrajectory(): TrajectoryView {
-  const element = svg('svg', {
+  const element = createSvgElement('svg', {
     class: 'trajectory',
     part: 'trajectory',
     'aria-hidden': 'true',
@@ -36,7 +36,7 @@ export function createTrajectory(): TrajectoryView {
     show(dots, unit) {
       shown = dots;
       while (circles.length < dots.length) {
-        const circle = svg('circle', { class: 'dot' });
+        const circle = createSvgElement('circle', { class: 'dot' });
         circles.push(circle);
         element.append(circle);
       }

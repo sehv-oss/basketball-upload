@@ -24,11 +24,11 @@ export function shadow(element: BasketballUploadElement): ShadowRoot {
   return element.shadowRoot;
 }
 
-export function query<T extends Element = HTMLElement>(
+export function query<TElement extends Element = HTMLElement>(
   element: BasketballUploadElement,
   selector: string
-): T {
-  const found = shadow(element).querySelector<T>(selector);
+): TElement {
+  const found = shadow(element).querySelector<TElement>(selector);
   if (!found) throw new Error(`Nothing matches ${selector}`);
 
   return found;
@@ -38,16 +38,16 @@ export function pdf(name = 'final_final_v7.pdf', size = 2_400): File {
   return new File([new Uint8Array(size)], name, { type: 'application/pdf' });
 }
 
-export function nextEvent<T extends Event = CustomEvent>(
+export function nextEvent<TEvent extends Event = CustomEvent>(
   target: EventTarget,
   type: string,
-  accept: (event: T) => boolean = () => true
-): Promise<T> {
+  accept: (event: TEvent) => boolean = () => true
+): Promise<TEvent> {
   return new Promise((resolve) => {
     const listener = (event: Event): void => {
-      if (!accept(event as T)) return;
+      if (!accept(event as TEvent)) return;
       target.removeEventListener(type, listener);
-      resolve(event as T);
+      resolve(event as TEvent);
     };
     target.addEventListener(type, listener);
   });
@@ -86,7 +86,7 @@ export function pointer(
     | 'pointercancel'
     | 'lostpointercapture',
   point: { x: number; y: number },
-  init: PointerEventInit = {}
+  overrides: PointerEventInit = {}
 ): PointerEvent {
   return new PointerEvent(type, {
     pointerId: 7,
@@ -99,15 +99,15 @@ export function pointer(
     bubbles: true,
     composed: true,
     cancelable: true,
-    ...init,
+    ...overrides,
   });
 }
 
 /**
- * Resolves after `ms` milliseconds, for animations that must have ended.
+ * Resolves after `milliseconds`, for animations that must have ended.
  */
-export function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 /**

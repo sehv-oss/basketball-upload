@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { PHYSICS } from '../../src/game/config.ts';
-import { courtFromRects, rimCenter } from '../../src/game/court.ts';
+import { courtFromRectangles, rimCenter } from '../../src/game/court.ts';
 import {
   launch,
   previewPath,
@@ -21,16 +21,16 @@ function run(
   while (body.steps < limit) {
     const result = step(body, court);
     body = result.body;
-    const event = result.events.find((e) => until.includes(e));
+    const event = result.events.find((candidate) => until.includes(candidate));
     if (event) return { event, body };
   }
 
   return { event: null, body };
 }
 
-describe('courtFromRects', () => {
+describe('courtFromRectangles', () => {
   it('measures the rim plane and the rest spot relative to the host', () => {
-    const measured = courtFromRects({
+    const measured = courtFromRectangles({
       host: { x: 100, y: 50, width: 754, height: 887 },
       board: { x: 277, y: 225, width: 400, height: 268 },
       square: { x: 409, y: 398, width: 136, height: 80 },
@@ -62,7 +62,7 @@ describe('step', () => {
     const center = rimCenter(court);
     let body = launch({ x: center.x, y: 520 }, { x: 0, y: -1400 });
     const events: string[] = [];
-    while (body.vy < 0) {
+    while (body.velocityY < 0) {
       const result = step(body, court);
       body = result.body;
       events.push(...result.events);
@@ -82,7 +82,7 @@ describe('step', () => {
     const first = step(start, court);
 
     expect(first.events).toContain('board');
-    expect(first.body.vx).toBeCloseTo(600 * PHYSICS.board.x);
+    expect(first.body.velocityX).toBeCloseTo(600 * PHYSICS.board.x);
     expect(first.body.boarded).toBe(true);
     expect(step(first.body, court).events).not.toContain('board');
   });
@@ -103,8 +103,8 @@ describe('step', () => {
     );
 
     expect(result.events).toContain('floor');
-    expect(result.body.vy).toBeLessThan(0);
-    expect(Math.abs(result.body.vy)).toBeLessThan(900);
+    expect(result.body.velocityY).toBeLessThan(0);
+    expect(Math.abs(result.body.velocityY)).toBeLessThan(900);
   });
 
   it('keeps a card below the floor on it, without turning it back down', () => {
@@ -116,7 +116,7 @@ describe('step', () => {
 
     expect(result.events).toContain('floor');
     expect(result.body.y).toBe(floor);
-    expect(result.body.vy).toBeLessThan(0);
+    expect(result.body.velocityY).toBeLessThan(0);
   });
 
   it('bounces off the walls and the ceiling, losing speed', () => {
@@ -128,7 +128,7 @@ describe('step', () => {
     );
     expect(left.events).toEqual(['wall']);
     expect(left.body.x).toBe(edge);
-    expect(left.body.vx).toBeCloseTo(900 * PHYSICS.restitution.wall);
+    expect(left.body.velocityX).toBeCloseTo(900 * PHYSICS.restitution.wall);
 
     const right = step(
       launch({ x: court.bounds.width - edge - 1, y: 300 }, { x: 900, y: 0 }),
@@ -136,7 +136,7 @@ describe('step', () => {
     );
     expect(right.events).toEqual(['wall']);
     expect(right.body.x).toBe(court.bounds.width - edge);
-    expect(right.body.vx).toBeCloseTo(-900 * PHYSICS.restitution.wall);
+    expect(right.body.velocityX).toBeCloseTo(-900 * PHYSICS.restitution.wall);
 
     const ceiling = step(
       launch({ x: 120, y: edge + 1 }, { x: 0, y: -900 }),
@@ -144,7 +144,7 @@ describe('step', () => {
     );
     expect(ceiling.events).toEqual(['wall']);
     expect(ceiling.body.y).toBe(edge);
-    expect(ceiling.body.vy).toBeGreaterThan(0);
+    expect(ceiling.body.velocityY).toBeGreaterThan(0);
   });
 
   it('stays finite when a card lands exactly on an end of the rim', () => {
@@ -155,8 +155,8 @@ describe('step', () => {
       court
     );
 
-    const { x, y, vx, vy } = result.body;
-    expect([x, y, vx, vy].every(Number.isFinite)).toBe(true);
+    const { x, y, velocityX, velocityY } = result.body;
+    expect([x, y, velocityX, velocityY].every(Number.isFinite)).toBe(true);
     expect({ x, y }).toEqual({ x: court.rim.left, y: court.rim.y });
     expect(result.events).toEqual([]);
   });
