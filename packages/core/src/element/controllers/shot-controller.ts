@@ -79,10 +79,6 @@ export class ShotController {
     this.#host = host;
   }
 
-  get busy(): boolean {
-    return this.#card !== null;
-  }
-
   /**
    * Starts aiming: the card follows the pointer like a slingshot pouch.
    */
