@@ -10,7 +10,7 @@
     block-size: var(--_card-height);
     translate: calc(var(--_rest-x, 0px) - 50% - var(--_depth) * 0.45rem)
       calc(var(--_rest-y, 0px) - 50% + var(--_depth) * 0.2rem);
-    /* Keep -6deg in sync with REST_ROTATION in ShotController.ts. */
+    /* Keep -6deg in sync with REST_ROTATION in shot-controller.ts. */
     rotate: calc(-6deg - var(--_depth) * 7deg);
     pointer-events: auto;
     touch-action: none;

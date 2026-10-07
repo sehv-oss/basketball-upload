@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { UploadQueue } from '../../src/upload/UploadQueue.ts';
+import { UploadQueue } from '../../src/upload/upload-queue.ts';
 import type { UploadContext, Uploader } from '../../src/upload/types.ts';
 
 interface Call {

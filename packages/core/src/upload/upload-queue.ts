@@ -1,4 +1,4 @@
-import { EventEmitter } from './EventEmitter.ts';
+import { EventEmitter } from './event-emitter.ts';
 import type { UploadItem, Uploader } from './types.ts';
 
 export interface UploadQueueEvents {

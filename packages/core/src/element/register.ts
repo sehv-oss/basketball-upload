@@ -1,4 +1,4 @@
-import { BasketballUploadElement } from './BasketballUploadElement.ts';
+import { BasketballUploadElement } from './basketball-upload-element.ts';
 
 export interface RegisterBasketballUploadOptions {
   /**

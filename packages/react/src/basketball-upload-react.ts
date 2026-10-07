@@ -1,7 +1,7 @@
 export {
   BasketballUpload,
   type BasketballUploadProps,
-} from './BasketballUpload.ts';
+} from './basketball-upload.ts';
 export {
   createXhrUploader,
   defaultFileTypes,

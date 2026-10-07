@@ -3,7 +3,7 @@ export {
   type BasketballUploadEventMap,
   type ShotResult,
   type Theme,
-} from './element/BasketballUploadElement.ts';
+} from './element/basketball-upload-element.ts';
 export {
   DEFAULT_TAG_NAME,
   registerBasketballUpload,

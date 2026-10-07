@@ -4,9 +4,9 @@ import type { Vec } from '../game/vector.ts';
 import { assertFileType, resolveFileType } from '../file-types/registry.ts';
 import type { FileType, ResolvedFileType } from '../file-types/types.ts';
 import { matchesAccept } from '../upload/accept.ts';
-import { DEFAULT_CONCURRENCY, UploadQueue } from '../upload/UploadQueue.ts';
+import { DEFAULT_CONCURRENCY, UploadQueue } from '../upload/upload-queue.ts';
 import type { UploadItem, Uploader } from '../upload/types.ts';
-import { ShotController } from './controllers/ShotController.ts';
+import { ShotController } from './controllers/shot-controller.ts';
 import { el } from './dom.ts';
 import {
   defaultMessages,
