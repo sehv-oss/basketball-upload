@@ -1,3 +1,6 @@
+/**
+ * An HTML element with its attributes and children.
+ */
 export function createElement<TTagName extends keyof HTMLElementTagNameMap>(
   tag: TTagName,
   attributes: Record<string, string> = {},
@@ -13,6 +16,9 @@ export function createElement<TTagName extends keyof HTMLElementTagNameMap>(
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
+/**
+ * An SVG element with its attributes and children, in the SVG namespace.
+ */
 export function createSvgElement<TTagName extends keyof SVGElementTagNameMap>(
   tag: TTagName,
   attributes: Record<string, string | number> = {},
@@ -33,6 +39,9 @@ const icons = {
   retry: 'M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4',
 } as const;
 
+/**
+ * Icons drawn by `icon()`.
+ */
 export type IconName = keyof typeof icons;
 
 /**

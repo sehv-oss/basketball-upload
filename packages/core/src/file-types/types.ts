@@ -38,9 +38,19 @@ export interface FileType {
   readonly artwork?: FileArtwork | undefined;
 }
 
+/**
+ * A file type applied to one file, as `resolveFileType` returns it: every
+ * default filled in.
+ */
 export interface ResolvedFileType {
+  /**
+   * `kind` of the matching type, or `file` when none matched.
+   */
   readonly kind: string;
 
+  /**
+   * Badge text for this file.
+   */
   readonly label: string;
 
   /**
@@ -48,5 +58,8 @@ export interface ResolvedFileType {
    */
   readonly color: string | null;
 
+  /**
+   * What the body of the card shows.
+   */
   readonly artwork: FileArtwork;
 }

@@ -184,6 +184,8 @@ interface UploadItem {
 | `removeItem(id)` | Takes a file out of the basket, aborting its upload           |
 | `clear()`        | Empties the court and the basket, aborting uploads            |
 
+`shoot()`, `retryItem()` and `removeItem()` return whether they did anything: `false` when there is no card on the court (or another one is held or in the air), no failed item with that `id` (or no `uploader`), or no item with that `id`.
+
 ### Events
 
 Every event is a `CustomEvent` that bubbles, with its payload in `detail`.

@@ -6,7 +6,14 @@
 export type UploadStatus =
   'ready' | 'queued' | 'uploading' | 'uploaded' | 'error';
 
+/**
+ * A file in the basket and its upload. Items are immutable: every change
+ * replaces the item with a new one, under the same `id`.
+ */
 export interface UploadItem {
+  /**
+   * Unique within the element, for `retryItem()` and `removeItem()`.
+   */
   readonly id: string;
 
   readonly file: File;
@@ -29,6 +36,9 @@ export interface UploadItem {
   readonly error: unknown;
 }
 
+/**
+ * Second argument of an `Uploader`.
+ */
 export interface UploadContext {
   /**
    * Aborted when the item is removed or the queue is cleared.

@@ -1,3 +1,6 @@
+/**
+ * Gets the payload of an event.
+ */
 export type Listener<TDetail> = (detail: TDetail) => void;
 
 /**
@@ -6,6 +9,9 @@ export type Listener<TDetail> = (detail: TDetail) => void;
 export class EventEmitter<TEvents extends object> {
   readonly #listeners = new Map<keyof TEvents, Set<Listener<never>>>();
 
+  /**
+   * Subscribes to an event. Returns a function that unsubscribes.
+   */
   on<TType extends keyof TEvents>(
     type: TType,
     listener: Listener<TEvents[TType]>
@@ -21,6 +27,9 @@ export class EventEmitter<TEvents extends object> {
     };
   }
 
+  /**
+   * Calls the listeners of an event with its payload.
+   */
   emit<TType extends keyof TEvents>(type: TType, detail: TEvents[TType]): void {
     const listeners = this.#listeners.get(type);
     if (!listeners) return;

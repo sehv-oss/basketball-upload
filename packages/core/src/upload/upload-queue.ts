@@ -1,22 +1,40 @@
 import { EventEmitter } from './event-emitter.ts';
 import type { UploadItem, Uploader } from './types.ts';
 
+/**
+ * Events of `UploadQueue`, with the payload their listeners get.
+ */
 export interface UploadQueueEvents {
   /**
    * Any change to the list or to an item, including progress.
    */
   change: readonly UploadItem[];
 
+  /**
+   * The uploader was called for the item.
+   */
   start: UploadItem;
 
+  /**
+   * The uploader reported progress.
+   */
   progress: UploadItem;
 
+  /**
+   * The upload resolved. Not emitted once the item was removed.
+   */
   success: UploadItem;
 
+  /**
+   * The upload rejected. Not emitted once the item was removed.
+   */
   error: UploadItem;
 }
 
 export interface UploadQueueOptions {
+  /**
+   * Sends each file. Without one, files are `ready`.
+   */
   uploader?: Uploader | null | undefined;
 
   /**
@@ -25,6 +43,9 @@ export interface UploadQueueOptions {
   concurrency?: number | undefined;
 }
 
+/**
+ * Uploads running at the same time when no valid `concurrency` is given.
+ */
 export const DEFAULT_CONCURRENCY = 3;
 
 /**
@@ -48,10 +69,17 @@ export class UploadQueue extends EventEmitter<UploadQueueEvents> {
     this.#concurrency = normalizeConcurrency(options.concurrency);
   }
 
+  /**
+   * Every item, in the order the files were added.
+   */
   get items(): readonly UploadItem[] {
     return this.#items;
   }
 
+  /**
+   * Uploads running at the same time: a whole number from 1, otherwise
+   * `DEFAULT_CONCURRENCY`. Raising it starts queued uploads at once.
+   */
   get concurrency(): number {
     return this.#concurrency;
   }
@@ -61,10 +89,18 @@ export class UploadQueue extends EventEmitter<UploadQueueEvents> {
     this.#pump();
   }
 
+  /**
+   * The current snapshot of an item.
+   */
   get(id: string): UploadItem | undefined {
     return this.#items.find((item) => item.id === id);
   }
 
+  /**
+   * Adds a file: `queued` with an uploader, which starts as soon as a slot is
+   * free, otherwise `ready`. Returns the item as it is once added, possibly
+   * already `uploading`.
+   */
   add(file: File): UploadItem {
     this.#nextId += 1;
     const id = `upload-${this.#nextId}`;

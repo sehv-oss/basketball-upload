@@ -1,3 +1,10 @@
+/**
+ * Why a file was turned away:
+ * - `type`: it does not match `accept`.
+ * - `size`: it is larger than `max-size`.
+ * - `count`: it is one file more than `max-files` allows, or than one without
+ *   `multiple`.
+ */
 export type RejectReason = 'type' | 'size' | 'count';
 
 /**
@@ -6,12 +13,24 @@ export type RejectReason = 'type' | 'size' | 'count';
  * first four with slots.
  */
 export interface Messages {
+  /**
+   * Heading of the element. The `title` slot replaces it.
+   */
   title: string;
 
+  /**
+   * Line under the heading. The `description` slot replaces it.
+   */
   description: string;
 
+  /**
+   * Main text of the dropzone. The `prompt` slot replaces it.
+   */
   prompt: string;
 
+  /**
+   * Text under the prompt. The `hint` slot replaces it.
+   */
   hint: string;
 
   /**
@@ -19,6 +38,9 @@ export interface Messages {
    */
   dropzone: string;
 
+  /**
+   * Label of the pill that counts the files in the basket.
+   */
   counter: string;
 
   /**
@@ -26,18 +48,39 @@ export interface Messages {
    */
   shoot: (name: string) => string;
 
+  /**
+   * Status of a file in the basket when there is no uploader.
+   */
   ready: string;
 
+  /**
+   * Status of a file waiting for a free upload slot.
+   */
   queued: string;
 
+  /**
+   * Status of a file being uploaded.
+   */
   uploading: string;
 
+  /**
+   * Status of a file the uploader stored.
+   */
   uploaded: string;
 
+  /**
+   * Status of a file whose upload failed.
+   */
   failed: string;
 
+  /**
+   * Accessible name and tooltip of the retry button of a row.
+   */
   retry: (name: string) => string;
 
+  /**
+   * Accessible name of the progress bar of a row.
+   */
   progress: (name: string) => string;
 
   /**
@@ -45,17 +88,35 @@ export interface Messages {
    */
   required: string;
 
+  /**
+   * Announced when a file goes through the net.
+   */
   scored: (name: string) => string;
 
+  /**
+   * Announced when a shot misses.
+   */
   missed: (name: string) => string;
 
+  /**
+   * Announced when a file is turned away.
+   */
   rejected: (name: string, reason: RejectReason) => string;
 
+  /**
+   * Announced when an upload succeeds.
+   */
   complete: (name: string) => string;
 
+  /**
+   * Announced when an upload fails.
+   */
   error: (name: string) => string;
 }
 
+/**
+ * The copy of the reference design, in English.
+ */
 export const defaultMessages: Messages = {
   title: 'Upload files',
   description: 'Drag and drop, or take the shot.',

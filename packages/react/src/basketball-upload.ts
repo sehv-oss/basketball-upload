@@ -23,6 +23,10 @@ import {
 type Detail<TType extends keyof BasketballUploadEventMap> =
   BasketballUploadEventMap[TType]['detail'];
 
+/**
+ * Props of `<BasketballUpload>`: the attributes and properties of the element,
+ * and its events as callbacks.
+ */
 export interface BasketballUploadProps {
   /**
    * The `<basketball-upload>` element, for its methods and properties.
@@ -34,8 +38,14 @@ export interface BasketballUploadProps {
    */
   theme?: Theme | undefined;
 
+  /**
+   * Accepted files, with the syntax of `<input type="file" accept>`.
+   */
   accept?: string | undefined;
 
+  /**
+   * Several files at a time. Without it, a new file replaces the previous one.
+   */
   multiple?: boolean | undefined;
 
   /**
@@ -53,8 +63,14 @@ export interface BasketballUploadProps {
    */
   name?: string | undefined;
 
+  /**
+   * The form is invalid while the basket is empty.
+   */
   required?: boolean | undefined;
 
+  /**
+   * Ignores files and shots.
+   */
   disabled?: boolean | undefined;
 
   /**
@@ -62,6 +78,9 @@ export interface BasketballUploadProps {
    */
   instant?: boolean | undefined;
 
+  /**
+   * Uploads running at the same time. Defaults to 3.
+   */
   concurrency?: number | undefined;
 
   /**
@@ -84,10 +103,19 @@ export interface BasketballUploadProps {
    */
   tagName?: string | undefined;
 
+  /**
+   * Set on the element.
+   */
   id?: string | undefined;
 
+  /**
+   * Set on the element, as `class`.
+   */
   className?: string | undefined;
 
+  /**
+   * Set on the element, custom properties (`--basketball-upload-*`) included.
+   */
   style?: CSSProperties | undefined;
 
   /**
@@ -95,18 +123,39 @@ export interface BasketballUploadProps {
    */
   children?: ReactNode | undefined;
 
+  /**
+   * A file did not pass `accept`, `maxSize` or `maxFiles`. Gets the `detail` of the `file-reject` event, not the event.
+   */
   onFileReject?: ((detail: Detail<'file-reject'>) => void) | undefined;
 
+  /**
+   * A card went through the net, dunks included, or a shot missed. Gets the `detail` of the `shot` event.
+   */
   onShot?: ((detail: Detail<'shot'>) => void) | undefined;
 
+  /**
+   * The uploader was called for an item. Gets the `detail` of the `upload-start` event.
+   */
   onUploadStart?: ((detail: Detail<'upload-start'>) => void) | undefined;
 
+  /**
+   * The uploader reported progress. Gets the `detail` of the `upload-progress` event.
+   */
   onUploadProgress?: ((detail: Detail<'upload-progress'>) => void) | undefined;
 
+  /**
+   * An upload resolved; `item.response` has its value. Gets the `detail` of the `upload-success` event.
+   */
   onUploadSuccess?: ((detail: Detail<'upload-success'>) => void) | undefined;
 
+  /**
+   * An upload rejected; `item.error` has the reason. Gets the `detail` of the `upload-error` event.
+   */
   onUploadError?: ((detail: Detail<'upload-error'>) => void) | undefined;
 
+  /**
+   * Files entered or left the basket, or one changed status. Gets the `detail` of the `change` event.
+   */
   onChange?: ((detail: Detail<'change'>) => void) | undefined;
 }
 

@@ -8,6 +8,10 @@ export interface Pose {
   readonly scale: number;
 }
 
+/**
+ * Whether the user asked for reduced motion. `false` where `matchMedia` is
+ * missing.
+ */
 export function prefersReducedMotion(): boolean {
   return (
     typeof matchMedia === 'function' &&
@@ -30,6 +34,9 @@ export function poseStyle(
   };
 }
 
+/**
+ * Timing of `play()`, plus `commit`.
+ */
 export interface PlayOptions extends KeyframeAnimationOptions {
   /**
    * Keep the last keyframe as inline style once the animation ends.

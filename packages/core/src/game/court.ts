@@ -105,10 +105,16 @@ export function courtFromRectangles(rectangles: CourtRectangles): Court {
   };
 }
 
+/**
+ * Middle of the rim, on the rim plane.
+ */
 export function rimCenter(court: Court): Vector {
   return { x: (court.rim.left + court.rim.right) / 2, y: court.rim.y };
 }
 
+/**
+ * Whether `point` is inside `rectangle`, edges included.
+ */
 export function contains(rectangle: Rectangle, point: Vector): boolean {
   return (
     point.x >= rectangle.x &&

@@ -1,5 +1,8 @@
 import { BasketballUploadElement } from './basketball-upload-element.ts';
 
+/**
+ * Options of `registerBasketballUpload`.
+ */
 export interface RegisterBasketballUploadOptions {
   /**
    * Custom element name. Defaults to `basketball-upload`.
@@ -7,6 +10,9 @@ export interface RegisterBasketballUploadOptions {
   tagName?: string | undefined;
 }
 
+/**
+ * Name the element is registered with when no `tagName` is given.
+ */
 export const DEFAULT_TAG_NAME = 'basketball-upload';
 
 /**

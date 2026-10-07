@@ -28,20 +28,56 @@ import { createLiveRegion } from './views/live-region.ts';
 import { createTrajectory } from './views/trajectory.ts';
 import { createUploadList, type UploadListView } from './views/upload-list.ts';
 
+/**
+ * Color scheme of the element. `system` follows `prefers-color-scheme`.
+ */
 export type Theme = 'light' | 'dark' | 'system';
 
+/**
+ * How a shot ended: through the net (a dunk included), or back on the court.
+ */
 export type ShotResult = 'score' | 'miss';
 
 /**
  * `CustomEvent`s dispatched by `<basketball-upload>`, keyed by event name. They bubble.
  */
 export interface BasketballUploadEventMap {
+  /**
+   * A file did not pass `accept`, `max-size` or `max-files`, and stays out.
+   */
   'file-reject': CustomEvent<{ file: File; reason: RejectReason }>;
+
+  /**
+   * A card went through the net, dunks included, or a shot missed and the
+   * card is back on the court.
+   */
   shot: CustomEvent<{ file: File; result: ShotResult }>;
+
+  /**
+   * The uploader was called for an item.
+   */
   'upload-start': CustomEvent<{ item: UploadItem }>;
+
+  /**
+   * The uploader reported progress; `item.progress` has the new value.
+   */
   'upload-progress': CustomEvent<{ item: UploadItem }>;
+
+  /**
+   * An upload resolved; `item.response` has its value.
+   */
   'upload-success': CustomEvent<{ item: UploadItem }>;
+
+  /**
+   * An upload rejected; `item.error` has the reason. Aborted uploads (removed
+   * items, `clear()`) do not fire it.
+   */
   'upload-error': CustomEvent<{ item: UploadItem }>;
+
+  /**
+   * Files entered or left the basket, or one changed status. Progress alone
+   * does not fire it: `upload-progress` does.
+   */
   change: CustomEvent<{ items: readonly UploadItem[] }>;
 }
 
@@ -225,6 +261,9 @@ export class BasketballUploadElement extends BaseElement {
     this.#syncForm();
   }
 
+  /**
+   * `light`, `dark`, or `system` (the default) to follow `prefers-color-scheme`.
+   */
   get theme(): Theme {
     const value = this.getAttribute('theme');
     return value === 'light' || value === 'dark' ? value : 'system';
@@ -296,6 +335,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.removeAttribute('name');
   }
 
+  /**
+   * The form is invalid while the basket is empty.
+   */
   get required(): boolean {
     return this.hasAttribute('required');
   }
@@ -304,6 +346,10 @@ export class BasketballUploadElement extends BaseElement {
     this.toggleAttribute('required', Boolean(value));
   }
 
+  /**
+   * Ignores files and shots. A disabled `<fieldset>` does the same, without
+   * changing this property.
+   */
   get disabled(): boolean {
     return this.hasAttribute('disabled');
   }
@@ -347,13 +393,15 @@ export class BasketballUploadElement extends BaseElement {
     this.#queue.uploader = value ?? null;
   }
 
+  /**
+   * Copy and accessible names. Assign a partial object to override some: it is
+   * merged over the defaults, not over the previous value, and keys set to
+   * `undefined` keep their default.
+   */
   get messages(): Messages {
     return this.#messages;
   }
 
-  /**
-   * Copy overrides, merged over the defaults.
-   */
   set messages(value: Partial<Messages> | null | undefined) {
     const overrides = Object.fromEntries(
       Object.entries(value ?? {}).filter(([, message]) => message !== undefined)
@@ -389,26 +437,47 @@ export class BasketballUploadElement extends BaseElement {
     return this.#queue.items.map((item) => item.file);
   }
 
+  /**
+   * The `<form>` the element belongs to, or `null`.
+   */
   get form(): HTMLFormElement | null {
     return this.#internals?.form ?? null;
   }
 
+  /**
+   * As on native controls: `valueMissing` while `required` and empty.
+   * `undefined` where `ElementInternals` is missing.
+   */
   get validity(): ValidityState | undefined {
     return this.#internals?.validity;
   }
 
+  /**
+   * `messages.required` while `required` and empty, otherwise empty.
+   */
   get validationMessage(): string {
     return this.#internals?.validationMessage ?? '';
   }
 
+  /**
+   * Whether the form validates the element, as on native controls: not while
+   * disabled.
+   */
   get willValidate(): boolean {
     return this.#internals?.willValidate ?? false;
   }
 
+  /**
+   * Whether the element is valid, firing `invalid` when it is not. Always
+   * valid where `ElementInternals` is missing.
+   */
   checkValidity(): boolean {
     return this.#internals?.checkValidity() ?? true;
   }
 
+  /**
+   * Like `checkValidity()`, and shows the message on the dropzone when invalid.
+   */
   reportValidity(): boolean {
     return this.#internals?.reportValidity() ?? true;
   }
@@ -424,7 +493,9 @@ export class BasketballUploadElement extends BaseElement {
   }
 
   /**
-   * Puts files on the court, ready to be shot.
+   * Puts files on the court, ready to be shot (with `instant`, straight into
+   * the basket). Files that do not pass `accept`, `max-size` or `max-files`
+   * fire `file-reject` instead.
    */
   stage(files: Iterable<File>): void {
     if (this.instant) this.#dunk([...files]);
@@ -432,14 +503,17 @@ export class BasketballUploadElement extends BaseElement {
   }
 
   /**
-   * Puts files straight into the basket.
+   * Puts files straight into the basket. Files that do not pass `accept`,
+   * `max-size` or `max-files` fire `file-reject` instead.
    */
   dunk(files: Iterable<File>): void {
     this.#dunk([...files]);
   }
 
   /**
-   * Shoots the card on top of the court with a perfect shot.
+   * Shoots the card on top of the court with a perfect shot. Returns `false`
+   * when it cannot: no card on the court, disabled, another card held or in
+   * the air, or the element not laid out.
    */
   shoot(): boolean {
     const card = this.#staged.at(-1);
@@ -447,14 +521,16 @@ export class BasketballUploadElement extends BaseElement {
   }
 
   /**
-   * Uploads a failed file again.
+   * Uploads a failed file again. Returns `false` when `id` is not an item in
+   * error, or there is no `uploader`.
    */
   retryItem(id: string): boolean {
     return this.#queue.retry(id);
   }
 
   /**
-   * Takes a file out of the basket, aborting its upload.
+   * Takes a file out of the basket, aborting its upload. Returns `false` when
+   * there is no item with this `id`.
    */
   removeItem(id: string): boolean {
     return this.#queue.remove(id);
@@ -971,6 +1047,9 @@ export class BasketballUploadElement extends BaseElement {
 
 // Typed `addEventListener` for the events dispatched above.
 export interface BasketballUploadElement {
+  /**
+   * Typed for the events of `BasketballUploadEventMap`.
+   */
   addEventListener<TType extends keyof BasketballUploadEventMap>(
     type: TType,
     listener: (
@@ -979,11 +1058,19 @@ export interface BasketballUploadElement {
     ) => void,
     options?: boolean | AddEventListenerOptions
   ): void;
+
+  /**
+   * Any other event, as on `HTMLElement`.
+   */
   addEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions
   ): void;
+
+  /**
+   * Typed for the events of `BasketballUploadEventMap`.
+   */
   removeEventListener<TType extends keyof BasketballUploadEventMap>(
     type: TType,
     listener: (
@@ -992,6 +1079,10 @@ export interface BasketballUploadElement {
     ) => void,
     options?: boolean | EventListenerOptions
   ): void;
+
+  /**
+   * Any other event, as on `HTMLElement`.
+   */
   removeEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,

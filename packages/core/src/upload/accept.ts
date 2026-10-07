@@ -1,3 +1,6 @@
+/**
+ * The parts of a `File` that `matchesAccept` reads.
+ */
 export interface FileLike {
   readonly name: string;
   readonly type: string;

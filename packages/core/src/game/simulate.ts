@@ -33,11 +33,25 @@ export interface Body {
  */
 export type ShotEvent = 'board' | 'rim' | 'score' | 'floor' | 'wall';
 
+/**
+ * One step of the simulation.
+ */
 export interface StepResult {
+  /**
+   * The body after the step.
+   */
   readonly body: Body;
+
+  /**
+   * What happened during the step, in the order it was resolved. Usually
+   * empty.
+   */
   readonly events: readonly ShotEvent[];
 }
 
+/**
+ * A body at `position`, leaving at `velocity` (pixels per second).
+ */
 export function launch(position: Vector, velocity: Vector): Body {
   return {
     x: position.x,
@@ -49,6 +63,9 @@ export function launch(position: Vector, velocity: Vector): Body {
   };
 }
 
+/**
+ * Seconds since launch.
+ */
 export function timeOf(body: Body): number {
   return body.steps * PHYSICS.step;
 }

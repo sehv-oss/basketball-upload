@@ -2,6 +2,7 @@ const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
 
 /**
  * Human readable size in decimal units, the way file managers show it: `2_400_000` → `2.4 MB`.
+ * `locale` formats the number (`2,4 MB` in `de`); it defaults to the runtime's.
  */
 export function formatBytes(bytes: number, locale?: string): string {
   let value = bytes > 0 ? bytes : 0;

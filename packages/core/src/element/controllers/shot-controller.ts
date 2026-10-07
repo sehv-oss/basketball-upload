@@ -35,14 +35,29 @@ const GRAB_SCALE = 1.04;
  */
 const PULL_TILT = 14;
 
+/**
+ * What `ShotController` needs from the element: the views it draws on, and
+ * callbacks for what happens to the card.
+ */
 export interface ShotHost {
+  /**
+   * Shows the arc of the shot while aiming and in flight.
+   */
   readonly trajectory: TrajectoryView;
 
   /**
    * The court as currently laid out, or `null` when not rendered.
    */
   measure(): Court | null;
+
+  /**
+   * Whether a card is pulled back: the `aiming` state.
+   */
   setAiming(aiming: boolean): void;
+
+  /**
+   * Whether a card is in the air: the `flying` state.
+   */
   setFlying(flying: boolean): void;
 
   /**

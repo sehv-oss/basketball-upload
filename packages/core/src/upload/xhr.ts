@@ -1,5 +1,8 @@
 import type { Uploader } from './types.ts';
 
+/**
+ * Options of `createXhrUploader`.
+ */
 export interface XhrUploaderOptions {
   /**
    * Endpoint, or a function of the file for one URL per file.
@@ -25,10 +28,17 @@ export interface XhrUploaderOptions {
     | ((file: File) => Record<string, string | Blob>)
     | undefined;
 
+  /**
+   * Request headers, or a function of the file.
+   */
   headers?:
     | Record<string, string>
     | ((file: File) => Record<string, string>)
     | undefined;
+
+  /**
+   * Sends cookies with cross-origin requests. Defaults to `false`.
+   */
   withCredentials?: boolean | undefined;
 }
 
@@ -40,6 +50,10 @@ export class UploadError extends Error {
    * HTTP status, or 0 when the request did not complete.
    */
   readonly status: number;
+
+  /**
+   * Response text, or an empty string when the request did not complete.
+   */
   readonly body: string;
 
   constructor(status: number, body: string) {
