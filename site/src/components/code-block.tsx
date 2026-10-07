@@ -29,7 +29,6 @@ export function CodeBlock({
       {html ? (
         <div
           className="code-block-body"
-          // Shiki escapes the code; the markup is its own.
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (

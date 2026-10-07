@@ -6,15 +6,6 @@ import { defineConfig, type Plugin } from 'vite';
 const packages = fileURLToPath(new URL('../packages/', import.meta.url));
 const coreSources = `${packages}core/src/`;
 
-/**
- * Development only: the site runs the packages from their TypeScript
- * sources, with no build step. The one thing the tsdown build does at bundle
- * time, loading the core's `.css` files as strings, is reproduced with
- * Vite's `?raw`.
- *
- * `vite build` is left alone: the published site consumes `dist/` through
- * `package.json#exports`, which keeps the public API boundary exercised.
- */
 function librarySources(): Plugin[] {
   return [
     {
@@ -49,8 +40,6 @@ function librarySources(): Plugin[] {
     {
       name: 'basketball-upload:reload',
       apply: 'serve',
-      // A defined custom element cannot be swapped for a re-evaluated class,
-      // so a change in a package reloads the page instead of hot-updating.
       hotUpdate({ file }) {
         if (!file.startsWith(packages)) return undefined;
         this.environment.hot.send({ type: 'full-reload' });
@@ -61,7 +50,6 @@ function librarySources(): Plugin[] {
 }
 
 export default defineConfig({
-  // Served from https://sehv-oss.github.io/basketball-upload/
   base: '/basketball-upload/',
   plugins: [react(), librarySources()],
 });

@@ -11,8 +11,6 @@ import './styles/index.css';
 const root = document.getElementById('root');
 if (!root) throw new Error('Missing #root');
 
-// `?reference` renders the element alone, at the size of the reference
-// design, for side-by-side comparisons with its screenshots.
 const reference = new URLSearchParams(location.search).has('reference');
 
 createRoot(root).render(

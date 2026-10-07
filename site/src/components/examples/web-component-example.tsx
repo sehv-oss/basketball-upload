@@ -30,7 +30,6 @@ const HTML = `
 </script>
 `;
 
-/** `<basketball-upload>` created with plain DOM calls: no framework involved. */
 function VanillaHoop(): ReactElement {
   const host = useRef<HTMLDivElement>(null);
 

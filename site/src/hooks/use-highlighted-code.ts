@@ -7,7 +7,6 @@ export type CodeLanguage =
 
 let highlighter: Promise<HighlighterCore> | undefined;
 
-/** Only the languages and themes the site shows, with the JavaScript regex engine (no WASM). */
 function getHighlighter(): Promise<HighlighterCore> {
   highlighter ??= createHighlighterCore({
     themes: [
@@ -26,11 +25,6 @@ function getHighlighter(): Promise<HighlighterCore> {
   return highlighter;
 }
 
-/**
- * Highlighted HTML for `code`, empty until ready. Both themes are emitted as
- * CSS variables (`--shiki-light`, `--shiki-dark`); the stylesheet picks one
- * with `light-dark()`.
- */
 export function useHighlightedCode(
   code: string,
   language: CodeLanguage

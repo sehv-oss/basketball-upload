@@ -39,12 +39,10 @@ basketball-upload::part(file-image) {
 }
 `;
 
-/** The four shapes of the Figma logo, as the artwork of `.fig` cards. */
 function figmaLogo(): Node {
   const namespace = 'http://www.w3.org/2000/svg';
   const logo = document.createElementNS(namespace, 'svg');
   logo.setAttribute('viewBox', '0 0 38 57');
-  // Inline: the artwork lives in the element's Shadow DOM, out of reach of page styles.
   logo.setAttribute(
     'style',
     'display: block; inline-size: 48%; block-size: auto; margin: 4% auto 0'

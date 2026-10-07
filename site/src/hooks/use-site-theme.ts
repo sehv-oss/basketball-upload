@@ -13,7 +13,6 @@ function stored(): SiteTheme {
   }
 }
 
-/** The theme of the site: `data-theme` on the root, remembered across visits. */
 export function useSiteTheme(): [SiteTheme, (theme: SiteTheme) => void] {
   const [theme, setTheme] = useState<SiteTheme>(stored);
 
