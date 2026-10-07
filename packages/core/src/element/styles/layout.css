@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    isolation: isolate;
     container-type: inline-size;
     min-block-size: 36rem;
     font-family: var(--_font-family);

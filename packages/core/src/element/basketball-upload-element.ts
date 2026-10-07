@@ -765,8 +765,8 @@ export class BasketballUploadElement extends BaseElement {
       void play(
         card.element,
         [
-          { transform: `translate(${offsetX}px, ${offsetY}px)` },
-          { transform: 'none' },
+          { translate: `${offsetX}px ${offsetY}px`, composite: 'add' },
+          { translate: '0 0', composite: 'add' },
         ],
         { duration: 380, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
       );

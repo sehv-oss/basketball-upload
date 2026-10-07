@@ -81,6 +81,20 @@ describe('rendering', () => {
       'Upload files'
     );
   });
+
+  it('keeps its layers out of the stacking order of the page', () => {
+    const page = document.createElement('div');
+    page.style.position = 'relative';
+    document.body.append(page);
+    const element = mount({}, page);
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position: absolute; inset: 0; z-index: 1';
+    page.append(overlay);
+    element.stage([pdf()]);
+
+    const { x, y } = center(query(element, '.card'));
+    expect(document.elementFromPoint(x, y)).toBe(overlay);
+  });
 });
 
 describe('theming', () => {
@@ -580,6 +594,27 @@ describe('scoring', () => {
 
     expect(shadow(element).querySelectorAll('.card')).toHaveLength(1);
     expect(element.items).toHaveLength(0);
+  });
+
+  it('starts the cards dropped on the court under the pointer', () => {
+    const element = mount({ multiple: '' });
+    const point = { x: 380, y: 780 };
+    element.dispatchEvent(
+      fileDrag('drop', [pdf('a.pdf'), pdf('b.pdf'), pdf('c.pdf')], point)
+    );
+
+    const cards = shadow(element).querySelectorAll('.card');
+    expect(cards).toHaveLength(3);
+    for (const card of cards) {
+      const [animation] = card.getAnimations();
+      if (!animation) throw new Error('The card does not fly in');
+      animation.pause();
+      animation.currentTime = 0;
+
+      const start = center(card);
+      expect(start.x).toBeCloseTo(point.x, 0);
+      expect(start.y).toBeCloseTo(point.y, 0);
+    }
   });
 
   it('scores a slingshot shot pulled like in the design', async () => {
