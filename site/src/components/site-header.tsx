@@ -8,6 +8,7 @@ const SECTIONS = [
   { id: 'theming', label: 'Theming' },
   { id: 'file-types', label: 'File types' },
   { id: 'forms', label: 'Forms' },
+  { id: 'accessibility', label: 'Accessibility' },
   { id: 'credits', label: 'Credits' },
 ] as const;
 

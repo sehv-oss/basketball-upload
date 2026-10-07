@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import { Credits } from './components/credits.tsx';
+import { AccessibilityExample } from './components/examples/accessibility-example.tsx';
 import { FileTypesExample } from './components/examples/file-types-example.tsx';
 import { FormsExample } from './components/examples/forms-example.tsx';
 import { ReactExample } from './components/examples/react-example.tsx';
@@ -64,6 +65,7 @@ export function App(): ReactElement {
           <FileTypesExample theme={theme} />
           <FormsExample theme={theme} />
           <UploadsExample />
+          <AccessibilityExample theme={theme} />
           <Credits />
         </div>
       </main>

@@ -116,7 +116,9 @@ export function HeroDemo(): ReactElement {
       <p className="demo-hint">
         Grab the file, pull it back like a slingshot and let go: the dots show
         exactly where it goes. Or drop files from your computer on the
-        backboard. Nothing leaves your browser: uploads are simulated.
+        backboard. No mouse?{' '}
+        <a href="#accessibility">Shoot from the keyboard</a>. Nothing leaves
+        your browser: uploads are simulated.
       </p>
     </div>
   );
