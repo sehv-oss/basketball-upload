@@ -29,6 +29,6 @@ The card writes its color as `var(--basketball-upload-file-<kind>, <color>)`, so
 ## Consequences
 
 - Global registration suits design systems; per-element types suit one-off cases and frameworks (the React prop).
-- Thumbnails use object URLs, revoked when the card or row goes away; images that fail to decode fall back to lines.
+- Thumbnails use object URLs, revoked once the image has loaded or failed to, or when the card or row goes away before that: an element removed from the page holds no file. Images that fail to decode fall back to lines.
 - Labels are text, never HTML. A custom artwork is the application's own node, rendered inside the Shadow DOM: it styles itself.
 - The look is resolved when a card is created; changing `fileTypes` affects the files added afterwards.

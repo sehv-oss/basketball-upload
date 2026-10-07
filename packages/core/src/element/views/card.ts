@@ -30,6 +30,10 @@ export function createArtwork(
 ): Artwork {
   const element = createElement('span', attributes);
   let url: string | null = null;
+  const revoke = (): void => {
+    if (url) URL.revokeObjectURL(url);
+    url = null;
+  };
 
   if (
     type.artwork === 'thumbnail' &&
@@ -43,9 +47,11 @@ export function createArtwork(
       draggable: 'false',
       decoding: 'async',
     });
+    image.addEventListener('load', revoke, { once: true });
     image.addEventListener(
       'error',
       () => {
+        revoke();
         element.dataset.artwork = 'lines';
         image.replaceWith(...lines());
       },
@@ -61,13 +67,7 @@ export function createArtwork(
     element.append(...lines());
   }
 
-  return {
-    element,
-    dispose() {
-      if (url) URL.revokeObjectURL(url);
-      url = null;
-    },
-  };
+  return { element, dispose: revoke };
 }
 
 export interface CardView {

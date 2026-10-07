@@ -267,7 +267,7 @@ Each file is drawn as a card of its type: a badge with its label and color, and 
 | `code`    | `.json`, `.js`, `.ts`, `.html`, `.css`…  | `#475569` | lines     |
 | `file`    | anything else                            | neutral   | lines     |
 
-The label defaults to the extension, in capitals (at most 4 characters). Image thumbnails use an object URL, revoked when the card goes away.
+The label defaults to the extension, in capitals (at most 4 characters). Image thumbnails use an object URL, revoked as soon as the image has loaded (or failed to), or when the card goes away before that.
 
 Add your own types, for every element on the page:
 

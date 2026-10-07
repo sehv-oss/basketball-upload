@@ -38,6 +38,28 @@ export function pdf(name = 'final_final_v7.pdf', size = 2_400): File {
   return new File([new Uint8Array(size)], name, { type: 'application/pdf' });
 }
 
+/**
+ * A 24×24 PNG that decodes, for thumbnails.
+ */
+export async function png(name = 'photo.png'): Promise<File> {
+  const canvas = new OffscreenCanvas(24, 24);
+  canvas.getContext('2d')?.fillRect(0, 0, 24, 24);
+  const blob = await canvas.convertToBlob({ type: 'image/png' });
+  return new File([blob], name, { type: 'image/png' });
+}
+
+/**
+ * Whether an object URL still gives its file: `false` once it is revoked.
+ */
+export async function stillResolves(url: string): Promise<boolean> {
+  try {
+    await fetch(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function nextEvent<TEvent extends Event = CustomEvent>(
   target: EventTarget,
   type: string,

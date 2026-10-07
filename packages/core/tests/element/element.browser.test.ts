@@ -16,9 +16,11 @@ import {
   mount,
   nextEvent,
   pdf,
+  png,
   pointer,
   query,
   shadow,
+  stillResolves,
   wait,
 } from './helpers.ts';
 
@@ -836,6 +838,29 @@ describe('file types', () => {
     expect(query<HTMLImageElement>(element, '.card .thumbnail').src).toMatch(
       /^blob:/
     );
+  });
+
+  it('keeps no thumbnail file alive once removed', async () => {
+    const element = mount({ multiple: '' });
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.stage([await png('staged.png')]);
+    element.dunk([await png('dunked.png')]);
+    await change;
+    const thumbnails = [
+      query<HTMLImageElement>(element, '.card:not([inert]) .thumbnail'),
+      query<HTMLImageElement>(element, '.item .thumbnail'),
+    ];
+    await vi.waitFor(() => {
+      for (const thumbnail of thumbnails) {
+        expect(thumbnail.naturalWidth).toBe(24);
+      }
+    });
+
+    element.remove();
+
+    for (const thumbnail of thumbnails) {
+      expect(await stillResolves(thumbnail.src)).toBe(false);
+    }
   });
 
   it('rejects kinds that cannot be part names', () => {
