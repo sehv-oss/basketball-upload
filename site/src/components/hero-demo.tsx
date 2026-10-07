@@ -10,10 +10,11 @@ import {
 import {
   BasketballUpload,
   type BasketballUploadElement,
+  type Messages,
   type Theme,
 } from '@sehv-oss/basketball-upload-react';
 
-import { portugueseMessages } from '../demo/messages.ts';
+import { portugueseMessages, spanishMessages } from '../demo/messages.ts';
 import { designFile } from '../demo/sample-files.ts';
 import { createSimulatedUploader } from '../demo/simulated-uploader.ts';
 import { Segmented } from './segmented.tsx';
@@ -27,13 +28,21 @@ const THEMES = [
 const LANGUAGES = [
   { value: 'en', label: 'EN' },
   { value: 'pt-BR', label: 'PT-BR' },
+  { value: 'es', label: 'ES' },
 ] as const;
 
-/** The reference design, live: one file on the court, ready for the shot. */
+type Language = (typeof LANGUAGES)[number]['value'];
+
+const MESSAGES: Record<Language, Partial<Messages> | undefined> = {
+  en: undefined,
+  'pt-BR': portugueseMessages,
+  es: spanishMessages,
+};
+
 export function HeroDemo(): ReactElement {
   const element = useRef<BasketballUploadElement>(null);
   const [theme, setTheme] = useState<Theme>('light');
-  const [language, setLanguage] = useState<'en' | 'pt-BR'>('en');
+  const [language, setLanguage] = useState<Language>('en');
   const [instant, setInstant] = useState(false);
   const [failing, setFailing] = useState(false);
 
@@ -66,7 +75,7 @@ export function HeroDemo(): ReactElement {
           theme={theme}
           instant={instant}
           uploader={uploader}
-          messages={language === 'pt-BR' ? portugueseMessages : undefined}
+          messages={MESSAGES[language]}
         />
       </div>
 
