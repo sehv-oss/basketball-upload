@@ -9,7 +9,7 @@ describe('<BasketballUpload> on the server', () => {
 
     const html = renderToString(
       <BasketballUpload multiple maxSize={10} theme="dark" name="files">
-        <span slot="title">Enviar arquivos</span>
+        <span slot="title">Send your files</span>
       </BasketballUpload>
     );
 
@@ -18,7 +18,7 @@ describe('<BasketballUpload> on the server', () => {
     expect(html).toContain('max-size="10"');
     expect(html).toContain('theme="dark"');
     expect(html).toContain('name="files"');
-    expect(html).toContain('<span slot="title">Enviar arquivos</span>');
+    expect(html).toContain('<span slot="title">Send your files</span>');
   });
 
   it('leaves out the attributes that are not set', () => {

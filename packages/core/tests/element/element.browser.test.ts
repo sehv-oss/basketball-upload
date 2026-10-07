@@ -59,7 +59,7 @@ describe('rendering', () => {
 
     const title = document.createElement('span');
     title.slot = 'title';
-    title.textContent = 'Enviar arquivos';
+    title.textContent = 'Send your files';
     element.append(title);
     expect(
       query<HTMLSlotElement>(element, 'slot[name="title"]').assignedElements()
@@ -68,11 +68,11 @@ describe('rendering', () => {
 
   it('applies new messages', () => {
     const element = mount();
-    element.messages = { counter: 'Enviados', prompt: 'Solte aqui' };
+    element.messages = { counter: 'Sent', prompt: 'Drop it here' };
 
-    expect(query(element, '.counter-label').textContent).toBe('Enviados');
+    expect(query(element, '.counter-label').textContent).toBe('Sent');
     expect(query(element, 'slot[name="prompt"]').textContent).toBe(
-      'Solte aqui'
+      'Drop it here'
     );
     expect(query(element, 'slot[name="title"]').textContent).toBe(
       'Upload files'
@@ -160,7 +160,7 @@ describe('attributes and properties', () => {
 
   it('take null messages and file types as the defaults', () => {
     const element = mount();
-    element.messages = { title: 'Enviar arquivos' };
+    element.messages = { title: 'Send your files' };
     element.fileTypes = [{ kind: 'figma', match: '.fig' }];
 
     element.messages = null;
@@ -341,10 +341,10 @@ describe('the court', () => {
   it('renames the staged cards when the messages change', () => {
     const element = mount({ multiple: '' });
     element.stage([pdf()]);
-    element.messages = { shoot: (name) => `Arremessar ${name}` };
+    element.messages = { shoot: (name) => `Throw ${name}` };
 
     expect(query(element, '.card').getAttribute('aria-label')).toBe(
-      'Arremessar final_final_v7.pdf'
+      'Throw final_final_v7.pdf'
     );
   });
 });
@@ -757,8 +757,8 @@ describe('forms', () => {
     expect(element.checkValidity()).toBe(false);
     expect(element.validationMessage).toBe('Add at least one file.');
 
-    element.messages = { required: 'Adicione um arquivo.' };
-    expect(element.validationMessage).toBe('Adicione um arquivo.');
+    element.messages = { required: 'Pick a file first.' };
+    expect(element.validationMessage).toBe('Pick a file first.');
 
     element.required = false;
     expect(element.checkValidity()).toBe(true);

@@ -88,7 +88,7 @@ describe('<BasketballUpload>', () => {
       <BasketballUpload
         ref={ref}
         uploader={uploader}
-        messages={{ counter: 'Enviados' }}
+        messages={{ counter: 'Sent' }}
         fileTypes={fileTypes}
         onUploadSuccess={onUploadSuccess}
       />
@@ -96,7 +96,7 @@ describe('<BasketballUpload>', () => {
 
     const hoop = element(ref);
     expect(hoop.uploader).toBe(uploader);
-    expect(hoop.messages.counter).toBe('Enviados');
+    expect(hoop.messages.counter).toBe('Sent');
     expect(hoop.fileTypes).toBe(fileTypes);
 
     hoop.dunk([pdf()]);
@@ -112,7 +112,7 @@ describe('<BasketballUpload>', () => {
       <BasketballUpload
         ref={ref}
         uploader={async () => 'ok'}
-        messages={{ counter: 'Enviados' }}
+        messages={{ counter: 'Sent' }}
         fileTypes={[{ kind: 'figma', match: '.fig' }]}
       />
     );
@@ -173,7 +173,7 @@ describe('<BasketballUpload>', () => {
     const ref = createRef<BasketballUploadElement>();
     await render(
       <BasketballUpload ref={ref}>
-        <span slot="title">Enviar arquivos</span>
+        <span slot="title">Send your files</span>
       </BasketballUpload>
     );
 
@@ -181,6 +181,6 @@ describe('<BasketballUpload>', () => {
       element(ref).shadowRoot?.querySelector<HTMLSlotElement>(
         'slot[name="title"]'
       );
-    expect(slot?.assignedElements()[0]?.textContent).toBe('Enviar arquivos');
+    expect(slot?.assignedElements()[0]?.textContent).toBe('Send your files');
   });
 });
