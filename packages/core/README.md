@@ -222,14 +222,14 @@ The default copy is the one of the design. Override any part of it, in any langu
 
 ```ts
 hoop.messages = {
-  title: 'Enviar arquivos',
-  description: 'Arraste e solte, ou arremesse.',
-  prompt: 'Solte os arquivos aqui',
-  hint: 'ou arremesse',
-  counter: 'Enviados',
-  uploading: 'Enviando…',
-  uploaded: 'Enviado',
-  shoot: (name) => `Arremessar ${name}`,
+  title: 'Custom title',
+  description: 'Custom description',
+  prompt: 'Custom prompt',
+  hint: 'Custom hint',
+  counter: 'Custom counter',
+  uploading: 'Custom uploading',
+  uploaded: 'Custom uploaded',
+  shoot: (name) => `Custom shoot ${name}`,
 };
 ```
 
