@@ -25,6 +25,7 @@ Outside, the compatibility surface is: tokens, parts (`::part(dropzone)`, `::par
 
 - The internal DOM can change freely; tokens, parts and states are public API.
 - No per-theme stylesheets: each token is declared once.
+- Setting the accent recolors its shades (`accent-strong`, `accent-surface`), while the defaults stay the measured colors: the mixes reference `--basketball-upload-accent` without a fallback, so they are invalid, and skipped, until it is set.
 - Requires custom states, `light-dark()`, nesting, cascade layers and container queries: browsers since mid 2024.
 - `@property` is not used: registered properties are ignored inside shadow trees. Progress bars animate `scale` instead.
 - Styles of the page never reach inside; custom artworks (ADR 0007) style themselves.

@@ -320,7 +320,7 @@ The attribute sets `color-scheme` on the element. Every default color is a `ligh
 
 ### CSS custom properties
 
-Set them on the element or on any ancestor (`:root` included) — they are read once, inside, with their default as fallback. Use `light-dark()` to keep an override theme-aware.
+Set them on the element or on any ancestor (`:root` included) — they are read once, inside, with their default as fallback. Use `light-dark()` to keep an override theme-aware. Setting the accent is enough: its shades (`accent-strong`, `accent-surface`) follow it unless you set them too.
 
 ```css
 basketball-upload {

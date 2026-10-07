@@ -83,6 +83,70 @@ describe('rendering', () => {
   });
 });
 
+describe('theming', () => {
+  async function accentShades(
+    element: BasketballUploadElement
+  ): Promise<{ strong: string; surface: string }> {
+    const dropzone = query(element, '.dropzone');
+    element.dispatchEvent(fileDrag('dragover', [pdf()], center(dropzone)));
+    await wait(250);
+
+    return {
+      strong: getComputedStyle(query(element, '.rim-bracket')).fill,
+      surface: getComputedStyle(dropzone).backgroundColor,
+    };
+  }
+
+  function color(value: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = value;
+    document.body.append(probe);
+    return getComputedStyle(probe).color;
+  }
+
+  it('shades the accent of the reference with its own colors', async () => {
+    const light = mount({ theme: 'light' });
+    expect(await accentShades(light)).toEqual({
+      strong: 'rgb(189, 77, 25)',
+      surface: 'rgb(255, 244, 239)',
+    });
+
+    const dark = mount({ theme: 'dark' });
+    expect(await accentShades(dark)).toEqual({
+      strong: 'rgb(196, 82, 31)',
+      surface: color('color-mix(in oklab, #f26a39 14%, #181b21)'),
+    });
+  });
+
+  it('derives the shades of a custom accent', async () => {
+    const element = mount({ theme: 'light' });
+    element.style.setProperty('--basketball-upload-accent', 'rgb(8, 145, 178)');
+
+    expect(await accentShades(element)).toEqual({
+      strong: color('color-mix(in oklab, rgb(8, 145, 178) 84%, black)'),
+      surface: color('color-mix(in oklab, rgb(8, 145, 178) 8%, white)'),
+    });
+  });
+
+  it('keeps the shades set with their own tokens', async () => {
+    const element = mount({ theme: 'light' });
+    element.style.setProperty('--basketball-upload-accent', 'rgb(8, 145, 178)');
+    element.style.setProperty(
+      '--basketball-upload-accent-strong',
+      'rgb(1, 2, 3)'
+    );
+    element.style.setProperty(
+      '--basketball-upload-accent-surface',
+      'rgb(4, 5, 6)'
+    );
+
+    expect(await accentShades(element)).toEqual({
+      strong: 'rgb(1, 2, 3)',
+      surface: 'rgb(4, 5, 6)',
+    });
+  });
+});
+
 describe('attributes and properties', () => {
   it('reflect each other', () => {
     const element = mount();
