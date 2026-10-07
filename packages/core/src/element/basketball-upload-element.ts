@@ -762,11 +762,12 @@ export class BasketballUploadElement extends BaseElement {
       const layer = this.#layer.getBoundingClientRect();
       const offsetX = origin.x - (rest.left - layer.left + rest.width / 2);
       const offsetY = origin.y - (rest.top - layer.top + rest.height / 2);
+      // Added to the resting `translate`: a `transform` would be rotated with the card.
       void play(
         card.element,
         [
-          { transform: `translate(${offsetX}px, ${offsetY}px)` },
-          { transform: 'none' },
+          { translate: `${offsetX}px ${offsetY}px`, composite: 'add' },
+          { translate: '0 0', composite: 'add' },
         ],
         { duration: 380, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
       );
