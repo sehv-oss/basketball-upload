@@ -7,6 +7,7 @@ export {
   defaultFileTypes,
   defaultMessages,
   registerFileType,
+  UploadError,
   type BasketballUploadElement,
   type BasketballUploadEventMap,
   type FileArtwork,

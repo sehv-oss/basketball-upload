@@ -76,7 +76,7 @@ Keep `uploader`, `messages` and `fileTypes` stable (module scope, `useMemo`, `us
 
 For forms, render it inside a `<form>` with a `name`, as you would an `<input type="file">`; with React 19 actions, the files arrive in the `FormData`.
 
-Types and helpers of the core (`createXhrUploader`, `registerFileType`, `defaultMessages`, `defaultFileTypes`, `Uploader`, `UploadItem`, `FileType`, `Messages`, …) are re-exported.
+The helpers and types needed to use the component are re-exported from the core: `createXhrUploader`, `UploadError`, `registerFileType`, `defaultMessages`, `defaultFileTypes`, and the types of the element, its props and events (`BasketballUploadElement`, `Uploader`, `UploadItem`, `FileType`, `Messages`, …). The ones for building around the element (`resolveFileType`, `matchesAccept`, `formatBytes`, `registerBasketballUpload`) come from [`@sehv-oss/basketball-upload`](../core).
 
 ## License
 
