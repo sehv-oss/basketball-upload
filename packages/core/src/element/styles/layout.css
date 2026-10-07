@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    /* The hoop layers interleave in here, never with the z-indexes of the page. */
     isolation: isolate;
     container-type: inline-size;
     min-block-size: 36rem;
