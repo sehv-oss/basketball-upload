@@ -1,6 +1,6 @@
 {
   "name": "@sehv-oss/basketball-upload",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Basketball-themed drag and drop file upload Web Component: drop your files, or take the shot.",
   "type": "module",
   "exports": {
