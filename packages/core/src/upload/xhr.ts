@@ -125,7 +125,11 @@ export function createXhrUploader(options: XhrUploaderOptions): Uploader {
       });
       request.addEventListener('error', () => reject(new UploadError(0, '')));
       request.addEventListener('abort', () => reject(signal.reason));
-      signal.addEventListener('abort', () => request.abort(), { once: true });
+      const abort = (): void => request.abort();
+      signal.addEventListener('abort', abort, { once: true });
+      request.addEventListener('loadend', () =>
+        signal.removeEventListener('abort', abort)
+      );
 
       const fieldName =
         options.fieldName === undefined ? 'file' : options.fieldName;

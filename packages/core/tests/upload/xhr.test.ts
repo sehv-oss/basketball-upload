@@ -45,7 +45,7 @@ class FakeXMLHttpRequest extends EventTarget {
 
   abort(): void {
     this.aborted = true;
-    this.dispatchEvent(new Event('abort'));
+    this.#end('abort');
   }
 
   progress(loaded: number, total?: number): void {
@@ -66,11 +66,16 @@ class FakeXMLHttpRequest extends EventTarget {
     this.status = status;
     this.responseText = body;
     this.#responseHeaders = headers;
-    this.dispatchEvent(new Event('load'));
+    this.#end('load');
   }
 
   fail(): void {
-    this.dispatchEvent(new Event('error'));
+    this.#end('error');
+  }
+
+  #end(type: 'load' | 'error' | 'abort'): void {
+    this.dispatchEvent(new Event(type));
+    this.dispatchEvent(new Event('loadend'));
   }
 }
 
@@ -238,6 +243,24 @@ describe('createXhrUploader', () => {
 
     expect(lastRequest().aborted).toBe(true);
     await expect(upload).rejects.toBe(reason);
+  });
+
+  it('lets go of the signal once the request ends', async () => {
+    const page = new AbortController();
+    const uploader = createXhrUploader({ url: '/upload' });
+
+    const stored = uploader(pdf, context(page.signal));
+    const storedRequest = lastRequest();
+    storedRequest.respond(201);
+    await stored;
+    const failed = uploader(pdf, context(page.signal));
+    const failedRequest = lastRequest();
+    failedRequest.fail();
+    await failed.catch(() => undefined);
+
+    page.abort();
+    expect(storedRequest.aborted).toBe(false);
+    expect(failedRequest.aborted).toBe(false);
   });
 
   it('sends nothing when the signal is already aborted', async () => {
