@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactElement } from 'react';
+import * as React from 'react';
 
 import { registerBasketballUpload } from '@sehv-oss/basketball-upload';
 
@@ -30,10 +30,10 @@ const HTML = `
 </script>
 `;
 
-function VanillaHoop(): ReactElement {
-  const host = useRef<HTMLDivElement>(null);
+function VanillaHoop(): React.ReactElement {
+  const host = React.useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     registerBasketballUpload();
     const hoop = document.createElement('basketball-upload');
     hoop.multiple = true;
@@ -46,7 +46,7 @@ function VanillaHoop(): ReactElement {
   return <div ref={host} className="example-stage" />;
 }
 
-export function WebComponentExample(): ReactElement {
+export function WebComponentExample(): React.ReactElement {
   return (
     <Section
       id="web-component"

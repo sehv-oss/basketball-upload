@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 
 export type SiteTheme = 'system' | 'light' | 'dark';
 
@@ -14,9 +14,9 @@ function stored(): SiteTheme {
 }
 
 export function useSiteTheme(): [SiteTheme, (theme: SiteTheme) => void] {
-  const [theme, setTheme] = useState<SiteTheme>(stored);
+  const [theme, setTheme] = React.useState<SiteTheme>(stored);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const root = document.documentElement;
     if (theme === 'system') delete root.dataset.theme;
     else root.dataset.theme = theme;

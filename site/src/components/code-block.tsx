@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type * as React from 'react';
 
 import {
   useHighlightedCode,
@@ -16,7 +16,7 @@ export function CodeBlock({
   code,
   language,
   filename,
-}: CodeBlockProps): ReactElement {
+}: CodeBlockProps): React.ReactElement {
   const html = useHighlightedCode(code, language);
   const plain = code.trim();
 

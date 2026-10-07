@@ -51,6 +51,7 @@ The ADRs in [`docs/adr`](docs/adr) are the reference. Read the one for the area 
 - **File names in `src/` and `tests/` are kebab-case.** Classes keep PascalCase names inside them: `UploadQueue` lives in `upload-queue.ts`. Suffixes after a dot are fine: `.d.ts`, `.fixture.ts`, and the test suffixes below.
 - Relative imports carry the `.ts` extension.
 - Named exports only. Default exports are for configuration files.
+- React is imported as a namespace, `import * as React from 'react'`, and used as `React.useRef` or `React.ReactNode`; a file that only uses its types writes `import type * as React from 'react'`. React DOM too: `import * as ReactDOM from 'react-dom/client'` and `import * as ReactDOMServer from 'react-dom/server'`.
 - The TypeScript presets (`@sehv-oss/typescript-config`) enable `erasableSyntaxOnly` (no `enum`, `namespace` or parameter properties), `verbatimModuleSyntax` (type-only imports say `type`) and `exactOptionalPropertyTypes` (an optional prop that accepts `undefined` declares `| undefined`).
 - Visible copy and accessible names come from `Messages` (`element/messages.ts`); views never hard-code text.
 - Shared dependency versions live in the `catalog:` of `pnpm-workspace.yaml`; a `package.json` refers to them as `catalog:`. pnpm 11 holds back releases that are too recent: pick the newest version it accepts, without adding a `minimumReleaseAgeExclude`. The pnpm version matches the rest of the organization; changing it is an organization-wide decision.

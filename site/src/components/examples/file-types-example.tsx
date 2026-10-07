@@ -1,4 +1,4 @@
-import { useMemo, useRef, type ReactElement } from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -67,13 +67,13 @@ export function FileTypesExample({
   theme,
 }: {
   theme: SiteTheme;
-}): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const uploader = useMemo(
+}): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const uploader = React.useMemo(
     () => createSimulatedUploader({ duration: 2500 }),
     []
   );
-  const fileTypes = useMemo<FileType[]>(
+  const fileTypes = React.useMemo<FileType[]>(
     () => [
       {
         kind: 'figma',

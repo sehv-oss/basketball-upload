@@ -1,14 +1,17 @@
-import { useEffect, useState, type ReactElement } from 'react';
+import * as React from 'react';
 
 interface CopyButtonProps {
   text: string;
   label: string;
 }
 
-export function CopyButton({ text, label }: CopyButtonProps): ReactElement {
-  const [copied, setCopied] = useState(false);
+export function CopyButton({
+  text,
+  label,
+}: CopyButtonProps): React.ReactElement {
+  const [copied, setCopied] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 1800);
     return () => clearTimeout(timer);

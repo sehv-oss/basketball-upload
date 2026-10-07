@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type * as React from 'react';
 
 import { Credits } from './components/credits.tsx';
 import { AccessibilityExample } from './components/examples/accessibility-example.tsx';
@@ -24,7 +24,7 @@ const FEATURES = [
   'Zero dependencies',
 ];
 
-export function App(): ReactElement {
+export function App(): React.ReactElement {
   const [theme, setTheme] = useSiteTheme();
 
   return (

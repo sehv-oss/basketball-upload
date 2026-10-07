@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type * as React from 'react';
 
 import { CodeBlock } from '../code-block.tsx';
 import { Section } from '../section.tsx';
@@ -33,7 +33,7 @@ const toS3: Uploader = async (file, { signal, onProgress }) => {
 hoop.uploader = toS3;
 `;
 
-export function UploadsExample(): ReactElement {
+export function UploadsExample(): React.ReactElement {
   return (
     <Section
       id="uploads"

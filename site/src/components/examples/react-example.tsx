@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactElement,
-} from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -48,22 +41,26 @@ interface LogEntry {
   text: string;
 }
 
-export function ReactExample({ theme }: { theme: SiteTheme }): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const uploader = useMemo(
+export function ReactExample({
+  theme,
+}: {
+  theme: SiteTheme;
+}): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const uploader = React.useMemo(
     () => createSimulatedUploader({ duration: 2500 }),
     []
   );
-  const [log, setLog] = useState<LogEntry[]>([]);
-  const next = useRef(0);
+  const [log, setLog] = React.useState<LogEntry[]>([]);
+  const next = React.useRef(0);
 
-  const write = useCallback((type: string, text: string) => {
+  const write = React.useCallback((type: string, text: string) => {
     next.current += 1;
     const entry = { id: next.current, type, text };
     setLog((entries) => [entry, ...entries].slice(0, 6));
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     element.current?.clear();
     element.current?.stage([designFile()]);
   }, []);

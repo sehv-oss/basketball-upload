@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  type ReactElement,
-  type ReactNode,
-} from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -17,7 +10,7 @@ import { createSimulatedUploader } from '../../demo/simulated-uploader.ts';
 import type { SiteTheme } from '../../hooks/use-site-theme.ts';
 import { Section } from '../section.tsx';
 
-const KEYS: { keys: ReactNode; action: ReactNode }[] = [
+const KEYS: { keys: React.ReactNode; action: React.ReactNode }[] = [
   {
     keys: <kbd>Tab</kbd>,
     action: 'Moves to the dropzone, the retry buttons and the file on top.',
@@ -72,14 +65,14 @@ export function AccessibilityExample({
   theme,
 }: {
   theme: SiteTheme;
-}): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const uploader = useMemo(
+}): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const uploader = React.useMemo(
     () => createSimulatedUploader({ duration: 2500 }),
     []
   );
 
-  const reset = useCallback(() => {
+  const reset = React.useCallback(() => {
     let active = true;
     void sampleFiles().then((files) => {
       if (!active) return;
@@ -91,7 +84,7 @@ export function AccessibilityExample({
     };
   }, []);
 
-  useEffect(reset, [reset]);
+  React.useEffect(reset, [reset]);
 
   return (
     <Section

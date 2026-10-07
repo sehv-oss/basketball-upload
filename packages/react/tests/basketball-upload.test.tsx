@@ -1,4 +1,4 @@
-import { createRef } from 'react';
+import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -21,7 +21,7 @@ function element(ref: {
 
 describe('<BasketballUpload>', () => {
   it('renders the custom element, with its props as attributes', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     await render(
       <BasketballUpload
         ref={ref}
@@ -49,7 +49,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('removes attributes when props go away', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     const screen = await render(
       <BasketballUpload ref={ref} multiple theme="dark" maxSize={10} />
     );
@@ -62,7 +62,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('calls the latest callbacks with the event details', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     const first = vi.fn();
     const second = vi.fn();
     const screen = await render(
@@ -80,7 +80,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('applies the uploader, messages and file types to the element', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     const uploader = vi.fn(async () => 'ok');
     const fileTypes: FileType[] = [{ kind: 'figma', match: '.fig' }];
     const onUploadSuccess = vi.fn();
@@ -107,7 +107,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('resets the uploader, messages and file types when they go away', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     const screen = await render(
       <BasketballUpload
         ref={ref}
@@ -125,7 +125,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('stops calling a callback once removed, and after unmounting', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     const onFileReject = vi.fn();
     const screen = await render(
       <BasketballUpload ref={ref} accept=".pdf" onFileReject={onFileReject} />
@@ -145,7 +145,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('renders the tag name it is given, registering it', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     await render(<BasketballUpload ref={ref} tagName="react-hoop" multiple />);
 
     const hoop = element(ref);
@@ -155,7 +155,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('leaves out an unknown theme and empty strings', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     await render(
       <BasketballUpload
         ref={ref}
@@ -170,7 +170,7 @@ describe('<BasketballUpload>', () => {
   });
 
   it('passes children through as slotted content', async () => {
-    const ref = createRef<BasketballUploadElement>();
+    const ref = React.createRef<BasketballUploadElement>();
     await render(
       <BasketballUpload ref={ref}>
         <span slot="title">Send your files</span>

@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type * as React from 'react';
 
 import { Section } from './section.tsx';
 
@@ -20,7 +20,7 @@ const LINKS = [
   },
 ] as const;
 
-export function Credits(): ReactElement {
+export function Credits(): React.ReactElement {
   return (
     <Section
       id="credits"

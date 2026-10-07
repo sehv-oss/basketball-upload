@@ -1,13 +1,4 @@
-import {
-  createElement,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  type CSSProperties,
-  type ReactNode,
-  type Ref,
-} from 'react';
+import * as React from 'react';
 
 import {
   DEFAULT_TAG_NAME,
@@ -31,7 +22,7 @@ export interface BasketballUploadProps {
   /**
    * The `<basketball-upload>` element, for its methods and properties.
    */
-  ref?: Ref<BasketballUploadElement> | undefined;
+  ref?: React.Ref<BasketballUploadElement> | undefined;
 
   /**
    * Defaults to `system`.
@@ -116,12 +107,12 @@ export interface BasketballUploadProps {
   /**
    * Set on the element, custom properties (`--basketball-upload-*`) included.
    */
-  style?: CSSProperties | undefined;
+  style?: React.CSSProperties | undefined;
 
   /**
    * Slotted content, such as `<span slot="title">`.
    */
-  children?: ReactNode | undefined;
+  children?: React.ReactNode | undefined;
 
   /**
    * A file did not pass `accept`, `maxSize` or `maxFiles`. Gets the `detail` of the `file-reject` event, not the event.
@@ -186,7 +177,9 @@ const EVENTS: { [TType in keyof BasketballUploadEventMap]: keyof Callbacks } = {
  * (`uploader`, `messages`, `fileTypes`) and the event callbacks are applied to
  * the element after it mounts.
  */
-export function BasketballUpload(props: BasketballUploadProps): ReactNode {
+export function BasketballUpload(
+  props: BasketballUploadProps
+): React.ReactNode {
   const {
     ref,
     theme,
@@ -218,14 +211,14 @@ export function BasketballUpload(props: BasketballUploadProps): ReactNode {
 
   registerBasketballUpload({ tagName });
 
-  const elementRef = useRef<BasketballUploadElement>(null);
-  useImperativeHandle(
+  const elementRef = React.useRef<BasketballUploadElement>(null);
+  React.useImperativeHandle(
     ref,
     () => elementRef.current as BasketballUploadElement,
     []
   );
 
-  const callbacks = useRef<Callbacks>({});
+  const callbacks = React.useRef<Callbacks>({});
   callbacks.current = {
     onFileReject,
     onShot,
@@ -236,7 +229,7 @@ export function BasketballUpload(props: BasketballUploadProps): ReactNode {
     onChange,
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
@@ -256,22 +249,22 @@ export function BasketballUpload(props: BasketballUploadProps): ReactNode {
     return () => listeners.abort();
   }, []);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const element = elementRef.current;
     if (element) element.uploader = uploader ?? null;
   }, [uploader]);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const element = elementRef.current;
     if (element) element.messages = messages;
   }, [messages]);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const element = elementRef.current;
     if (element) element.fileTypes = fileTypes;
   }, [fileTypes]);
 
-  return createElement(
+  return React.createElement(
     tagName,
     {
       ...rest,

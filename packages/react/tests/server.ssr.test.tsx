@@ -1,4 +1,4 @@
-import { renderToString } from 'react-dom/server';
+import * as ReactDOMServer from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { BasketballUpload } from '../src/basketball-upload-react.ts';
@@ -7,7 +7,7 @@ describe('<BasketballUpload> on the server', () => {
   it('renders the custom element with its attributes, without a DOM', () => {
     expect(typeof document).toBe('undefined');
 
-    const html = renderToString(
+    const html = ReactDOMServer.renderToString(
       <BasketballUpload multiple maxSize={10} theme="dark" name="files">
         <span slot="title">Send your files</span>
       </BasketballUpload>
@@ -22,7 +22,9 @@ describe('<BasketballUpload> on the server', () => {
   });
 
   it('leaves out the attributes that are not set', () => {
-    const html = renderToString(<BasketballUpload theme="system" />);
+    const html = ReactDOMServer.renderToString(
+      <BasketballUpload theme="system" />
+    );
 
     expect(html).toBe('<basketball-upload></basketball-upload>');
   });

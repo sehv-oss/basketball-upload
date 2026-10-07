@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactElement } from 'react';
+import * as React from 'react';
 
 import { BasketballUpload } from '@sehv-oss/basketball-upload-react';
 import { formatBytes } from '@sehv-oss/basketball-upload';
@@ -23,10 +23,14 @@ interface Entry {
   value: string;
 }
 
-export function FormsExample({ theme }: { theme: SiteTheme }): ReactElement {
-  const [entries, setEntries] = useState<Entry[] | null>(null);
+export function FormsExample({
+  theme,
+}: {
+  theme: SiteTheme;
+}): React.ReactElement {
+  const [entries, setEntries] = React.useState<Entry[] | null>(null);
 
-  const submit = (event: FormEvent<HTMLFormElement>): void => {
+  const submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setEntries(

@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactElement,
-} from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -39,31 +32,31 @@ const MESSAGES: Record<Language, Partial<Messages> | undefined> = {
   es: spanishMessages,
 };
 
-export function HeroDemo(): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const [theme, setTheme] = useState<Theme>('light');
-  const [language, setLanguage] = useState<Language>('en');
-  const [instant, setInstant] = useState(false);
-  const [failing, setFailing] = useState(false);
+export function HeroDemo(): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const [theme, setTheme] = React.useState<Theme>('light');
+  const [language, setLanguage] = React.useState<Language>('en');
+  const [instant, setInstant] = React.useState(false);
+  const [failing, setFailing] = React.useState(false);
 
-  const failingRef = useRef(failing);
-  useEffect(() => {
+  const failingRef = React.useRef(failing);
+  React.useEffect(() => {
     failingRef.current = failing;
   }, [failing]);
 
-  const uploader = useMemo(
+  const uploader = React.useMemo(
     () => createSimulatedUploader({ shouldFail: () => failingRef.current }),
     []
   );
 
-  const reset = useCallback(() => {
+  const reset = React.useCallback(() => {
     const hoop = element.current;
     if (!hoop) return;
     hoop.clear();
     hoop.stage([designFile()]);
   }, []);
 
-  useEffect(reset, [reset]);
+  React.useEffect(reset, [reset]);
 
   return (
     <div className="demo">

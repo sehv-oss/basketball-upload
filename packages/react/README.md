@@ -31,13 +31,13 @@ import {
   createXhrUploader,
   type BasketballUploadElement,
 } from '@sehv-oss/basketball-upload-react';
-import { useRef } from 'react';
+import * as React from 'react';
 
 // Stable across renders: module scope, useMemo or useCallback.
 const uploader = createXhrUploader({ url: '/api/uploads' });
 
 export function Uploads() {
-  const hoop = useRef<BasketballUploadElement>(null);
+  const hoop = React.useRef<BasketballUploadElement>(null);
 
   return (
     <>

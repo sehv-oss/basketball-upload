@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { createHighlighterCore, type HighlighterCore } from 'shiki/core';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 
@@ -29,9 +29,9 @@ export function useHighlightedCode(
   code: string,
   language: CodeLanguage
 ): string {
-  const [html, setHtml] = useState('');
+  const [html, setHtml] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     let current = true;
     void getHighlighter().then((instance) => {
       if (!current) return;

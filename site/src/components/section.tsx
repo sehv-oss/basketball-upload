@@ -1,10 +1,10 @@
-import type { PropsWithChildren, ReactElement, ReactNode } from 'react';
+import type * as React from 'react';
 
-type SectionProps = PropsWithChildren<{
+type SectionProps = React.PropsWithChildren<{
   id: string;
   badge: string;
   title: string;
-  description: ReactNode;
+  description: React.ReactNode;
 }>;
 
 export function Section({
@@ -13,7 +13,7 @@ export function Section({
   title,
   description,
   children,
-}: SectionProps): ReactElement {
+}: SectionProps): React.ReactElement {
   return (
     <section id={id} className="section" aria-labelledby={`${id}-title`}>
       <header className="section-header">

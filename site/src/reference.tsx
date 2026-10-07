@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type ReactElement } from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -8,11 +8,11 @@ import {
 import { designFile } from './demo/sample-files.ts';
 import { createSimulatedUploader } from './demo/simulated-uploader.ts';
 
-export function Reference(): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const uploader = useMemo(() => createSimulatedUploader(), []);
+export function Reference(): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const uploader = React.useMemo(() => createSimulatedUploader(), []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     element.current?.clear();
     element.current?.stage([designFile()]);
   }, []);

@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from 'react';
+import * as React from 'react';
 
 import { CopyButton } from './copy-button.tsx';
 
@@ -14,8 +14,8 @@ function command(manager: Manager, name: string): string {
   return manager === 'npm' ? `npm install ${name}` : `${manager} add ${name}`;
 }
 
-export function InstallTabs(): ReactElement {
-  const [manager, setManager] = useState<Manager>('npm');
+export function InstallTabs(): React.ReactElement {
+  const [manager, setManager] = React.useState<Manager>('npm');
 
   return (
     <div className="install">

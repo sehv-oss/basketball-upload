@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import * as React from 'react';
 
 import {
   BasketballUpload,
@@ -45,11 +45,11 @@ basketball-upload:state(drop-target)::part(backboard-square) {
 }
 `;
 
-export function ThemingExample(): ReactElement {
-  const element = useRef<BasketballUploadElement>(null);
-  const [look, setLook] = useState<Look>('hardwood');
+export function ThemingExample(): React.ReactElement {
+  const element = React.useRef<BasketballUploadElement>(null);
+  const [look, setLook] = React.useState<Look>('hardwood');
 
-  useEffect(() => {
+  React.useEffect(() => {
     element.current?.clear();
     element.current?.stage([designFile()]);
   }, []);
