@@ -1,15 +1,24 @@
 import type { PreviewDot } from '../../game/simulate.ts';
 import { svg } from '../dom.ts';
 
-/** Dot radius, in rim units: 3.6 px on the 164 px rim of the design. */
+/**
+ * Dot radius, in rim units: 3.6 px on the 164 px rim of the design.
+ */
 const DOT_RADIUS = 0.022;
 
 export interface TrajectoryView {
   readonly element: SVGSVGElement;
-  /** Draws the dots of a preview. `unit` is the rim width in pixels. */
+
+  /**
+   * Draws the dots of a preview. `unit` is the rim width in pixels.
+   */
   show(dots: readonly PreviewDot[], unit: number): void;
-  /** Hides the dots the card has already passed. */
+
+  /**
+   * Hides the dots the card has already passed.
+   */
   hideBefore(steps: number): void;
+
   clear(): void;
 }
 

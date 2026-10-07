@@ -24,6 +24,7 @@ function scores(start: Body): boolean {
     if (events.includes('score')) return true;
     if (events.includes('floor')) return false;
   }
+
   return false;
 }
 

@@ -1,6 +1,4 @@
 @layer components {
-  /* Header */
-
   .title {
     font-size: clamp(1.5rem, 3cqi + 1rem, 2rem);
     font-weight: 700;
@@ -42,8 +40,6 @@
     text-align: center;
   }
 
-  /* The dropzone is the backboard */
-
   .dropzone {
     position: absolute;
     inset: 0;
@@ -51,7 +47,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Percentages of padding follow the width: the hoop keeps its ratio. */
     padding-block-start: 7.5%;
     border-radius: var(--_radius);
     color: var(--_muted-foreground);
@@ -104,8 +99,6 @@
     font-size: 0.9375rem;
     color: var(--_subtle-foreground);
   }
-
-  /* Target square, rim and net */
 
   .square {
     position: absolute;

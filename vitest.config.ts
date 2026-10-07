@@ -13,7 +13,6 @@ const coreSources = fileURLToPath(
   new URL('./packages/core/src/', import.meta.url)
 );
 
-/** The core's `.css` files as strings, the way its tsdown build loads them. */
 function cssText(): Plugin {
   return {
     name: 'basketball-upload:css-text',
@@ -22,17 +21,16 @@ function cssText(): Plugin {
       if (!source.endsWith('.css') || !importer?.startsWith(coreSources)) {
         return null;
       }
+
       return this.resolve(`${source}?raw`, importer, { skipSelf: true });
     },
   };
 }
 
-/** React tests run against the core sources: no build needed. */
 const alias = {
   '@sehv-oss/basketball-upload': `${coreSources}basketball-upload.ts`,
 };
 
-/** A fresh object per project: Vitest names the instances it is given. */
 const browser = () => ({
   enabled: true,
   provider: playwright(),

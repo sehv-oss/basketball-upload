@@ -9,8 +9,12 @@ export interface Rect {
 
 export interface Rim {
   readonly left: number;
+
   readonly right: number;
-  /** Height of the rim plane. */
+
+  /**
+   * Height of the rim plane.
+   */
   readonly y: number;
 }
 
@@ -19,29 +23,56 @@ export interface Rim {
  * CSS owns the layout; the game only measures it (see `courtFromRects`).
  */
 export interface Court {
-  /** Rim width in pixels: the `u` the physics constants are expressed in. */
+  /**
+   * Rim width in pixels: the `u` the physics constants are expressed in.
+   */
   readonly unit: number;
-  /** Play area: walls, ceiling and floor. */
+
+  /**
+   * Play area: walls, ceiling and floor.
+   */
   readonly bounds: Rect;
-  /** The dropzone, which doubles as the backboard. */
+
+  /**
+   * The dropzone, which doubles as the backboard.
+   */
   readonly board: Rect;
-  /** The orange target square on the board. */
+
+  /**
+   * The orange target square on the board.
+   */
   readonly square: Rect;
+
   readonly rim: Rim;
-  /** Bottom edge of the net, where scored cards come to rest. */
+
+  /**
+   * Bottom edge of the net, where scored cards come to rest.
+   */
   readonly netBottom: number;
-  /** Center of a staged card. */
+
+  /**
+   * Center of a staged card.
+   */
   readonly rest: Vec;
 }
 
 export interface CourtRects {
   readonly host: Rect;
+
   readonly board: Rect;
+
   readonly square: Rect;
-  /** Bounding box of the rim drawing: the rim plane is its vertical center. */
+
+  /**
+   * Bounding box of the rim drawing: the rim plane is its vertical center.
+   */
   readonly rim: Rect;
+
   readonly net: Rect;
-  /** Box a staged card rests in. */
+
+  /**
+   * Box a staged card rests in.
+   */
   readonly spot: Rect;
 }
 
@@ -54,7 +85,9 @@ function relative(rect: Rect, origin: Rect): Rect {
   };
 }
 
-/** Builds a court from client rectangles (`getBoundingClientRect`). */
+/**
+ * Builds a court from client rectangles (`getBoundingClientRect`).
+ */
 export function courtFromRects(rects: CourtRects): Court {
   const { host } = rects;
   const rim = relative(rects.rim, host);

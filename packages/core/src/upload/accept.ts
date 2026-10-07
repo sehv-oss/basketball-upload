@@ -20,16 +20,20 @@ export function matchesAccept(
 
   const name = file.name.toLowerCase();
   const type = file.type.toLowerCase();
-
   return tokens.some((token) => {
     if (token === '*' || token === '*/*') return true;
+
     if (token.startsWith('.')) return name.endsWith(token);
+
     if (token.endsWith('/*')) return type.startsWith(token.slice(0, -1));
+
     return type === token;
   });
 }
 
-/** Lowercase extension without the dot, or an empty string. */
+/**
+ * Lowercase extension without the dot, or an empty string.
+ */
 export function fileExtension(name: string): string {
   const dot = name.lastIndexOf('.');
   return dot > 0 && dot < name.length - 1

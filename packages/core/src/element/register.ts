@@ -1,7 +1,9 @@
 import { BasketballUploadElement } from './BasketballUploadElement.ts';
 
 export interface RegisterBasketballUploadOptions {
-  /** Custom element name. Defaults to `basketball-upload`. */
+  /**
+   * Custom element name. Defaults to `basketball-upload`.
+   */
   tagName?: string | undefined;
 }
 
@@ -19,7 +21,6 @@ export function registerBasketballUpload(
   if (typeof customElements === 'undefined') return;
   if (customElements.get(tagName)) return;
 
-  // A constructor can only be defined once per registry; other names get a subclass.
   customElements.define(
     tagName,
     tagName === DEFAULT_TAG_NAME

@@ -1,8 +1,7 @@
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
 
 /**
- * Human readable size in decimal units, the way file managers show it:
- * `2_400_000` → `2.4 MB`.
+ * Human readable size in decimal units, the way file managers show it: `2_400_000` → `2.4 MB`.
  */
 export function formatBytes(bytes: number, locale?: string): string {
   let value = Math.max(0, bytes);
@@ -14,5 +13,6 @@ export function formatBytes(bytes: number, locale?: string): string {
   const number = new Intl.NumberFormat(locale, {
     maximumFractionDigits: unit === 0 ? 0 : 1,
   }).format(value);
+
   return `${number} ${UNITS[unit]}`;
 }

@@ -1,5 +1,3 @@
-/** Small helpers for building the Shadow DOM without a template library. */
-
 export function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attributes: Record<string, string> = {},
@@ -37,7 +35,9 @@ const icons = {
 
 export type IconName = keyof typeof icons;
 
-/** A 24×24 stroked icon, hidden from assistive technology. */
+/**
+ * A 24×24 stroked icon, hidden from assistive technology.
+ */
 export function icon(
   name: IconName,
   attributes: Record<string, string> = {}
@@ -55,7 +55,9 @@ export function icon(
   );
 }
 
-/** Replaces the children of a slot: its fallback content. */
+/**
+ * Replaces the children of a slot: its fallback content.
+ */
 export function setFallback(slot: HTMLSlotElement, text: string): void {
   if (slot.textContent !== text) slot.textContent = text;
 }

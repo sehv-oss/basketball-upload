@@ -9,19 +9,34 @@ import { play } from '../motion.ts';
  */
 export interface HoopView {
   readonly element: HTMLElement;
+
   readonly dropzone: HTMLButtonElement;
+
   readonly square: HTMLElement;
-  /** The front of the rim: its box is the rim the physics measures. */
+
+  /**
+   * The front of the rim: its box is the rim the physics measures.
+   */
   readonly rim: SVGSVGElement;
+
   readonly net: SVGSVGElement;
+
   update(messages: Messages): void;
-  /** The net swings as a card goes through. */
+
+  /**
+   * The net swings as a card goes through.
+   */
   swish(): void;
-  /** The "+1" over the square. */
+
+  /**
+   * The "+1" over the square.
+   */
   celebrate(reducedMotion: boolean): void;
 }
 
-/** Net in a 164×104 box: the rim width on top, narrowing towards the bottom. */
+/**
+ * Net in a 164×104 box: the rim width on top, narrowing towards the bottom.
+ */
 function netLines(): SVGElement[] {
   const top = [3, 29.3, 55.7, 82, 108.3, 134.7, 161];
   const bottom = [31, 48, 65, 82, 99, 116, 133];
@@ -32,8 +47,6 @@ function netLines(): SVGElement[] {
     lines.push(svg('line', { x1, y1, x2, y2 }));
   };
 
-  // Each knot on the rim hangs a cord to the neighboring knots below: the
-  // cords cross, which gives the net its diamond pattern.
   for (let index = 0; index < top.length; index += 1) {
     const x = top[index] ?? 0;
     const left = bottom[index - 1];

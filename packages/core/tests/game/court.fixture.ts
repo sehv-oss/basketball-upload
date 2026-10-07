@@ -1,6 +1,5 @@
 import type { Court } from '../../src/game/court.ts';
 
-/** The court of the reference design: a 754 × 887 frame, a 400 px wide board. */
 export const designCourt: Court = {
   unit: 164,
   bounds: { x: 0, y: 0, width: 754, height: 887 },

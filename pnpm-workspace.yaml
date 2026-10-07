@@ -3,9 +3,6 @@ packages:
   - packages/react
   - site
 
-allowBuilds:
-  esbuild: false
-
 engineStrict: true
 
 catalog:

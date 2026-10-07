@@ -2,7 +2,9 @@ import type { ResolvedFileType } from '../../file-types/types.ts';
 import { el } from '../dom.ts';
 import { poseStyle, type Pose } from '../motion.ts';
 
-/** The CSS color of a file type: its token when set, its own color otherwise. */
+/**
+ * The CSS color of a file type: its token when set, its own color otherwise.
+ */
 export function fileColor(type: ResolvedFileType): string {
   return `var(--basketball-upload-file-${type.kind}, ${type.color ?? 'var(--_file-badge)'})`;
 }
@@ -16,7 +18,9 @@ function lines(): HTMLElement[] {
   return Array.from({ length: 3 }, () => el('span', { class: 'line' }));
 }
 
-/** The body of a file card: text lines, a thumbnail, or a node of your own. */
+/**
+ * The body of a file card: text lines, a thumbnail, or a node of your own.
+ */
 export function createArtwork(
   file: File,
   type: ResolvedFileType,
@@ -68,12 +72,22 @@ export interface CardView {
   readonly element: HTMLButtonElement;
   readonly file: File;
   readonly type: ResolvedFileType;
-  /** Size before scaling, in pixels. */
+
+  /**
+   * Size before scaling, in pixels.
+   */
   size(): { width: number; height: number };
-  /** Takes the card out of the CSS layout and draws it at `pose`. */
+
+  /**
+   * Takes the card out of the CSS layout and draws it at `pose`.
+   */
   place(pose: Pose): void;
-  /** Hands the card back to the CSS layout (its spot on the court). */
+
+  /**
+   * Hands the card back to the CSS layout (its spot on the court).
+   */
   release(): void;
+
   dispose(): void;
 }
 

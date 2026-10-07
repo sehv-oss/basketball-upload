@@ -5,7 +5,10 @@ import { play } from '../motion.ts';
 export interface HeaderView {
   readonly element: HTMLElement;
   update(messages: Messages): void;
-  /** Shows the number of files in the basket; `bump` animates an increase. */
+
+  /**
+   * Shows the number of files in the basket; `bump` animates an increase.
+   */
   setCount(count: number, bump: boolean): void;
 }
 

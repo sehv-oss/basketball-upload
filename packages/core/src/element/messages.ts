@@ -7,27 +7,52 @@ export type RejectReason = 'type' | 'size' | 'count';
  */
 export interface Messages {
   title: string;
+
   description: string;
+
   prompt: string;
+
   hint: string;
-  /** Accessible name of the dropzone button. */
+
+  /**
+   * Accessible name of the dropzone button.
+   */
   dropzone: string;
+
   counter: string;
-  /** Accessible name of a card waiting on the court. */
+
+  /**
+   * Accessible name of a card waiting on the court.
+   */
   shoot: (name: string) => string;
+
   ready: string;
+
   queued: string;
+
   uploading: string;
+
   uploaded: string;
+
   failed: string;
+
   retry: (name: string) => string;
+
   progress: (name: string) => string;
-  /** Validation message when `required` and empty. */
+
+  /**
+   * Validation message when `required` and empty.
+   */
   required: string;
+
   scored: (name: string) => string;
+
   missed: (name: string) => string;
+
   rejected: (name: string, reason: RejectReason) => string;
+
   complete: (name: string) => string;
+
   error: (name: string) => string;
 }
 

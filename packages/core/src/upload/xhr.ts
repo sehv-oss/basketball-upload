@@ -1,20 +1,30 @@
 import type { Uploader } from './types.ts';
 
 export interface XhrUploaderOptions {
-  /** Endpoint, or a function of the file for one URL per file. */
+  /**
+   * Endpoint, or a function of the file for one URL per file.
+   */
   url: string | URL | ((file: File) => string | URL);
-  /** Defaults to `POST`. */
+
+  /**
+   * Defaults to `POST`.
+   */
   method?: string | undefined;
+
   /**
    * Form field the file is sent under, as `multipart/form-data`. Defaults to
    * `file`. `null` sends the file itself as the request body.
    */
   fieldName?: string | null | undefined;
-  /** Extra form fields, sent before the file. Ignored when `fieldName` is `null`. */
+
+  /**
+   * Extra form fields, sent before the file. Ignored when `fieldName` is `null`.
+   */
   fields?:
     | Record<string, string | Blob>
     | ((file: File) => Record<string, string | Blob>)
     | undefined;
+
   headers?:
     | Record<string, string>
     | ((file: File) => Record<string, string>)
@@ -22,9 +32,13 @@ export interface XhrUploaderOptions {
   withCredentials?: boolean | undefined;
 }
 
-/** Rejection reason of `createXhrUploader` for a non-2xx response or a network error. */
+/**
+ * Rejection reason of `createXhrUploader` for a non-2xx response or a network error.
+ */
 export class UploadError extends Error {
-  /** HTTP status, or 0 when the request did not complete. */
+  /**
+   * HTTP status, or 0 when the request did not complete.
+   */
   readonly status: number;
   readonly body: string;
 

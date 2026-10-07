@@ -92,7 +92,9 @@ hoop.uploader = async (file, { signal, onProgress }) => {
     }
   );
   if (!response.ok) throw new Error(`Upload failed: ${response.status}`);
+
   onProgress(file.size);
+
   return response.json();
 };
 ```
@@ -156,8 +158,8 @@ Up to `concurrency` uploads (3 by default) run at a time; the others wait as `qu
 | `uploader`  | `Uploader \| null`      | Sends each file in the basket                                       |
 | `messages`  | `Messages`              | Copy and accessible names; assign a partial object to override some |
 | `fileTypes` | `readonly FileType[]`   | File types for this element, checked before the registered ones     |
-| `items`     | `readonly UploadItem[]` | Read only. Files in the basket and their uploads                    |
-| `files`     | `readonly File[]`       | Read only. Files in the basket: the form value                      |
+| `items`     | `readonly UploadItem[]` | Files in the basket and their uploads                               |
+| `files`     | `readonly File[]`       | Files in the basket: the form value                                 |
 
 ```ts
 interface UploadItem {

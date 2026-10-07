@@ -10,7 +10,6 @@ interface Call {
   reject(reason: unknown): void;
 }
 
-/** An uploader whose uploads finish when the test says so. */
 function controlledUploader(): { uploader: Uploader; calls: Call[] } {
   const calls: Call[] = [];
   const uploader: Uploader = (file, context) =>

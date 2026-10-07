@@ -13,12 +13,16 @@ export function stretchPull(pull: Vec, unit: number): Vec {
   return scale(pull, (max + (size - max) * PHYSICS.pullStretch) / size);
 }
 
-/** Pulls shorter than this cancel the shot. */
+/**
+ * Pulls shorter than this cancel the shot.
+ */
 export function isPullEnough(pull: Vec, unit: number): boolean {
   return length(pull) >= PHYSICS.minPull * unit;
 }
 
-/** Launch velocity of a pull, in px/s: opposite to the pull, like a slingshot. */
+/**
+ * Launch velocity of a pull, in px/s: opposite to the pull, like a slingshot.
+ */
 export function pullToVelocity(pull: Vec, unit: number, power: number): Vec {
   return scale(limit(pull, PHYSICS.maxPull * unit), -power);
 }
@@ -57,7 +61,9 @@ export function launchPower(court: Court): number {
   );
 }
 
-/** Spin in degrees per second for a launch velocity in px/s. */
+/**
+ * Spin in degrees per second for a launch velocity in px/s.
+ */
 export function spinFor(velocity: Vec, unit: number): number {
   const speed = (Math.abs(velocity.x) / unit) * PHYSICS.spin.factor;
   const spin = Math.min(PHYSICS.spin.max, Math.max(PHYSICS.spin.min, speed));

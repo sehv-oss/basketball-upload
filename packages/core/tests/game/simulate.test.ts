@@ -12,7 +12,6 @@ import {
 import { solveAssistedShot } from '../../src/game/slingshot.ts';
 import { designCourt as court } from './court.fixture.ts';
 
-/** Steps until one of `until` happens; returns the event and the body then. */
 function run(
   start: Body,
   until: readonly ShotEvent[] = ['score', 'floor']
@@ -25,6 +24,7 @@ function run(
     const event = result.events.find((e) => until.includes(e));
     if (event) return { event, body };
   }
+
   return { event: null, body };
 }
 

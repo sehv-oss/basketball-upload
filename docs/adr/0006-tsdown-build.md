@@ -8,13 +8,13 @@ The organization's `web/lib` TypeScript preset is `noEmit`: a web library goes t
 
 ## Decision
 
-As in `sehv-oss/pdf-viewer` (its ADR 0005): `tsc` type checks, tsdown produces `dist/`.
+tsdown produces `dist/`.
 
 ```text
 package build = tsc -p tsconfig.json && tsc -p tsconfig.tests.json && tsdown
 ```
 
-- The core's `tsdown.config.ts` carries the `cssText()` plugin of pdf-viewer: `.css` imports resolve to `?text` ids loaded as `export default "<css>"`, bypassing any CSS pipeline.
+- The core's `tsdown.config.ts` carries the `cssText()` plugin: `.css` imports resolve to `?text` ids loaded as `export default "<css>"`, bypassing any CSS pipeline.
 - The React package adds `'use client'` with tsdown's `banner`: a directive in the sources would not survive bundling.
 - Type checks of sources and tests are chained in the build, because the reusable CI workflows run `pnpm build`.
 

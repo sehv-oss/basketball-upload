@@ -24,42 +24,89 @@ type Detail<K extends keyof BasketballUploadEventMap> =
   BasketballUploadEventMap[K]['detail'];
 
 export interface BasketballUploadProps {
-  /** The `<basketball-upload>` element, for its methods and properties. */
+  /**
+   * The `<basketball-upload>` element, for its methods and properties.
+   */
   ref?: Ref<BasketballUploadElement> | undefined;
-  /** Defaults to `system`. */
+
+  /**
+   * Defaults to `system`.
+   */
   theme?: Theme | undefined;
+
   accept?: string | undefined;
+
   multiple?: boolean | undefined;
-  /** Largest accepted file, in bytes. */
+
+  /**
+   * Largest accepted file, in bytes.
+   */
   maxSize?: number | undefined;
-  /** Most files at once, staged and in the basket. */
+
+  /**
+   * Most files at once, staged and in the basket.
+   */
   maxFiles?: number | undefined;
-  /** Form field the files are submitted under. */
+
+  /**
+   * Form field the files are submitted under.
+   */
   name?: string | undefined;
+
   required?: boolean | undefined;
+
   disabled?: boolean | undefined;
-  /** No shooting: every file goes straight into the basket. */
+
+  /**
+   * No shooting: every file goes straight into the basket.
+   */
   instant?: boolean | undefined;
+
   concurrency?: number | undefined;
-  /** Sends each file. Keep it stable (module scope or `useCallback`). */
+
+  /**
+   * Sends each file. Keep it stable (module scope or `useCallback`).
+   */
   uploader?: Uploader | null | undefined;
-  /** Copy overrides. Memoize them: a new object re-renders the copy. */
+
+  /**
+   * Copy overrides. Memoize them: a new object re-renders the copy.
+   */
   messages?: Partial<Messages> | undefined;
-  /** File types for this element. Memoize them, like `messages`. */
+
+  /**
+   * File types for this element. Memoize them, like `messages`.
+   */
   fileTypes?: readonly FileType[] | undefined;
-  /** Name the custom element was registered with, when not the default. */
+
+  /**
+   * Name the custom element was registered with, when not the default.
+   */
   tagName?: string | undefined;
+
   id?: string | undefined;
+
   className?: string | undefined;
+
   style?: CSSProperties | undefined;
-  /** Slotted content, such as `<span slot="title">`. */
+
+  /**
+   * Slotted content, such as `<span slot="title">`.
+   */
   children?: ReactNode | undefined;
+
   onFileReject?: ((detail: Detail<'file-reject'>) => void) | undefined;
+
   onShot?: ((detail: Detail<'shot'>) => void) | undefined;
+
   onUploadStart?: ((detail: Detail<'upload-start'>) => void) | undefined;
+
   onUploadProgress?: ((detail: Detail<'upload-progress'>) => void) | undefined;
+
   onUploadSuccess?: ((detail: Detail<'upload-success'>) => void) | undefined;
+
   onUploadError?: ((detail: Detail<'upload-error'>) => void) | undefined;
+
   onChange?: ((detail: Detail<'change'>) => void) | undefined;
 }
 
@@ -90,34 +137,36 @@ const EVENTS: { [K in keyof BasketballUploadEventMap]: keyof Callbacks } = {
  * (`uploader`, `messages`, `fileTypes`) and the event callbacks are applied to
  * the element after it mounts.
  */
-export function BasketballUpload({
-  ref,
-  theme,
-  accept,
-  multiple,
-  maxSize,
-  maxFiles,
-  name,
-  required,
-  disabled,
-  instant,
-  concurrency,
-  uploader,
-  messages,
-  fileTypes,
-  tagName = DEFAULT_TAG_NAME,
-  children,
-  onFileReject,
-  onShot,
-  onUploadStart,
-  onUploadProgress,
-  onUploadSuccess,
-  onUploadError,
-  onChange,
-  ...props
-}: BasketballUploadProps): ReactNode {
-  // Idempotent and SSR-safe. Done during render so the element is upgraded
-  // as soon as React creates it, before any property is assigned.
+export function BasketballUpload(props: BasketballUploadProps): ReactNode {
+  const {
+    ref,
+    theme,
+    accept,
+    multiple,
+    maxSize,
+    maxFiles,
+    name,
+    required,
+    disabled,
+    instant,
+    concurrency,
+    uploader,
+    messages,
+    fileTypes,
+    tagName = DEFAULT_TAG_NAME,
+    children,
+
+    onFileReject,
+    onShot,
+    onUploadStart,
+    onUploadProgress,
+    onUploadSuccess,
+    onUploadError,
+    onChange,
+
+    ...rest
+  } = props;
+
   registerBasketballUpload({ tagName });
 
   const elementRef = useRef<BasketballUploadElement>(null);
@@ -127,7 +176,6 @@ export function BasketballUpload({
     []
   );
 
-  // Listeners are added once and read the latest callbacks.
   const callbacks = useRef<Callbacks>({});
   callbacks.current = {
     onFileReject,
@@ -145,16 +193,19 @@ export function BasketballUpload({
 
     const subscriptions = Object.entries(EVENTS).map(([type, callback]) => {
       const listener = (event: Event): void => {
-        const handler = callbacks.current[callback] as
+        const handle = callbacks.current[callback] as
           ((detail: unknown) => void) | undefined;
-        handler?.((event as CustomEvent).detail);
+        handle?.((event as CustomEvent).detail);
       };
       element.addEventListener(type, listener);
+
       return () => element.removeEventListener(type, listener);
     });
 
     return () => {
-      for (const unsubscribe of subscriptions) unsubscribe();
+      for (const unsubscribe of subscriptions) {
+        unsubscribe();
+      }
     };
   }, []);
 
@@ -176,9 +227,8 @@ export function BasketballUpload({
   return createElement(
     tagName,
     {
-      ...props,
+      ...rest,
       ref: elementRef,
-      // Kebab-case names are attributes on the server and on the client alike.
       theme: theme === 'light' || theme === 'dark' ? theme : undefined,
       accept: accept || undefined,
       multiple: multiple || undefined,

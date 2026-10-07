@@ -19,7 +19,9 @@ export function length(v: Vec): number {
   return Math.hypot(v.x, v.y);
 }
 
-/** `v` shortened to `max` when longer; unchanged otherwise. */
+/**
+ * `v` shortened to `max` when longer; unchanged otherwise.
+ */
 export function limit(v: Vec, max: number): Vec {
   const size = length(v);
   return size > max ? scale(v, max / size) : v;

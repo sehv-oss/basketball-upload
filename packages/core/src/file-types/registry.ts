@@ -4,10 +4,14 @@ import type { FileType, ResolvedFileType } from './types.ts';
 
 const KIND = /^[a-z][a-z0-9-]*$/;
 
-/** Registered globally, most recent first. */
+/**
+ * Registered globally, most recent first.
+ */
 const registered: FileType[] = [];
 
-/** Throws when a file type cannot be used: its kind ends up in part names. */
+/**
+ * Throws when a file type cannot be used: its kind ends up in part names.
+ */
 export function assertFileType(type: FileType): void {
   if (!KIND.test(type.kind)) {
     throw new TypeError(

@@ -121,7 +121,9 @@ function createRow(
   };
 }
 
-/** The list of files in the basket, with their upload progress. */
+/**
+ * The list of files in the basket, with their upload progress.
+ */
 export function createUploadList(options: UploadListOptions): UploadListView {
   const element = el('ul', { class: 'list', part: 'list', role: 'list' });
   element.hidden = true;

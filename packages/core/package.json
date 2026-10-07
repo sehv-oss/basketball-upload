@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "Basketball-themed drag and drop file upload Web Component: drop your files, or take the shot.",
   "type": "module",
-  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/basketball-upload.d.ts",
@@ -29,12 +28,6 @@
     "custom-element"
   ],
   "license": "ISC",
-  "contributors": [
-    {
-      "name": "Jorge Molina",
-      "url": "https://github.com/jm-fuster"
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sehv-oss/basketball-upload.git",
@@ -49,7 +42,10 @@
   },
   "devDependencies": {
     "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

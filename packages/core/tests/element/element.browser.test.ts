@@ -115,7 +115,6 @@ describe('the court', () => {
     expect(cards[1]?.querySelector('[part="file-badge"]')?.textContent).toBe(
       'PDF'
     );
-    // Only the card on top can be shot.
     expect((cards[0] as HTMLElement).inert).toBe(true);
     expect((cards[1] as HTMLElement).inert).toBe(false);
   });

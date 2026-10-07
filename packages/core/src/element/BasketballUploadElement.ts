@@ -32,7 +32,9 @@ export type Theme = 'light' | 'dark' | 'system';
 
 export type ShotResult = 'score' | 'miss';
 
-/** `CustomEvent`s dispatched by `<basketball-upload>`, keyed by event name. They bubble. */
+/**
+ * `CustomEvent`s dispatched by `<basketball-upload>`, keyed by event name. They bubble.
+ */
 export interface BasketballUploadEventMap {
   'file-reject': CustomEvent<{ file: File; reason: RejectReason }>;
   shot: CustomEvent<{ file: File; result: ShotResult }>;
@@ -52,9 +54,14 @@ type State =
   | 'rejected'
   | 'disabled';
 
-/** Cards drawn on the court: the top one and two underneath. */
+/**
+ * Cards drawn on the court: the top one and two underneath.
+ */
 const VISIBLE_STACK = 3;
-/** Delay between the cards of a multi-file dunk, ms. */
+
+/**
+ * Delay between the cards of a multi-file dunk, ms.
+ */
 const DUNK_STAGGER = 150;
 
 /**
@@ -78,8 +85,8 @@ function numberAttribute(value: string | null): number | null {
 }
 
 /**
- * `<basketball-upload>`: a file upload where the dropzone is a backboard. Drop
- * files on it, or drop them on the court and take the shot.
+ * `<basketball-upload>`: a file upload where the dropzone is a backboard.
+ * Drop files on it, or drop them on the court and take the shot.
  */
 export class BasketballUploadElement extends BaseElement {
   static readonly formAssociated = true;
@@ -103,9 +110,13 @@ export class BasketballUploadElement extends BaseElement {
   readonly #input: HTMLInputElement;
   readonly #shots: ShotController;
 
-  /** Cards waiting on the court, bottom of the stack first. */
+  /**
+   * Cards waiting on the court, bottom of the stack first.
+   */
   #staged: CardView[] = [];
-  /** Cards on their way into the basket: dunks, shots in the air, scores. */
+  /**
+   * Cards on their way into the basket: dunks, shots in the air, scores.
+   */
   readonly #inPlay = new Set<CardView>();
   #messages: Messages = defaultMessages;
   #fileTypes: readonly FileType[] = [];
@@ -206,8 +217,6 @@ export class BasketballUploadElement extends BaseElement {
     this.#syncForm();
   }
 
-  // Properties
-
   get theme(): Theme {
     const value = this.getAttribute('theme');
     return value === 'light' || value === 'dark' ? value : 'system';
@@ -219,7 +228,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.removeAttribute('theme');
   }
 
-  /** Accepted files, with the syntax of `<input type="file" accept>`. */
+  /**
+   * Accepted files, with the syntax of `<input type="file" accept>`.
+   */
   get accept(): string {
     return this.getAttribute('accept') ?? '';
   }
@@ -229,7 +240,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.removeAttribute('accept');
   }
 
-  /** Several files at a time. Without it, a new file replaces the previous one. */
+  /**
+   * Several files at a time. Without it, a new file replaces the previous one.
+   */
   get multiple(): boolean {
     return this.hasAttribute('multiple');
   }
@@ -238,7 +251,9 @@ export class BasketballUploadElement extends BaseElement {
     this.toggleAttribute('multiple', Boolean(value));
   }
 
-  /** Largest accepted file, in bytes. */
+  /**
+   * Largest accepted file, in bytes.
+   */
   get maxSize(): number | null {
     return numberAttribute(this.getAttribute('max-size'));
   }
@@ -248,7 +263,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.setAttribute('max-size', String(value));
   }
 
-  /** Most files at once, staged and in the basket. */
+  /**
+   * Most files at once, staged and in the basket.
+   */
   get maxFiles(): number | null {
     return numberAttribute(this.getAttribute('max-files'));
   }
@@ -259,7 +276,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.setAttribute('max-files', String(value));
   }
 
-  /** Form field the files are submitted under. */
+  /**
+   * Form field the files are submitted under.
+   */
   get name(): string {
     return this.getAttribute('name') ?? '';
   }
@@ -285,7 +304,9 @@ export class BasketballUploadElement extends BaseElement {
     this.toggleAttribute('disabled', Boolean(value));
   }
 
-  /** No shooting: every file goes straight into the basket. */
+  /**
+   * No shooting: every file goes straight into the basket.
+   */
   get instant(): boolean {
     return this.hasAttribute('instant');
   }
@@ -294,7 +315,9 @@ export class BasketballUploadElement extends BaseElement {
     this.toggleAttribute('instant', Boolean(value));
   }
 
-  /** Uploads running at the same time. */
+  /**
+   * Uploads running at the same time.
+   */
   get concurrency(): number {
     return this.#queue.concurrency;
   }
@@ -305,7 +328,9 @@ export class BasketballUploadElement extends BaseElement {
     else this.setAttribute('concurrency', String(value));
   }
 
-  /** Sends each file in the basket. Without one, files only travel with their form. */
+  /**
+   * Sends each file in the basket. Without one, files only travel with their form.
+   */
   get uploader(): Uploader | null {
     return this.#queue.uploader;
   }
@@ -318,13 +343,17 @@ export class BasketballUploadElement extends BaseElement {
     return this.#messages;
   }
 
-  /** Copy overrides, merged over the defaults. */
+  /**
+   * Copy overrides, merged over the defaults.
+   */
   set messages(value: Partial<Messages> | null | undefined) {
     this.#messages = { ...defaultMessages, ...value };
     this.#applyMessages();
   }
 
-  /** File types for this element only, checked before the registered ones. */
+  /**
+   * File types for this element only, checked before the registered ones.
+   */
   get fileTypes(): readonly FileType[] {
     return this.#fileTypes;
   }
@@ -335,12 +364,16 @@ export class BasketballUploadElement extends BaseElement {
     this.#fileTypes = types;
   }
 
-  /** Files in the basket and their uploads. */
+  /**
+   * Files in the basket and their uploads.
+   */
   get items(): readonly UploadItem[] {
     return this.#queue.items;
   }
 
-  /** Files in the basket: the value submitted with the form. */
+  /**
+   * Files in the basket: the value submitted with the form.
+   */
   get files(): readonly File[] {
     return this.#queue.items.map((item) => item.file);
   }
@@ -369,9 +402,9 @@ export class BasketballUploadElement extends BaseElement {
     return this.#internals?.reportValidity() ?? true;
   }
 
-  // Methods
-
-  /** Opens the file picker. The chosen files land on the court (or in the basket, with `instant`). */
+  /**
+   * Opens the file picker. The chosen files land on the court (or in the basket, with `instant`).
+   */
   openPicker(): void {
     if (this.#isDisabled) return;
     this.#input.accept = this.accept;
@@ -379,34 +412,46 @@ export class BasketballUploadElement extends BaseElement {
     this.#input.click();
   }
 
-  /** Puts files on the court, ready to be shot. */
+  /**
+   * Puts files on the court, ready to be shot.
+   */
   stage(files: Iterable<File>): void {
     if (this.instant) this.#dunk([...files]);
     else this.#stage([...files]);
   }
 
-  /** Puts files straight into the basket. */
+  /**
+   * Puts files straight into the basket.
+   */
   dunk(files: Iterable<File>): void {
     this.#dunk([...files]);
   }
 
-  /** Shoots the card on top of the court with a perfect shot. */
+  /**
+   * Shoots the card on top of the court with a perfect shot.
+   */
   shoot(): boolean {
     const card = this.#staged.at(-1);
     return card !== undefined && !this.#isDisabled && this.#shots.shoot(card);
   }
 
-  /** Uploads a failed file again. */
+  /**
+   * Uploads a failed file again.
+   */
   retryItem(id: string): boolean {
     return this.#queue.retry(id);
   }
 
-  /** Takes a file out of the basket, aborting its upload. */
+  /**
+   * Takes a file out of the basket, aborting its upload.
+   */
   removeItem(id: string): boolean {
     return this.#queue.remove(id);
   }
 
-  /** Empties the court and the basket, aborting uploads. */
+  /**
+   * Empties the court and the basket, aborting uploads.
+   */
   clear(): void {
     const card = this.#shots.stop();
     card?.dispose();
@@ -418,8 +463,6 @@ export class BasketballUploadElement extends BaseElement {
     this.#syncStates();
     this.#queue.clear();
   }
-
-  // Lifecycle
 
   connectedCallback(): void {
     if (typeof ResizeObserver !== 'undefined') {
@@ -473,8 +516,6 @@ export class BasketballUploadElement extends BaseElement {
     this.#applyDisabled();
   }
 
-  // Internals
-
   get #isDisabled(): boolean {
     return this.disabled || this.#formDisabled;
   }
@@ -498,9 +539,13 @@ export class BasketballUploadElement extends BaseElement {
   #toggleState(name: State, on: boolean): void {
     const states = this.#internals?.states;
     if (!states) return;
+
     try {
-      if (on) states.add(name);
-      else states.delete(name);
+      if (on) {
+        states.add(name);
+      } else {
+        states.delete(name);
+      }
     } catch {
       // CustomStateSet without plain identifiers (Chrome < 125): styling only.
     }
@@ -543,7 +588,9 @@ export class BasketballUploadElement extends BaseElement {
     this.#syncStates();
   }
 
-  /** Validates incoming files; rejected ones are reported, accepted ones returned. */
+  /**
+   * Validates incoming files; rejected ones are reported, accepted ones returned.
+   */
   #admit(files: readonly File[]): File[] {
     if (this.#isDisabled) return [];
     const max = this.multiple ? (this.maxFiles ?? Infinity) : 1;
@@ -563,7 +610,6 @@ export class BasketballUploadElement extends BaseElement {
       else accepted.push(file);
     }
 
-    // Like `<input type="file">` without `multiple`: a new file replaces the old one.
     if (!this.multiple && accepted.length > 0) this.clear();
     return accepted;
   }
@@ -601,8 +647,8 @@ export class BasketballUploadElement extends BaseElement {
       if (!this.#isDisabled && this.#staged.at(-1) === card)
         this.#shots.shoot(card);
     });
-    // Shots happen on pointer and key events; a click alone does nothing.
     element.addEventListener('click', (event) => event.preventDefault());
+
     return card;
   }
 
@@ -619,7 +665,7 @@ export class BasketballUploadElement extends BaseElement {
     this.#renderStack();
 
     if (!origin || prefersReducedMotion()) return;
-    // Cards dropped on the court slide from where they were dropped.
+
     for (const card of this.#staged.slice(-accepted.length)) {
       const rest = card.element.getBoundingClientRect();
       const layer = this.#layer.getBoundingClientRect();
@@ -652,7 +698,6 @@ export class BasketballUploadElement extends BaseElement {
     if (!this.#inPlay.has(card)) return;
     const court = this.#measure();
     if (!court) {
-      // Not rendered: no hoop to dunk on, the file still goes in.
       this.#inPlay.delete(card);
       card.dispose();
       this.#queue.add(card.file);
@@ -686,7 +731,6 @@ export class BasketballUploadElement extends BaseElement {
         }
       );
     }
-    // `clear()` may have emptied the basket meanwhile; it reset the states.
     if (!this.#inPlay.has(card)) return;
     this.#states.scoring -= 1;
     await this.#score(card, above, court);
@@ -741,7 +785,6 @@ export class BasketballUploadElement extends BaseElement {
         }
       );
     }
-    // `clear()` may have emptied the basket meanwhile; it reset the states.
     if (!this.#inPlay.has(card)) return;
 
     this.#states.scoring -= 1;
@@ -783,9 +826,9 @@ export class BasketballUploadElement extends BaseElement {
     this.#header.setCount(items.length, !prefersReducedMotion());
     this.#syncForm();
 
-    // `change` follows the basket and the status of its files, not progress.
     const signature = items.map((item) => `${item.id}:${item.status}`).join();
     if (signature === this.#changeSignature) return;
+
     this.#changeSignature = signature;
     this.#emit('change', { items });
   }
@@ -815,7 +858,9 @@ export class BasketballUploadElement extends BaseElement {
     }
   }
 
-  /** Converts client coordinates to the card layer's. */
+  /**
+   * Converts client coordinates to the card layer's.
+   */
   #toLayer(point: Vec): Vec {
     const layer = this.#layer.getBoundingClientRect();
     return { x: point.x - layer.left, y: point.y - layer.top };
@@ -835,7 +880,9 @@ export class BasketballUploadElement extends BaseElement {
     return court.unit > 0 ? court : null;
   }
 
-  /** Publishes where staged cards rest, for the CSS that draws them there. */
+  /**
+   * Publishes where staged cards rest, for the CSS that draws them there.
+   */
   #syncRest(): void {
     const layer = this.#layer.getBoundingClientRect();
     const spot = this.#spot.getBoundingClientRect();

@@ -1,8 +1,9 @@
-/** Where a card is drawn: its center, rotation and scale, in layer pixels. */
+/**
+ * Where a card is drawn: its center, rotation and scale, in layer pixels.
+ */
 export interface Pose {
   readonly x: number;
   readonly y: number;
-  /** Degrees. */
   readonly rotation: number;
   readonly scale: number;
 }
@@ -14,7 +15,9 @@ export function prefersReducedMotion(): boolean {
   );
 }
 
-/** The individual transform properties of a pose, for a box of the given size. */
+/**
+ * The individual transform properties of a pose, for a box of the given size.
+ */
 export function poseStyle(
   pose: Pose,
   width: number,
@@ -28,13 +31,15 @@ export function poseStyle(
 }
 
 export interface PlayOptions extends KeyframeAnimationOptions {
-  /** Keep the last keyframe as inline style once the animation ends. */
+  /**
+   * Keep the last keyframe as inline style once the animation ends.
+   */
   commit?: boolean;
 }
 
 /**
- * Runs a Web Animation and resolves when it ends or is cancelled. Resolves
- * at once where the Web Animations API is missing.
+ * Runs a Web Animation and resolves when it ends or is cancelled.
+ * Resolves at once where the Web Animations API is missing.
  */
 export async function play(
   element: Element,
@@ -47,21 +52,27 @@ export async function play(
     keyframes,
     commit ? { ...timing, fill: 'forwards' } : timing
   );
+
   try {
     await animation.finished;
   } catch {
     return;
   }
+
   if (!commit) return;
+
   try {
     animation.commitStyles();
   } catch {
     // Not rendered (display: none): there is nothing to keep.
   }
+
   animation.cancel();
 }
 
-/** The nearest whole turn, so a spinning card settles upright without unwinding. */
+/**
+ * The nearest whole turn, so a spinning card settles upright without unwinding.
+ */
 export function uprightOf(rotation: number): number {
   return Math.round(rotation / 360) * 360;
 }

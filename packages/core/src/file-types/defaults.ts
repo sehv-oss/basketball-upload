@@ -1,6 +1,8 @@
 import type { FileType } from './types.ts';
 
-/** Built-in file types, checked after the ones you register. */
+/**
+ * Built-in file types, checked after the ones you register.
+ */
 export const defaultFileTypes: readonly FileType[] = [
   {
     kind: 'pdf',
@@ -44,9 +46,12 @@ export const defaultFileTypes: readonly FileType[] = [
   },
 ];
 
-/** The extension in capitals, at most 4 characters, or `fallback`. */
+/**
+ * The extension in capitals, at most 4 characters, or `fallback`.
+ */
 export function extensionLabel(name: string, fallback: string): string {
   const dot = name.lastIndexOf('.');
   const extension = dot > 0 ? name.slice(dot + 1) : '';
+
   return (extension || fallback).slice(0, 4).toUpperCase();
 }

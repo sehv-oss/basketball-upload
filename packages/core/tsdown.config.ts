@@ -3,14 +3,6 @@ import { readFile } from 'node:fs/promises';
 import { defineConfig } from 'tsdown';
 import type { TsdownPlugin } from 'tsdown';
 
-/**
- * Imports `.css` files as plain strings, verbatim.
- *
- * The stylesheet is adopted by the Shadow DOM at runtime (`CSSStyleSheet`),
- * so nothing is emitted to `dist/` and no CSS pipeline is involved. The id is
- * suffixed with `?text` so it never reaches tsdown's CSS handling, which would
- * otherwise rewrite `@layer`, nesting and `light-dark()`.
- */
 function cssText(): TsdownPlugin {
   const suffix = '?text';
 
@@ -21,6 +13,7 @@ function cssText(): TsdownPlugin {
       async handler(source, importer, options) {
         const resolved = await this.resolve(source, importer, options);
         if (!resolved) return null;
+
         return { ...resolved, id: `${resolved.id}${suffix}` };
       },
     },
@@ -30,6 +23,7 @@ function cssText(): TsdownPlugin {
         const file = id.slice(0, -suffix.length);
         this.addWatchFile(file);
         const css = await readFile(file, 'utf8');
+
         return {
           code: `export default ${JSON.stringify(css)};`,
           moduleType: 'js',

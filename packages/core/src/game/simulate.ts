@@ -2,15 +2,26 @@ import { PHYSICS } from './config.ts';
 import { contains, rimCenter, type Court } from './court.ts';
 import type { Vec } from './vector.ts';
 
-/** State of a card in the air. Plain data: the same body always steps the same way. */
+/**
+ * State of a card in the air. Plain data: the same body always steps the same way.
+ */
 export interface Body {
   readonly x: number;
+
   readonly y: number;
+
   readonly vx: number;
+
   readonly vy: number;
-  /** Number of steps taken since launch. Time is `steps * PHYSICS.step`. */
+
+  /**
+   * Number of steps taken since launch. Time is `steps * PHYSICS.step`.
+   */
   readonly steps: number;
-  /** The board (orange square) absorbs the energy of a shot once. */
+
+  /**
+   * The board (orange square) absorbs the energy of a shot once.
+   */
   readonly boarded: boolean;
 }
 
@@ -42,7 +53,9 @@ export function timeOf(body: Body): number {
   return body.steps * PHYSICS.step;
 }
 
-/** Advances a body by one fixed step (`PHYSICS.step`). */
+/**
+ * Advances a body by one fixed step (`PHYSICS.step`).
+ */
 export function step(body: Body, court: Court): StepResult {
   const dt = PHYSICS.step;
   const u = court.unit;
@@ -59,12 +72,8 @@ export function step(body: Body, court: Court): StepResult {
   const center = rimCenter(court).x;
   const hit = PHYSICS.hitRadius * u;
 
-  // Seen from the front, a card on its way up is still in front of the hoop:
-  // it only reaches the depth of the board and the rim around the top of its
-  // arc. Rising cards pass in front of them; only the floor and walls count.
   const atHoopDepth = body.vy > -PHYSICS.hoopDepthRise * u;
 
-  // Going down through the rim, between its two ends.
   if (body.y < rimY && y >= rimY) {
     const t = (rimY - body.y) / (y - body.y);
     const crossX = body.x + (x - body.x) * t;
@@ -76,7 +85,6 @@ export function step(body: Body, court: Court): StepResult {
     }
   }
 
-  // Both ends of the rim are round obstacles.
   const reach = hit + PHYSICS.rimRadius * u;
   for (const end of atHoopDepth ? [left, right] : []) {
     const dx = x - end;
@@ -96,7 +104,6 @@ export function step(body: Body, court: Court): StepResult {
     events.push('rim');
   }
 
-  // The square is where the card reaches the board: most of its speed goes.
   if (!boarded && atHoopDepth && contains(court.square, { x, y })) {
     boarded = true;
     vx *= PHYSICS.board.x;
@@ -133,26 +140,35 @@ export function step(body: Body, court: Court): StepResult {
 
 export interface PreviewDot {
   readonly x: number;
+
   readonly y: number;
-  /** Steps since launch: the dot is behind the card once the card has taken this many. */
+
+  /**
+   * Steps since launch: the dot is behind the card once the card has taken this many.
+   */
   readonly steps: number;
 }
 
 export interface Preview {
   /**
-   * Where the card will be every `PHYSICS.dotInterval`, then where it meets
-   * `end`, which is the last dot.
+   * Where the card will be every `PHYSICS.dotInterval`, then where it meets `end`, which is the last dot.
    */
   readonly dots: readonly PreviewDot[];
-  /** First thing the card will hit, or `null` when the preview ran out of time. */
+
+  /**
+   * First thing the card will hit, or `null` when the preview ran out of time.
+   */
   readonly end: ShotEvent | null;
-  /** Steps until `end` (or until the preview gave up). */
+
+  /**
+   * Steps until `end` (or until the preview gave up).
+   */
   readonly steps: number;
 }
 
 /**
- * Runs the very simulation the flight will run, until its first event. The
- * dots are therefore exactly where the card is going to be.
+ * Runs the very simulation the flight will run, until its first event.
+ * The dots are therefore exactly where the card is going to be.
  */
 export function previewPath(start: Body, court: Court): Preview {
   const every = Math.round(PHYSICS.dotInterval / PHYSICS.step);
@@ -172,5 +188,6 @@ export function previewPath(start: Body, court: Court): Preview {
       dots.push({ x: body.x, y: body.y, steps: body.steps });
     }
   }
+
   return { dots, end: null, steps: body.steps };
 }

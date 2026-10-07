@@ -8,7 +8,7 @@ The upload has to serve React applications today and any other stack later, with
 
 ## Decision
 
-`<basketball-upload>` (`BasketballUploadElement`) is the reference implementation, following `sehv-oss/pdf-viewer` (its ADR 0001). Framework packages are adapters that translate the element's attributes, properties and events into the idiom of the framework; they contain no upload logic, no state and no rendering of their own.
+`<basketball-upload>` (`BasketballUploadElement`) is the reference implementation. Framework packages are adapters that translate the element's attributes, properties and events into the idiom of the framework; they contain no upload logic, no state and no rendering of their own.
 
 The React adapter targets React 19, which assigns props to custom elements as properties on the client and as attributes on the server, and takes `ref` as a plain prop. Plain values are passed under their attribute names (`max-size`), so the server renders them and the client upgrades the element with them; functions and objects (`uploader`, `messages`, `fileTypes`) are assigned in layout effects, and event callbacks are bound with `addEventListener` through a ref to the latest callbacks.
 

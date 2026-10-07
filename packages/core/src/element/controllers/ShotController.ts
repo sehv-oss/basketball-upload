@@ -20,33 +20,57 @@ import { play, poseStyle, prefersReducedMotion, type Pose } from '../motion.ts';
 import type { CardView } from '../views/card.ts';
 import type { TrajectoryView } from '../views/trajectory.ts';
 
-/** Rotation of a card resting on the court. Keep in sync with `card.css`. */
+/**
+ * Rotation of a card resting on the court. Keep in sync with `card.css`.
+ */
 export const REST_ROTATION = -6;
-/** Cards lift a little while held. */
+
+/**
+ * Cards lift a little while held.
+ */
 const GRAB_SCALE = 1.04;
-/** Tilt while pulling, in degrees per rim unit of horizontal pull. */
+
+/**
+ * Tilt while pulling, in degrees per rim unit of horizontal pull.
+ */
 const PULL_TILT = 14;
 
 export interface ShotHost {
   readonly trajectory: TrajectoryView;
-  /** The court as currently laid out, or `null` when not rendered. */
+
+  /**
+   * The court as currently laid out, or `null` when not rendered.
+   */
   measure(): Court | null;
   setAiming(aiming: boolean): void;
   setFlying(flying: boolean): void;
-  /** Whether the flying card is in front of the dropzone. */
+
+  /**
+   * Whether the flying card is in front of the dropzone.
+   */
   setOverBoard(over: boolean): void;
-  /** The card left the court: it is no longer staged. */
+
+  /**
+   * The card left the court: it is no longer staged.
+   */
   launched(card: CardView): void;
-  /** The card went through the rim, drawn at `pose`. */
+
+  /**
+   * The card went through the rim, drawn at `pose`.
+   */
   scored(card: CardView, pose: Pose, court: Court): void;
-  /** The card missed and is back on the court. */
+
+  /**
+   * The card missed and is back on the court.
+   */
   missed(card: CardView): void;
 }
 
-/** Aiming with the pointer, assisted shots, and the flight of the card. */
+/**
+ * Aiming with the pointer, assisted shots, and the flight of the card.
+ */
 export class ShotController {
   readonly #host: ShotHost;
-  /** The card being aimed or in the air. One shot at a time. */
   #card: CardView | null = null;
   #frame = 0;
   #endAim: (() => void) | null = null;
@@ -59,7 +83,9 @@ export class ShotController {
     return this.#card !== null;
   }
 
-  /** Starts aiming: the card follows the pointer like a slingshot pouch. */
+  /**
+   * Starts aiming: the card follows the pointer like a slingshot pouch.
+   */
   grab(card: CardView, event: PointerEvent): void {
     if (this.#card || event.button !== 0) return;
     const court = this.#host.measure();
@@ -68,7 +94,6 @@ export class ShotController {
     event.preventDefault();
     const { element } = card;
     try {
-      // Keeps the pointer events coming while it leaves the card.
       element.setPointerCapture(event.pointerId);
     } catch {
       // Not an active pointer (synthetic events): the card still gets its own.
@@ -132,6 +157,7 @@ export class ShotController {
       'pointermove',
       (moved) => {
         if (moved.pointerId !== event.pointerId) return;
+
         pull = { x: moved.clientX - origin.x, y: moved.clientY - origin.y };
         aim();
       },
@@ -140,34 +166,45 @@ export class ShotController {
     element.addEventListener(
       'pointerup',
       (released) => {
-        if (released.pointerId === event.pointerId) end(true);
+        if (released.pointerId === event.pointerId) {
+          end(true);
+        }
       },
       { signal }
     );
     element.addEventListener(
       'pointercancel',
       (cancelled) => {
-        if (cancelled.pointerId === event.pointerId) end(false);
+        if (cancelled.pointerId === event.pointerId) {
+          end(false);
+        }
       },
       { signal }
     );
     element.addEventListener(
       'lostpointercapture',
       (lost) => {
-        if (lost.pointerId === event.pointerId) end(false);
+        if (lost.pointerId === event.pointerId) {
+          end(false);
+        }
       },
       { signal }
     );
   }
 
-  /** Drops the current aim; the card goes back to the court. */
+  /**
+   * Drops the current aim; the card goes back to the court.
+   */
   cancelAim(): void {
     this.#endAim?.();
   }
 
-  /** A perfect shot from the court, for the keyboard and `shoot()`. */
+  /**
+   * A perfect shot from the court, for the keyboard and `shoot()`.
+   */
   shoot(card: CardView): boolean {
     if (this.#card) return false;
+
     const court = this.#host.measure();
     if (!court) return false;
 
@@ -178,10 +215,13 @@ export class ShotController {
     this.#host.trajectory.show(previewPath(body, court).dots, court.unit);
     this.#host.launched(card);
     this.#fly(card, body, pose.rotation, court);
+
     return true;
   }
 
-  /** Stops whatever is going on, leaving the card where it is. */
+  /**
+   * Stops whatever is going on, leaving the card where it is.
+   */
   stop(): CardView | null {
     this.#endAim?.();
     cancelAnimationFrame(this.#frame);
@@ -191,6 +231,7 @@ export class ShotController {
     this.#host.trajectory.clear();
     this.#host.setFlying(false);
     this.#host.setOverBoard(false);
+
     return card;
   }
 
@@ -212,7 +253,6 @@ export class ShotController {
       preview.end === 'board' ||
       preview.end === 'rim' ||
       preview.end === 'score';
-    // The card shrinks as it travels away from the viewer, towards the hoop.
     const depthSteps = reachesHoop
       ? Math.max(1, preview.steps)
       : Math.round(0.6 / PHYSICS.step);
@@ -236,7 +276,6 @@ export class ShotController {
       this.#frame = 0;
       this.#host.trajectory.clear();
       this.#host.setFlying(false);
-      // The score sequence keeps the dropzone lit on its own.
       this.#host.setOverBoard(false);
       const final = pose();
       card.place(final);
@@ -264,13 +303,16 @@ export class ShotController {
           finish(true);
           return;
         }
+
         if (result.events.includes('board') || result.events.includes('rim')) {
           spin *= 0.6;
         }
+
         if (result.events.includes('floor')) {
           bounces += 1;
           spin *= 0.5;
         }
+
         if (
           bounces > PHYSICS.maxFloorBounces ||
           timeOf(body) > PHYSICS.maxFlightTime
@@ -279,6 +321,7 @@ export class ShotController {
           return;
         }
       }
+
       card.place(pose());
       this.#host.trajectory.hideBefore(body.steps);
       this.#host.setOverBoard(contains(court.board, body));

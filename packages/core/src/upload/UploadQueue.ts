@@ -2,17 +2,26 @@ import { EventEmitter } from './EventEmitter.ts';
 import type { UploadItem, Uploader } from './types.ts';
 
 export interface UploadQueueEvents {
-  /** Any change to the list or to an item, including progress. */
+  /**
+   * Any change to the list or to an item, including progress.
+   */
   change: readonly UploadItem[];
+
   start: UploadItem;
+
   progress: UploadItem;
+
   success: UploadItem;
+
   error: UploadItem;
 }
 
 export interface UploadQueueOptions {
   uploader?: Uploader | null | undefined;
-  /** Uploads running at the same time. Defaults to 3. */
+
+  /**
+   * Uploads running at the same time. Defaults to 3.
+   */
   concurrency?: number | undefined;
 }
 
@@ -23,7 +32,9 @@ export const DEFAULT_CONCURRENCY = 3;
  * snapshots; every change replaces the item and emits `change`.
  */
 export class UploadQueue extends EventEmitter<UploadQueueEvents> {
-  /** Used for the files added from now on. Without one, files are `ready`. */
+  /**
+   * Used for the files added from now on. Without one, files are `ready`.
+   */
   uploader: Uploader | null;
 
   #concurrency: number;
@@ -71,7 +82,9 @@ export class UploadQueue extends EventEmitter<UploadQueueEvents> {
     return this.get(id) ?? item;
   }
 
-  /** Uploads a failed item again. Returns whether there was one to retry. */
+  /**
+   * Uploads a failed item again. Returns whether there was one to retry.
+   */
   retry(id: string): boolean {
     const item = this.get(id);
     if (!item || item.status !== 'error' || !this.uploader) return false;
@@ -80,7 +93,9 @@ export class UploadQueue extends EventEmitter<UploadQueueEvents> {
     return true;
   }
 
-  /** Removes an item, aborting its upload. */
+  /**
+   * Removes an item, aborting its upload.
+   */
   remove(id: string): boolean {
     if (!this.get(id)) return false;
     this.#controllers.get(id)?.abort();
@@ -91,7 +106,9 @@ export class UploadQueue extends EventEmitter<UploadQueueEvents> {
     return true;
   }
 
-  /** Removes every item, aborting the uploads in flight. */
+  /**
+   * Removes every item, aborting the uploads in flight.
+   */
   clear(): void {
     for (const controller of this.#controllers.values()) controller.abort();
     this.#controllers.clear();

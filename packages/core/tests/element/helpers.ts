@@ -1,6 +1,5 @@
 import type { BasketballUploadElement } from '../../src/basketball-upload.ts';
 
-/** An element at the size of the reference design, at the top left of the page. */
 export function mount(
   attributes: Record<string, string> = {},
   parent: HTMLElement = document.body
@@ -19,6 +18,7 @@ export function mount(
 
 export function shadow(element: BasketballUploadElement): ShadowRoot {
   if (!element.shadowRoot) throw new Error('No shadow root');
+
   return element.shadowRoot;
 }
 
@@ -28,6 +28,7 @@ export function query<T extends Element = HTMLElement>(
 ): T {
   const found = shadow(element).querySelector<T>(selector);
   if (!found) throw new Error(`Nothing matches ${selector}`);
+
   return found;
 }
 
@@ -35,7 +36,6 @@ export function pdf(name = 'final_final_v7.pdf', size = 2_400): File {
   return new File([new Uint8Array(size)], name, { type: 'application/pdf' });
 }
 
-/** Resolves with the next event of `type` that passes `accept`. */
 export function nextEvent<T extends Event = CustomEvent>(
   target: EventTarget,
   type: string,
@@ -56,14 +56,16 @@ export function center(element: Element): { x: number; y: number } {
   return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
 }
 
-/** A drag carrying files, the way the browser sends one from the desktop. */
 export function fileDrag(
   type: 'dragenter' | 'dragover' | 'drop',
   files: readonly File[],
   point: { x: number; y: number }
 ): DragEvent {
   const dataTransfer = new DataTransfer();
-  for (const file of files) dataTransfer.items.add(file);
+  for (const file of files) {
+    dataTransfer.items.add(file);
+  }
+
   return new DragEvent(type, {
     dataTransfer,
     clientX: point.x,

@@ -1,6 +1,8 @@
 export type Listener<TDetail> = (detail: TDetail) => void;
 
-/** Minimal typed emitter. Listeners run synchronously, in subscription order. */
+/**
+ * Minimal typed emitter. Listeners run synchronously, in subscription order.
+ */
 export class EventEmitter<TEvents extends object> {
   readonly #listeners = new Map<keyof TEvents, Set<Listener<never>>>();
 

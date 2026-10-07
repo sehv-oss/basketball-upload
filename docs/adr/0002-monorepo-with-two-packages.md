@@ -4,7 +4,7 @@
 
 ## Context
 
-`sehv-oss/pdf-viewer` ships its layers as subpath exports of a single package (its ADR 0003). Here the request was explicit: a core package with the Web Component, and a separate package with the React wrapper. `sehv-oss/i18n` already has that shape — `packages/core`, `packages/react` and a demo `site/` in one pnpm workspace.
+A core package with the Web Component, and a separate package with the React wrapper. `sehv-oss/i18n` already has that shape — `packages/core`, `packages/react` and a demo `site/` in one pnpm workspace.
 
 ## Decision
 

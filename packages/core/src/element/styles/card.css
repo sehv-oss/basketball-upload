@@ -1,10 +1,4 @@
 @layer components {
-  /*
-   * A file on the court. Resting cards are placed by CSS at the rest spot the
-   * element measures (`--_rest-x`, `--_rest-y`); while aimed or flying, the
-   * element writes `translate`, `rotate` and `scale` inline. Physical `top`
-   * and `left` on purpose: the physics works in screen coordinates.
-   */
   .card {
     --_depth: 0;
     --_fold: calc(var(--_card-width) * 0.2);
@@ -49,7 +43,6 @@
     inset: 0;
     border-radius: calc(var(--_card-width) * 0.1);
     background: var(--_file-surface);
-    /* The dog-ear: the top right corner is cut, the fold drawn below. */
     clip-path: polygon(
       0 0,
       calc(100% - var(--_fold)) 0,
@@ -123,8 +116,6 @@
     background: var(--_file-color, var(--_file-badge));
     white-space: nowrap;
   }
-
-  /* Aiming dots */
 
   .trajectory {
     position: absolute;

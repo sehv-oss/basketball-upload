@@ -8,7 +8,6 @@ import reset from './reset.css';
 import states from './states.css';
 import tokens from './tokens.css';
 
-/** In cascade order: `layers.css` declares the order of the layers first. */
 const SOURCES = [
   layers,
   tokens,
@@ -24,9 +23,8 @@ const SOURCES = [
 let sheet: CSSStyleSheet | undefined;
 
 /**
- * One constructed stylesheet shared by every element, created on first use
- * rather than at module evaluation: the module must be importable where
- * `CSSStyleSheet` does not exist (SSR).
+ * One constructed stylesheet shared by every element, created on first use rather than at module evaluation:
+ * the module must be importable where `CSSStyleSheet` does not exist (SSR).
  */
 export function getStyleSheet(): CSSStyleSheet {
   if (!sheet) {

@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "React component for <basketball-upload>, the basketball-themed drag and drop file upload.",
   "type": "module",
-  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/basketball-upload-react.d.ts",
@@ -29,12 +28,6 @@
     "web-component"
   ],
   "license": "ISC",
-  "contributors": [
-    {
-      "name": "Jorge Molina",
-      "url": "https://github.com/jm-fuster"
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sehv-oss/basketball-upload.git",
@@ -51,16 +44,25 @@
     "@sehv-oss/basketball-upload": "workspace:^"
   },
   "peerDependencies": {
+    "@types/react": ">=19",
     "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "vitest-browser-react": "catalog:"
   }
 }
