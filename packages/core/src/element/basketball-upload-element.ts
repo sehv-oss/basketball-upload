@@ -114,10 +114,16 @@ export class BasketballUploadElement extends BaseElement {
    * Cards waiting on the court, bottom of the stack first.
    */
   #staged: CardView[] = [];
+
   /**
    * Cards on their way into the basket: dunks, shots in the air, scores.
    */
   readonly #inPlay = new Set<CardView>();
+
+  /**
+   * Scored cards fading out of the net: their files are already in the basket.
+   */
+  readonly #leaving = new Set<CardView>();
   #messages: Messages = defaultMessages;
   #fileTypes: readonly FileType[] = [];
   #resizeObserver: ResizeObserver | null = null;
@@ -347,7 +353,10 @@ export class BasketballUploadElement extends BaseElement {
    * Copy overrides, merged over the defaults.
    */
   set messages(value: Partial<Messages> | null | undefined) {
-    this.#messages = { ...defaultMessages, ...value };
+    const overrides = Object.fromEntries(
+      Object.entries(value ?? {}).filter(([, message]) => message !== undefined)
+    ) as Partial<Messages>;
+    this.#messages = { ...defaultMessages, ...overrides };
     this.#applyMessages();
   }
 
@@ -457,8 +466,10 @@ export class BasketballUploadElement extends BaseElement {
     card?.dispose();
     for (const staged of this.#staged) staged.dispose();
     for (const playing of this.#inPlay) playing.dispose();
+    for (const leaving of this.#leaving) leaving.dispose();
     this.#staged = [];
     this.#inPlay.clear();
+    this.#leaving.clear();
     this.#states.scoring = 0;
     this.#syncStates();
     this.#queue.clear();
@@ -790,6 +801,8 @@ export class BasketballUploadElement extends BaseElement {
     this.#states.scoring -= 1;
     this.#syncStates();
     this.#hoop.celebrate(reduced);
+    this.#inPlay.delete(card);
+    this.#leaving.add(card);
     this.#queue.add(card.file);
     this.#emit('shot', { file: card.file, result: 'score' });
     this.#live.announce(this.#messages.scored(card.file.name));
@@ -804,7 +817,7 @@ export class BasketballUploadElement extends BaseElement {
       ],
       { duration: reduced ? 240 : 1200, commit: true }
     );
-    this.#inPlay.delete(card);
+    this.#leaving.delete(card);
     card.dispose();
   }
 

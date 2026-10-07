@@ -17,6 +17,7 @@ export default defineConfig({
     'sket',
     'sketchfile',
     'theming',
+    'unstub',
     'uploaders',
   ],
 });

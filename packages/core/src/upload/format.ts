@@ -4,9 +4,9 @@ const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
  * Human readable size in decimal units, the way file managers show it: `2_400_000` → `2.4 MB`.
  */
 export function formatBytes(bytes: number, locale?: string): string {
-  let value = Math.max(0, bytes);
+  let value = bytes > 0 ? bytes : 0;
   let unit = 0;
-  while (value >= 1000 && unit < UNITS.length - 1) {
+  while (value >= (unit === 0 ? 999.5 : 999.95) && unit < UNITS.length - 1) {
     value /= 1000;
     unit += 1;
   }

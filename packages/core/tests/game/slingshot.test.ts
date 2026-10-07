@@ -45,12 +45,21 @@ describe('isPullEnough', () => {
     expect(isPullEnough({ x: 0, y: unit * 0.1 }, unit)).toBe(false);
     expect(isPullEnough({ x: 0, y: unit * 0.2 }, unit)).toBe(true);
   });
+
+  it('accepts a pull of exactly the minimum, and cancels no pull at all', () => {
+    expect(isPullEnough({ x: 0, y: PHYSICS.minPull * unit }, unit)).toBe(true);
+    expect(isPullEnough({ x: 0, y: 0 }, unit)).toBe(false);
+  });
 });
 
 describe('pullToVelocity', () => {
   it('launches opposite to the pull', () => {
     const velocity = pullToVelocity({ x: -10, y: 20 }, unit, 12);
     expect(velocity).toEqual({ x: 120, y: -240 });
+  });
+
+  it('does not launch without a pull', () => {
+    expect(length(pullToVelocity({ x: 0, y: 0 }, unit, 12))).toBe(0);
   });
 
   it('stops adding speed beyond the maximum pull', () => {
@@ -105,5 +114,6 @@ describe('spinFor', () => {
     expect(spinFor({ x: -400, y: -900 }, unit)).toBeLessThan(0);
     expect(spinFor({ x: 0, y: -900 }, unit)).toBe(PHYSICS.spin.min);
     expect(spinFor({ x: 1e5, y: 0 }, unit)).toBe(PHYSICS.spin.max);
+    expect(spinFor({ x: -1e5, y: 0 }, unit)).toBe(-PHYSICS.spin.max);
   });
 });

@@ -40,6 +40,13 @@ describe('resolveFileType', () => {
       artwork: 'lines',
     });
     expect(resolveFileType(file('Makefile')).label).toBe('FILE');
+    expect(resolveFileType(file('')).label).toBe('FILE');
+  });
+
+  it('moves on to the next type when a predicate does not match', () => {
+    const types = [{ kind: 'never', match: () => false }];
+
+    expect(resolveFileType(file('a.pdf'), types).kind).toBe('pdf');
   });
 });
 
@@ -90,12 +97,30 @@ describe('registerFileType', () => {
     expect(typeof resolved.artwork).toBe('function');
   });
 
-  it('rejects kinds that cannot be part names', () => {
-    expect(() => registerFileType({ kind: 'My Type', match: '.x' })).toThrow(
-      TypeError
-    );
-    expect(() => registerFileType({ kind: '1st', match: '.x' })).toThrow(
-      TypeError
-    );
+  it('rejects kinds that cannot be part names, without registering them', () => {
+    for (const kind of ['My Type', '1st', '', 'PDF', 'my_type', '-x', 'a.b']) {
+      expect(() => registerFileType({ kind, match: '.pdf' }), kind).toThrow(
+        TypeError
+      );
+    }
+
+    expect(resolveFileType(file('march.pdf')).kind).toBe('pdf');
+  });
+
+  it('accepts lowercase kinds with digits and dashes', () => {
+    cleanups.push(registerFileType({ kind: 'x', match: '.x' }));
+    cleanups.push(registerFileType({ kind: 'doc-v2-', match: '.v2' }));
+
+    expect(resolveFileType(file('a.v2')).kind).toBe('doc-v2-');
+  });
+
+  it('only removes its own registration, however often it is called', () => {
+    const removeFirst = registerFileType({ kind: 'first', match: '.fig' });
+    cleanups.push(registerFileType({ kind: 'second', match: '.fig' }));
+
+    removeFirst();
+    removeFirst();
+
+    expect(resolveFileType(file('board.fig')).kind).toBe('second');
   });
 });

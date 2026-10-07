@@ -223,7 +223,7 @@ hoop.messages = {
 };
 ```
 
-See `Messages` and `defaultMessages` for every key: accessible names, statuses, the validation message, and the announcements made to screen readers (`scored`, `missed`, `rejected`, `complete`, `error`).
+Keys left out, or set to `undefined`, keep their default. See `Messages` and `defaultMessages` for every key: accessible names, statuses, the validation message, and the announcements made to screen readers (`scored`, `missed`, `rejected`, `complete`, `error`).
 
 ### Slots
 

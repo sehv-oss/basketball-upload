@@ -1,9 +1,12 @@
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import {
   BasketballUploadElement,
+  defaultMessages,
   registerBasketballUpload,
   registerFileType,
+  type Messages,
+  type Theme,
   type UploadItem,
 } from '../../src/basketball-upload.ts';
 import {
@@ -15,6 +18,7 @@ import {
   pointer,
   query,
   shadow,
+  wait,
 } from './helpers.ts';
 
 type ItemsEvent = CustomEvent<{ items: readonly UploadItem[] }>;
@@ -101,6 +105,100 @@ describe('attributes and properties', () => {
     expect(element.multiple).toBe(false);
     expect(element.maxSize).toBeNull();
   });
+
+  it('ignore sizes and counts that are not numbers of zero or more', () => {
+    const element = mount();
+    for (const value of ['abc', '-1', '', '  ', 'Infinity']) {
+      element.setAttribute('max-size', value);
+      element.setAttribute('max-files', value);
+      element.setAttribute('concurrency', value);
+
+      expect(element.maxSize, value).toBeNull();
+      expect(element.maxFiles, value).toBeNull();
+      expect(element.concurrency, value).toBe(3);
+    }
+
+    element.setAttribute('concurrency', '0');
+    expect(element.concurrency).toBe(3);
+    element.setAttribute('concurrency', '2.7');
+    expect(element.concurrency).toBe(2);
+  });
+
+  it('fall back to the system theme for unknown themes', () => {
+    const element = mount({ theme: 'neon' });
+    expect(element.theme).toBe('system');
+
+    element.theme = 'dark';
+    element.theme = 'neon' as Theme;
+    expect(element.hasAttribute('theme')).toBe(false);
+  });
+
+  it('remove the attribute for empty values', () => {
+    const element = mount({
+      accept: '.pdf',
+      name: 'files',
+      'max-files': '2',
+      concurrency: '1',
+      required: '',
+      disabled: '',
+      instant: '',
+    });
+
+    element.accept = '';
+    element.name = null;
+    element.maxFiles = null;
+    element.concurrency = undefined;
+    element.required = false;
+    element.disabled = null;
+    element.instant = undefined;
+
+    expect(element.getAttributeNames()).toEqual(['style']);
+    expect(element.accept).toBe('');
+    expect(element.name).toBe('');
+    expect(element.concurrency).toBe(3);
+  });
+
+  it('take null messages and file types as the defaults', () => {
+    const element = mount();
+    element.messages = { title: 'Enviar arquivos' };
+    element.fileTypes = [{ kind: 'figma', match: '.fig' }];
+
+    element.messages = null;
+    element.fileTypes = null;
+
+    expect(element.messages).toEqual(defaultMessages);
+    expect(element.fileTypes).toEqual([]);
+  });
+
+  it('keep the default of messages set to undefined', () => {
+    const element = mount();
+    element.messages = {
+      title: undefined,
+      shoot: undefined,
+    } as unknown as Partial<Messages>;
+    element.stage([pdf()]);
+
+    expect(query(element, 'slot[name="title"]').textContent).toBe(
+      'Upload files'
+    );
+    expect(query(element, '.card').getAttribute('aria-label')).toBe(
+      'Shoot final_final_v7.pdf'
+    );
+  });
+
+  it('keep the previous file types when new ones are invalid', () => {
+    const element = mount();
+    const types = [{ kind: 'figma', match: '.fig' }];
+    element.fileTypes = types;
+
+    expect(() => {
+      element.fileTypes = [
+        { kind: 'sketch', match: '.sketch' },
+        { kind: 'Bad Kind', match: '.bad' },
+      ];
+    }).toThrow(TypeError);
+    expect(element.fileTypes).toBe(types);
+  });
 });
 
 describe('the court', () => {
@@ -158,6 +256,229 @@ describe('the court', () => {
 
     expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
     expect(query<HTMLButtonElement>(element, '.dropzone').disabled).toBe(true);
+  });
+
+  it('announces a rejection, and flags it for a moment', async () => {
+    const element = mount({ accept: '.pdf' });
+    element.stage([new File(['x'], 'photo.png', { type: 'image/png' })]);
+
+    expect(element.matches(':state(rejected)')).toBe(true);
+    const live = query(element, '[role="status"]');
+    await vi.waitFor(() =>
+      expect(live.textContent).toBe('photo.png is not an accepted file type.')
+    );
+    await vi.waitFor(() =>
+      expect(element.matches(':state(rejected)')).toBe(false)
+    );
+  });
+
+  it('takes one file without multiple, keeping it when the next is rejected', async () => {
+    const element = mount({ accept: '.pdf', 'max-files': '5' });
+    const rejected: string[] = [];
+    element.addEventListener('file-reject', (event) =>
+      rejected.push(`${event.detail.file.name}: ${event.detail.reason}`)
+    );
+
+    element.stage([pdf('first.pdf'), pdf('second.pdf')]);
+    element.stage([new File(['x'], 'photo.png', { type: 'image/png' })]);
+
+    expect(rejected).toEqual(['second.pdf: count', 'photo.png: type']);
+    const cards = shadow(element).querySelectorAll('.card');
+    expect(cards).toHaveLength(1);
+    expect(cards[0]?.getAttribute('aria-label')).toBe('Shoot first.pdf');
+    await vi.waitFor(() =>
+      expect(query(element, '[role="status"]').textContent).toBe(
+        'photo.png is not an accepted file type.'
+      )
+    );
+  });
+
+  it('rejects every file with max-files="0"', () => {
+    const element = mount({ multiple: '', 'max-files': '0' });
+    const reasons: string[] = [];
+    element.addEventListener('file-reject', (event) =>
+      reasons.push(event.detail.reason)
+    );
+    element.stage([pdf(), pdf('second.pdf')]);
+
+    expect(reasons).toEqual(['count', 'count']);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+  });
+
+  it('ignores a max-size that is not a number', () => {
+    const element = mount({ 'max-size': 'big' });
+    element.stage([pdf('huge.pdf', 10_000)]);
+
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(1);
+  });
+
+  it('counts the files in the basket towards max-files, once', async () => {
+    const element = mount({ multiple: '', 'max-files': '2' });
+    const rejected: string[] = [];
+    element.addEventListener('file-reject', (event) =>
+      rejected.push(event.detail.file.name)
+    );
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.dunk([pdf('first.pdf')]);
+    await change;
+
+    element.stage([pdf('second.pdf'), pdf('third.pdf')]);
+
+    expect(rejected).toEqual(['third.pdf']);
+  });
+
+  it('does nothing with an empty list of files', () => {
+    const element = mount({ multiple: '' });
+    const reject = vi.fn();
+    element.addEventListener('file-reject', reject);
+    element.stage([]);
+    element.dunk([]);
+
+    expect(reject).not.toHaveBeenCalled();
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+  });
+
+  it('renames the staged cards when the messages change', () => {
+    const element = mount({ multiple: '' });
+    element.stage([pdf()]);
+    element.messages = { shoot: (name) => `Arremessar ${name}` };
+
+    expect(query(element, '.card').getAttribute('aria-label')).toBe(
+      'Arremessar final_final_v7.pdf'
+    );
+  });
+});
+
+describe('the file picker', () => {
+  it('opens with the accept and multiple of the element', () => {
+    const element = mount({ accept: '.pdf', multiple: '' });
+    const input = query<HTMLInputElement>(element, 'input[type="file"]');
+    const click = vi.spyOn(input, 'click').mockImplementation(() => {});
+
+    query(element, '.dropzone').click();
+
+    expect(click).toHaveBeenCalledOnce();
+    expect(input.accept).toBe('.pdf');
+    expect(input.multiple).toBe(true);
+  });
+
+  it('stays closed while disabled', () => {
+    const element = mount({ disabled: '' });
+    const input = query<HTMLInputElement>(element, 'input[type="file"]');
+    const click = vi.spyOn(input, 'click').mockImplementation(() => {});
+
+    element.openPicker();
+
+    expect(click).not.toHaveBeenCalled();
+  });
+
+  it('stages the picked files, and forgets them for the next pick', () => {
+    const element = mount({ multiple: '' });
+    const input = query<HTMLInputElement>(element, 'input[type="file"]');
+    const picked = new DataTransfer();
+    picked.items.add(pdf());
+    input.files = picked.files;
+
+    input.dispatchEvent(new Event('change'));
+
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(1);
+    expect(input.files).toHaveLength(0);
+  });
+
+  it('dunks the picked files with instant', async () => {
+    const element = mount({ multiple: '', instant: '' });
+    const input = query<HTMLInputElement>(element, 'input[type="file"]');
+    const picked = new DataTransfer();
+    picked.items.add(pdf());
+    input.files = picked.files;
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+
+    input.dispatchEvent(new Event('change'));
+
+    await change;
+  });
+});
+
+describe('dragging', () => {
+  function textDrag(
+    type: 'dragover' | 'drop',
+    point: { x: number; y: number }
+  ): DragEvent {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('text/plain', 'not a file');
+    return new DragEvent(type, {
+      dataTransfer,
+      clientX: point.x,
+      clientY: point.y,
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    });
+  }
+
+  it('ignores drags without files', () => {
+    const element = mount({ multiple: '' });
+    const point = center(query(element, '.dropzone'));
+    const over = textDrag('dragover', point);
+    const drop = textDrag('drop', point);
+
+    element.dispatchEvent(over);
+    expect(over.defaultPrevented).toBe(false);
+    expect(element.matches(':state(dragging)')).toBe(false);
+
+    element.dispatchEvent(drop);
+    expect(drop.defaultPrevented).toBe(false);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+  });
+
+  it('refuses drops while disabled, without rejecting the files', async () => {
+    const element = mount({ multiple: '', disabled: '' });
+    const reject = vi.fn();
+    element.addEventListener('file-reject', reject);
+    const point = center(query(element, '.dropzone'));
+    const over = fileDrag('dragover', [pdf()], point);
+
+    element.dispatchEvent(over);
+    expect(over.dataTransfer?.dropEffect).toBe('none');
+    expect(element.matches(':state(dragging)')).toBe(false);
+
+    element.dispatchEvent(fileDrag('drop', [pdf()], point));
+    await wait(50);
+    expect(element.items).toHaveLength(0);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+    expect(reject).not.toHaveBeenCalled();
+  });
+
+  it('stops only when the drag leaves the element', () => {
+    const element = mount({ multiple: '' });
+    const dropzone = query(element, '.dropzone');
+    element.dispatchEvent(fileDrag('dragover', [pdf()], center(dropzone)));
+
+    const leave = (point: { x: number; y: number }): void => {
+      element.dispatchEvent(
+        new DragEvent('dragleave', {
+          clientX: point.x,
+          clientY: point.y,
+          bubbles: true,
+          composed: true,
+        })
+      );
+    };
+
+    leave(center(element));
+    expect(element.matches(':state(dragging)')).toBe(true);
+
+    leave({ x: 2000, y: 2000 });
+    expect(element.matches(':state(dragging)')).toBe(false);
+    expect(element.matches(':state(drop-target)')).toBe(false);
+  });
+
+  it('dunks files dropped on the court with instant', async () => {
+    const element = mount({ multiple: '', instant: '' });
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.dispatchEvent(fileDrag('drop', [pdf()], { x: 120, y: 760 }));
+
+    await change;
   });
 });
 
@@ -295,6 +616,89 @@ describe('uploads', () => {
     await success;
     expect(attempts).toBe(2);
   });
+
+  it('announces failed uploads', async () => {
+    const element = mount();
+    element.uploader = () => Promise.reject(new Error('offline'));
+    const failure = nextEvent(element, 'upload-error');
+    element.dunk([pdf()]);
+    await failure;
+
+    await vi.waitFor(() =>
+      expect(query(element, '[role="status"]').textContent).toBe(
+        'final_final_v7.pdf failed to upload.'
+      )
+    );
+    expect(query(element, '.item-status').textContent).toBe('Upload failed');
+  });
+
+  it('takes a file out of the basket, its row and the form', async () => {
+    const form = document.createElement('form');
+    document.body.append(form);
+    const element = mount({ name: 'files', multiple: '' }, form);
+    const filled = nextEvent<ItemsEvent>(element, 'change', basketHas(2));
+    element.dunk([pdf('first.pdf'), pdf('second.pdf')]);
+    await filled;
+
+    const removed = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    expect(element.removeItem(element.items[0]!.id)).toBe(true);
+    await removed;
+
+    expect(query(element, '.counter-value').textContent).toBe('1');
+    expect(shadow(element).querySelectorAll('.item')).toHaveLength(1);
+    const files = new FormData(form).getAll('files') as File[];
+    expect(files.map((file) => file.name)).toEqual(['second.pdf']);
+  });
+
+  it('returns false for unknown items, and when nothing is staged', () => {
+    const element = mount();
+
+    expect(element.retryItem('missing')).toBe(false);
+    expect(element.removeItem('missing')).toBe(false);
+    expect(element.shoot()).toBe(false);
+  });
+});
+
+describe('clearing', () => {
+  it('removes the cards fading out of the net', async () => {
+    const element = mount({ multiple: '' });
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.dunk([pdf()]);
+    await change;
+
+    element.clear();
+
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+    expect(element.items).toHaveLength(0);
+  });
+
+  it('drops the dunks still on their way', async () => {
+    const element = mount({ multiple: '' });
+    element.dunk([pdf('first.pdf'), pdf('second.pdf')]);
+    await wait(100);
+
+    element.clear();
+    await wait(1000);
+
+    expect(element.items).toHaveLength(0);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+    expect(element.matches(':state(scoring)')).toBe(false);
+  });
+});
+
+describe('without a layout', () => {
+  it('dunks straight into the basket, and cannot shoot', async () => {
+    const element = mount({ multiple: '' });
+    element.style.display = 'none';
+
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.dunk([pdf('dunked.pdf')]);
+    await change;
+
+    element.stage([pdf('staged.pdf')]);
+    expect(element.shoot()).toBe(false);
+    expect(element.items.map((item) => item.file.name)).toEqual(['dunked.pdf']);
+  });
 });
 
 describe('forms', () => {
@@ -332,6 +736,52 @@ describe('forms', () => {
     form.reset();
 
     expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+  });
+
+  it('submits nothing without a name', async () => {
+    const form = document.createElement('form');
+    document.body.append(form);
+    const element = mount({ multiple: '' }, form);
+    const change = nextEvent<ItemsEvent>(element, 'change', basketHas(1));
+    element.dunk([pdf()]);
+    await change;
+
+    expect([...new FormData(form).keys()]).toEqual([]);
+  });
+
+  it('validates without a form, with the message of its messages', () => {
+    const element = mount({ required: '' });
+
+    expect(element.form).toBeNull();
+    expect(element.willValidate).toBe(true);
+    expect(element.checkValidity()).toBe(false);
+    expect(element.validationMessage).toBe('Add at least one file.');
+
+    element.messages = { required: 'Adicione um arquivo.' };
+    expect(element.validationMessage).toBe('Adicione um arquivo.');
+
+    element.required = false;
+    expect(element.checkValidity()).toBe(true);
+    expect(element.reportValidity()).toBe(true);
+  });
+
+  it('is disabled with its fieldset', () => {
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    document.body.append(fieldset);
+    const element = mount({ multiple: '' }, fieldset);
+    const dropzone = query<HTMLButtonElement>(element, '.dropzone');
+
+    expect(element.matches(':state(disabled)')).toBe(true);
+    expect(dropzone.disabled).toBe(true);
+    element.stage([pdf()]);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(0);
+
+    fieldset.disabled = false;
+    expect(element.matches(':state(disabled)')).toBe(false);
+    expect(dropzone.disabled).toBe(false);
+    element.stage([pdf()]);
+    expect(shadow(element).querySelectorAll('.card')).toHaveLength(1);
   });
 });
 

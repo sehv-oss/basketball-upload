@@ -106,6 +106,60 @@ describe('step', () => {
     expect(result.body.vy).toBeLessThan(0);
     expect(Math.abs(result.body.vy)).toBeLessThan(900);
   });
+
+  it('keeps a card below the floor on it, without turning it back down', () => {
+    const floor = court.bounds.height - PHYSICS.floorRadius * court.unit;
+    const result = step(
+      launch({ x: 120, y: floor + 20 }, { x: 0, y: -300 }),
+      court
+    );
+
+    expect(result.events).toContain('floor');
+    expect(result.body.y).toBe(floor);
+    expect(result.body.vy).toBeLessThan(0);
+  });
+
+  it('bounces off the walls and the ceiling, losing speed', () => {
+    const edge = PHYSICS.floorRadius * court.unit;
+
+    const left = step(
+      launch({ x: edge + 1, y: 300 }, { x: -900, y: 0 }),
+      court
+    );
+    expect(left.events).toEqual(['wall']);
+    expect(left.body.x).toBe(edge);
+    expect(left.body.vx).toBeCloseTo(900 * PHYSICS.restitution.wall);
+
+    const right = step(
+      launch({ x: court.bounds.width - edge - 1, y: 300 }, { x: 900, y: 0 }),
+      court
+    );
+    expect(right.events).toEqual(['wall']);
+    expect(right.body.x).toBe(court.bounds.width - edge);
+    expect(right.body.vx).toBeCloseTo(-900 * PHYSICS.restitution.wall);
+
+    const ceiling = step(
+      launch({ x: 120, y: edge + 1 }, { x: 0, y: -900 }),
+      court
+    );
+    expect(ceiling.events).toEqual(['wall']);
+    expect(ceiling.body.y).toBe(edge);
+    expect(ceiling.body.vy).toBeGreaterThan(0);
+  });
+
+  it('stays finite when a card lands exactly on an end of the rim', () => {
+    // Gravity cancels this velocity over one step: the card stays put.
+    const still = -PHYSICS.gravity * court.unit * PHYSICS.step;
+    const result = step(
+      launch({ x: court.rim.left, y: court.rim.y }, { x: 0, y: still }),
+      court
+    );
+
+    const { x, y, vx, vy } = result.body;
+    expect([x, y, vx, vy].every(Number.isFinite)).toBe(true);
+    expect({ x, y }).toEqual({ x: court.rim.left, y: court.rim.y });
+    expect(result.events).toEqual([]);
+  });
 });
 
 describe('previewPath', () => {

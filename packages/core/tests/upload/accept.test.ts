@@ -29,6 +29,31 @@ describe('matchesAccept', () => {
     expect(matchesAccept(png, ' .pdf , image/* ')).toBe(true);
     expect(matchesAccept(unknown, '.pdf,image/*')).toBe(false);
   });
+
+  it('skips empty tokens, accepting everything when none is left', () => {
+    expect(matchesAccept(png, '.pdf,,')).toBe(false);
+    expect(matchesAccept(pdf, ',.pdf,')).toBe(true);
+    expect(matchesAccept(png, ' , ')).toBe(true);
+  });
+
+  it('compares MIME types case insensitively', () => {
+    expect(matchesAccept(png, 'IMAGE/PNG')).toBe(true);
+    expect(matchesAccept({ name: 'a.png', type: 'Image/PNG' }, 'image/*')).toBe(
+      true
+    );
+  });
+
+  it('only matches extensions at the end of the name', () => {
+    const disguised = { name: 'invoice.pdf.exe', type: '' };
+    expect(matchesAccept(disguised, '.pdf')).toBe(false);
+    expect(matchesAccept(disguised, 'application/pdf')).toBe(false);
+  });
+
+  it('does not match files without a type against MIME types', () => {
+    expect(matchesAccept(unknown, 'application/octet-stream')).toBe(false);
+    expect(matchesAccept(unknown, 'image/*')).toBe(false);
+    expect(matchesAccept(unknown, '*')).toBe(true);
+  });
 });
 
 describe('fileExtension', () => {
@@ -41,5 +66,6 @@ describe('fileExtension', () => {
     expect(fileExtension('README')).toBe('');
     expect(fileExtension('.gitignore')).toBe('');
     expect(fileExtension('trailing.')).toBe('');
+    expect(fileExtension('')).toBe('');
   });
 });

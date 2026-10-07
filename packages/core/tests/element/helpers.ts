@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import type { BasketballUploadElement } from '../../src/basketball-upload.ts';
 
 export function mount(
@@ -77,19 +79,45 @@ export function fileDrag(
 }
 
 export function pointer(
-  type: 'pointerdown' | 'pointermove' | 'pointerup',
-  point: { x: number; y: number }
+  type:
+    | 'pointerdown'
+    | 'pointermove'
+    | 'pointerup'
+    | 'pointercancel'
+    | 'lostpointercapture',
+  point: { x: number; y: number },
+  init: PointerEventInit = {}
 ): PointerEvent {
   return new PointerEvent(type, {
     pointerId: 7,
     pointerType: 'mouse',
     isPrimary: true,
     button: 0,
-    buttons: type === 'pointerup' ? 0 : 1,
+    buttons: type === 'pointerdown' || type === 'pointermove' ? 1 : 0,
     clientX: point.x,
     clientY: point.y,
     bubbles: true,
     composed: true,
     cancelable: true,
+    ...init,
   });
+}
+
+/**
+ * Resolves after `ms` milliseconds, for animations that must have ended.
+ */
+export function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Pretends the user asked for reduced motion. Undo with `vi.unstubAllGlobals()`.
+ */
+export function stubReducedMotion(): void {
+  const matchMedia = window.matchMedia.bind(window);
+  vi.stubGlobal('matchMedia', (query: string) =>
+    query.includes('prefers-reduced-motion')
+      ? { matches: true, media: query }
+      : matchMedia(query)
+  );
 }
