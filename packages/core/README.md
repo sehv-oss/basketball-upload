@@ -39,7 +39,7 @@ registerBasketballUpload();
 <basketball-upload multiple accept="image/*,.pdf"></basketball-upload>
 ```
 
-`registerBasketballUpload` is idempotent and does nothing where `customElements` does not exist, so it is safe to call from any module, including on the server. Pass `tagName` to register under another name: `registerBasketballUpload({ tagName: 'my-upload' })`.
+`registerBasketballUpload` is idempotent and does nothing where `customElements` does not exist, so it is safe to call from any module, including on the server. Pass `tagName` to register under another name: `registerBasketballUpload({ tagName: 'my-upload' })`, then [declare it for TypeScript](#events).
 
 The element is a block that grows with its content (at least `36rem` tall). Its width drives everything else: the hoop is up to `25rem` wide and the shot scales with it.
 
@@ -204,7 +204,17 @@ hoop.addEventListener('upload-success', (event) => {
 });
 ```
 
-`BasketballUploadEventMap` types `addEventListener` for these events.
+`BasketballUploadEventMap` types `addEventListener` for these events, on the element that `querySelector('basketball-upload')` and `createElement('basketball-upload')` return. Registered under another name, declare that name once in your project, and they return the element for it too:
+
+```ts
+import type { BasketballUploadElement } from '@sehv-oss/basketball-upload';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'my-upload': BasketballUploadElement;
+  }
+}
+```
 
 ### Messages
 
