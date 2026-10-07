@@ -240,22 +240,20 @@ export function BasketballUpload(props: BasketballUploadProps): ReactNode {
     const element = elementRef.current;
     if (!element) return;
 
-    const subscriptions = Object.entries(EVENTS).map(([type, callback]) => {
-      const listener = (event: Event): void => {
-        const handle = callbacks.current[callback] as
-          ((detail: unknown) => void) | undefined;
-        handle?.((event as CustomEvent).detail);
-      };
-      element.addEventListener(type, listener);
+    const listeners = new AbortController();
+    for (const [type, callback] of Object.entries(EVENTS)) {
+      element.addEventListener(
+        type,
+        (event) => {
+          const handle = callbacks.current[callback] as
+            ((detail: unknown) => void) | undefined;
+          handle?.((event as CustomEvent).detail);
+        },
+        { signal: listeners.signal }
+      );
+    }
 
-      return () => element.removeEventListener(type, listener);
-    });
-
-    return () => {
-      for (const unsubscribe of subscriptions) {
-        unsubscribe();
-      }
-    };
+    return () => listeners.abort();
   }, []);
 
   useLayoutEffect(() => {
