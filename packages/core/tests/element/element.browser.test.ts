@@ -84,9 +84,6 @@ describe('rendering', () => {
 });
 
 describe('theming', () => {
-  /**
-   * The colors of the bracket of the rim and of the dropzone under a drag.
-   */
   async function accentShades(
     element: BasketballUploadElement
   ): Promise<{ strong: string; surface: string }> {
