@@ -1,0 +1,68 @@
+{
+  "name": "@sehv-oss/basketball-upload-react",
+  "version": "0.0.0",
+  "description": "React component for <basketball-upload>, the basketball-themed drag and drop file upload.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/basketball-upload-react.d.ts",
+      "default": "./dist/basketball-upload-react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json && tsc --project tsconfig.tests.json && tsdown"
+  },
+  "files": [
+    "./dist",
+    "NOTICE.md"
+  ],
+  "keywords": [
+    "react",
+    "file-upload",
+    "upload",
+    "dropzone",
+    "drag-and-drop",
+    "dnd",
+    "basketball",
+    "web-component"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sehv-oss/basketball-upload.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://sehv-oss.github.io/basketball-upload/",
+  "bugs": {
+    "url": "https://github.com/sehv-oss/basketball-upload/issues"
+  },
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "dependencies": {
+    "@sehv-oss/basketball-upload": "workspace:^"
+  },
+  "peerDependencies": {
+    "@types/react": ">=19",
+    "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "catalog:"
+  }
+}

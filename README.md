@@ -1,43 +1,89 @@
-# template-new-repository
+# basketball-upload
 
-Template repository for creating new repositories in the **sehv-oss** organization.
+Drag and drop, or take the shot.
 
-It documents every step required to set up a new repository — regardless of language or stack. The goal is for every repository to start with a consistent configuration and reach **100% Community Standards**.
+A file upload where the dropzone is a backboard. Drop your files on it, or pull a file back like a slingshot and score it into the basket: the dots show exactly where it is going. Every file that goes in is uploaded, with its progress in the list below.
 
-## Creating a New Repository
+**[Live demo](https://sehv-oss.github.io/basketball-upload/)**
 
-1. Create a new **public** repository on GitHub using this repository as a template (**Use this template > Create a new repository**).
-2. Go through the checklist below and verify every item.
+<img src="docs/images/preview.png" alt="The element: a dropzone shaped like a backboard, a rim and net below it, and a PDF card pulled back with dotted aiming arc towards the hoop" width="377" />
 
-## Setup Checklist
+## Credits
 
-### 1. About Section (gear icon next to "About" on the repository home page)
+Design by **Jorge Molina** — [jm-fuster](https://github.com/jm-fuster) on GitHub, [@jm_fuster](https://www.figma.com/@jm_fuster) on Figma Community, [jorgemolinafuster.com](https://jorgemolinafuster.com).
 
-- [ ] Fill in the **Description**
-- [ ] Fill in the **Website** (optional)
-- [ ] Check **only** _Releases_ (uncheck _Packages_ and _Deployments_)
+This project is an independent, faithful code implementation of his basketball upload design, published on Figma Community. It is not affiliated with or endorsed by the author. See [NOTICE.md](NOTICE.md) for what was added along the way.
 
-### 2. General Settings (`Settings > General`)
+## Packages
 
-- [ ] **Features** — enable **only** the following (leave Wikis, Discussions, Projects, and Sponsorships disabled):
-  - **Issues**
-  - **Preserve this repository** (GitHub Archive Program)
-  - **Pull Requests**
-- [ ] **Pull Requests** — enable **only** _Allow squash merging_, with _Default message_ as the default commit message (keep _Allow merge commits_ and _Allow rebase merging_ disabled)
-- [ ] Check **Automatically delete head branches**
+| Package                                               | What                                                      |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| [`@sehv-oss/basketball-upload`](packages/core)        | The `<basketball-upload>` Web Component, for any stack    |
+| [`@sehv-oss/basketball-upload-react`](packages/react) | `<BasketballUpload>`, a thin React 19 component around it |
 
-### 3. Ruleset (`Settings > Rules > Rulesets`)
+### Web Component
 
-- [ ] Create the default ruleset for the repository: **New ruleset > Import a ruleset** an exported file from another repository in the organization.
+```bash
+npm install @sehv-oss/basketball-upload
+```
 
-### 4. Moderation (`Settings > Moderation options > Reported content`)
+```html
+<basketball-upload multiple accept="image/*,.pdf"></basketball-upload>
 
-- [ ] Enable reported content and select **Prior contributors and collaborators**
+<script type="module">
+  import {
+    registerBasketballUpload,
+    createXhrUploader,
+  } from '@sehv-oss/basketball-upload';
 
-### 5. Security (`Settings > Advanced Security`)
+  registerBasketballUpload();
+  document.querySelector('basketball-upload').uploader = createXhrUploader({
+    url: '/api/uploads',
+  });
+</script>
+```
 
-- [ ] Enable **Private vulnerability reporting** (required by the reporting channel referenced in `SECURITY.md`)
+### React
 
-### 6. Community Standards (`Insights > Community Standards`)
+```bash
+npm install @sehv-oss/basketball-upload-react
+```
 
-Verify that the checklist shows **100%**.
+```tsx
+import {
+  BasketballUpload,
+  createXhrUploader,
+} from '@sehv-oss/basketball-upload-react';
+
+const uploader = createXhrUploader({ url: '/api/uploads' });
+
+export function Uploads() {
+  return (
+    <BasketballUpload multiple accept="image/*,.pdf" uploader={uploader} />
+  );
+}
+```
+
+The [core README](packages/core/README.md) documents the whole API: attributes, events, theming tokens, parts, file types, uploads and forms.
+
+## Development
+
+Requires Node.js 26 (`.nvmrc`) and pnpm through Corepack.
+
+```bash
+corepack enable
+pnpm install
+pnpm site:dev        # the demo site, running the packages from their sources
+pnpm build           # type checks, builds both packages, then the site
+pnpm test:setup      # once: the Chromium used by the browser tests
+pnpm test            # unit tests (Node) and element/React tests (Chromium)
+pnpm lint            # cspell and prettier
+```
+
+The site serves the element alone, at the size of the reference design, at `/basketball-upload/?reference`: compare it with the screenshots in [`docs/design/reference`](docs/design/reference).
+
+Architecture decisions are recorded in [`docs/adr`](docs/adr).
+
+## License
+
+[ISC](LICENSE)

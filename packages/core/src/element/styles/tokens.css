@@ -1,0 +1,86 @@
+@layer tokens {
+  :host {
+    color-scheme: light dark;
+
+    --_background: var(
+      --basketball-upload-background,
+      light-dark(#eff1f5, #0f1115)
+    );
+    --_foreground: var(
+      --basketball-upload-foreground,
+      light-dark(#0f1115, #f4f5f7)
+    );
+    --_muted-foreground: var(
+      --basketball-upload-muted-foreground,
+      light-dark(#6b6f78, #a3a8b2)
+    );
+    --_subtle-foreground: var(
+      --basketball-upload-subtle-foreground,
+      light-dark(#989a9f, #7c818b)
+    );
+    --_surface: var(--basketball-upload-surface, light-dark(#ffffff, #181b21));
+    --_border: var(--basketball-upload-border, light-dark(#cbccd1, #3a3f48));
+    --_radius: var(--basketball-upload-radius, 1.125rem);
+
+    --_accent: var(--basketball-upload-accent, light-dark(#f0612e, #f26a39));
+    --_accent-strong: var(
+      --basketball-upload-accent-strong,
+      light-dark(#bd4d19, #c4521f)
+    );
+    --_accent-surface: var(
+      --basketball-upload-accent-surface,
+      light-dark(#fff4ef, color-mix(in oklab, #f26a39 14%, #181b21))
+    );
+    --_trajectory: var(
+      --basketball-upload-trajectory,
+      color-mix(in oklab, var(--_accent) 60%, transparent)
+    );
+    --_net: var(--basketball-upload-net, light-dark(#a9abb3, #6b717c));
+
+    --_counter-background: var(
+      --basketball-upload-counter-background,
+      light-dark(#e3e7ed, #232730)
+    );
+    --_track: var(--basketball-upload-track, light-dark(#e6e8ec, #2a2e36));
+    --_success: var(--basketball-upload-success, light-dark(#2fb06d, #34c07a));
+    --_danger: var(--basketball-upload-danger, light-dark(#d8374e, #f0606f));
+
+    --_file-surface: var(--basketball-upload-file-surface, #ffffff);
+    --_file-line: var(--basketball-upload-file-line, #e4e5e9);
+    --_file-fold: var(--basketball-upload-file-fold, #e9eaee);
+    --_file-badge: var(--basketball-upload-file-badge, #6b7280);
+
+    --_shadow: var(
+      --basketball-upload-shadow,
+      0 1px 2px rgb(15 17 21 / 0.04),
+      0 0.5rem 1.5rem rgb(15 17 21 / 0.07)
+    );
+    --_focus-ring: var(
+      --basketball-upload-focus-ring,
+      2px solid var(--_accent)
+    );
+    --_font-family: var(
+      --basketball-upload-font-family,
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      sans-serif
+    );
+
+    --_gutter: var(--basketball-upload-gutter, clamp(1.25rem, 8cqi, 3.75rem));
+    --_hoop-size: var(
+      --basketball-upload-hoop-size,
+      min(25rem, 100cqi - 2 * var(--_gutter))
+    );
+    --_card-width: calc(var(--_hoop-size) * 0.2375);
+    --_card-height: calc(var(--_hoop-size) * 0.2875);
+  }
+
+  :host([theme='light']) {
+    color-scheme: light;
+  }
+
+  :host([theme='dark']) {
+    color-scheme: dark;
+  }
+}

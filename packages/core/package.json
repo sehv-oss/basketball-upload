@@ -1,0 +1,51 @@
+{
+  "name": "@sehv-oss/basketball-upload",
+  "version": "0.0.0",
+  "description": "Basketball-themed drag and drop file upload Web Component: drop your files, or take the shot.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/basketball-upload.d.ts",
+      "default": "./dist/basketball-upload.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json && tsc --project tsconfig.tests.json && tsdown"
+  },
+  "files": [
+    "./dist",
+    "NOTICE.md"
+  ],
+  "keywords": [
+    "file-upload",
+    "upload",
+    "dropzone",
+    "drag-and-drop",
+    "dnd",
+    "basketball",
+    "web-component",
+    "custom-element"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sehv-oss/basketball-upload.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://sehv-oss.github.io/basketball-upload/",
+  "bugs": {
+    "url": "https://github.com/sehv-oss/basketball-upload/issues"
+  },
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "devDependencies": {
+    "@sehv-oss/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

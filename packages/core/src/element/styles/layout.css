@@ -1,0 +1,81 @@
+@layer layout {
+  :host {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    container-type: inline-size;
+    min-block-size: 36rem;
+    font-family: var(--_font-family);
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--_foreground);
+    background: var(--_background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :host([hidden]) {
+    display: none;
+  }
+
+  .frame {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: var(--_gutter);
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+
+  .hoop {
+    position: relative;
+    flex: none;
+    align-self: center;
+    inline-size: var(--_hoop-size);
+    aspect-ratio: 400 / 268;
+    margin-block-start: calc(var(--_hoop-size) * 0.1125);
+  }
+
+  .court {
+    position: relative;
+    flex: 1 1 auto;
+    min-block-size: calc(var(--_hoop-size) * 0.96);
+  }
+
+  .frame:has(.list:not([hidden])) {
+    padding-block-end: calc(var(--_gutter) * 0.65);
+
+    & .court {
+      min-block-size: calc(var(--_hoop-size) * 0.8);
+    }
+  }
+
+  .spot {
+    position: absolute;
+    inset-inline-start: calc(var(--_hoop-size) * 0.13);
+    inset-block-end: calc(var(--_hoop-size) * 0.3);
+    inline-size: var(--_card-width);
+    block-size: var(--_card-height);
+    pointer-events: none;
+  }
+
+  .list {
+    display: grid;
+    flex: none;
+    gap: 0.75rem;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}

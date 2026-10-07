@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": [
+    "@sehv-oss/typescript-config/web/app",
+    "@sehv-oss/typescript-config/layer/react"
+  ],
+  "_comment": "Types come from the package sources, like the modules Vite serves in development, so no build is needed to work on the site.",
+  "compilerOptions": {
+    "types": ["vite/client"],
+    "paths": {
+      "@sehv-oss/basketball-upload": [
+        "../packages/core/src/basketball-upload.ts"
+      ],
+      "@sehv-oss/basketball-upload-react": [
+        "../packages/react/src/basketball-upload-react.ts"
+      ]
+    }
+  },
+  "include": ["src", "../packages/core/src/css.d.ts"]
+}
