@@ -53,15 +53,17 @@ basketball-upload:not(:defined) {
 
 ### How files get in
 
-| You…                                                        | The file…                                    |
-| ----------------------------------------------------------- | -------------------------------------------- |
-| drop it on the dropzone (the backboard)                     | is dunked: it goes straight through the hoop |
-| drop it anywhere else, or pick it with the file dialog      | lands on the court, ready to be shot         |
-| pull a card back and let go                                 | flies along the dotted arc: score, or miss   |
-| focus a card and press <kbd>Enter</kbd> or <kbd>Space</kbd> | takes a perfect, assisted shot               |
-| set `instant`                                               | always goes straight in, never to the court  |
+| You…                                                       | The file…                                           |
+| ---------------------------------------------------------- | --------------------------------------------------- |
+| drop it on the dropzone (the backboard)                    | is dunked: it goes straight through the hoop        |
+| drop it anywhere else, or pick it with the file dialog     | lands on the court, ready to be shot                |
+| pull a card back and let go                                | flies along the dotted arc: score, or miss          |
+| focus a card and hold <kbd>Enter</kbd> or <kbd>Space</kbd> | aims a perfect, assisted shot; letting go shoots it |
+| set `instant`                                              | always goes straight in, never to the court         |
 
 A file is in the basket once it goes through the net: it is counted, listed and uploaded. A missed card bounces and comes back to the court.
+
+While a card is held with the keyboard, <kbd>←</kbd> / <kbd>→</kbd> turn the shot and <kbd>↑</kbd> / <kbd>↓</kbd> make it stronger or weaker, so it can miss too; a quick press is still a perfect shot.
 
 Clicking the dropzone (or <kbd>Enter</kbd> / <kbd>Space</kbd> on it) opens the file dialog. <kbd>Escape</kbd> drops the current aim. With `prefers-reduced-motion: reduce`, shots go in without flying.
 
@@ -395,7 +397,7 @@ The element exposes what it is doing as custom states, for `:state()`:
 | ------------- | ----------------------------------------------------------- |
 | `dragging`    | Files are dragged over the element                          |
 | `drop-target` | Files are over the dropzone, or a card flies over it/scores |
-| `aiming`      | A card is pulled back                                       |
+| `aiming`      | A card is pulled back, or held with the keyboard            |
 | `flying`      | A card is in the air                                        |
 | `scoring`     | A card goes through the hoop                                |
 | `rejected`    | Just after a file was rejected                              |
@@ -411,7 +413,7 @@ Parts, tokens and states are public API: removing or renaming one is a breaking 
 
 ## Accessibility
 
-- The dropzone is a real button; cards on the court are buttons ("Shoot final.pdf") that shoot with the keyboard.
+- The dropzone is a real button; cards on the court are buttons ("Shoot final.pdf") that aim and shoot with the keyboard.
 - Scores, misses, rejections and finished uploads are announced in a polite live region.
 - Progress bars are `progressbar`s with their value; retry buttons are labelled.
 - With `prefers-reduced-motion: reduce`, nothing flies or swings.

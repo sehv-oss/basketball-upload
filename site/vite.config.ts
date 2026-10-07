@@ -52,4 +52,7 @@ function librarySources(): Plugin[] {
 export default defineConfig({
   base: '/basketball-upload/',
   plugins: [react(), librarySources()],
+  server: {
+    open: true,
+  },
 });

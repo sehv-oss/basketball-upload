@@ -16,7 +16,8 @@ The physics lives in `src/game/`, free of DOM:
 - **Pseudo depth**: seen from the front, a rising card is still in front of the hoop. The board (the orange square) and the ends of the rim only stop a card around the top of its arc or when it falls. The card shrinks to 0.7 of its size by the time it reaches the hoop, and spins.
 - **Events**: entering the square takes most of the speed away, once (the card drops along the board, "aim for the square"); the ends of the rim are round obstacles; going down through the rim between its ends scores; the floor and walls bounce. The preview stops at the first event, drawing a last dot there.
 - **Scripted endings**: a score continues as an animation, not physics — through the net (which swings), then the "+1", the counter, the list row and the upload, in the order of the design's frames; a miss bounces, then springs back to the court.
-- **Assisted shots** (keyboard, `shoot()`): `solveAssistedShot` computes the velocity of an arc that peaks above the square and comes down on the rim's center.
+- **Assisted shots** (`shoot()`, and the start of a keyboard aim): `solveAssistedShot` computes the velocity of an arc that peaks above the square and comes down on the rim's center.
+- **Keyboard aiming**: holding <kbd>Enter</kbd> or <kbd>Space</kbd> on a card holds it at the pull of the assisted shot (`assistedPull`), without moving it. The arrows steer that pull (`steerPull`): left and right turn it, up and down lengthen or shorten it, within the pulls the pointer can make. Releasing the key shoots, so a quick press is a perfect shot, and focus only moves on once the key is up.
 - **Reduced motion**: a shot goes in without flying.
 
 ## Consequences

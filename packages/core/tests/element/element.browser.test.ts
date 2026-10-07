@@ -12,6 +12,7 @@ import {
 import {
   center,
   fileDrag,
+  keyboard,
   mount,
   nextEvent,
   pdf,
@@ -561,9 +562,8 @@ describe('scoring', () => {
     const shot = nextEvent<ShotEvent>(element, 'shot');
 
     card.focus();
-    card.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
-    );
+    card.dispatchEvent(keyboard('keydown', 'Enter'));
+    card.dispatchEvent(keyboard('keyup', 'Enter'));
 
     expect((await shot).detail.result).toBe('score');
   });

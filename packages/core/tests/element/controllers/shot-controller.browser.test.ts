@@ -1,4 +1,5 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 import {
   registerBasketballUpload,
@@ -7,6 +8,7 @@ import {
 import {
   center,
   fileDrag,
+  keyboard,
   mount,
   nextEvent,
   pdf,
@@ -46,6 +48,34 @@ function aim(element: BasketballUploadElement): {
   card.dispatchEvent(pointer('pointermove', { x: 140, y: 775 }));
 
   return { card, start };
+}
+
+/**
+ * Stages one card, focuses it and holds Enter on it.
+ */
+function hold(element: BasketballUploadElement): HTMLElement {
+  element.stage([pdf()]);
+  const card = query(element, '.card');
+  card.focus();
+  card.dispatchEvent(keyboard('keydown', 'Enter'));
+
+  return card;
+}
+
+/**
+ * Center of the aiming dot at `index`, in pixels.
+ */
+function dot(
+  element: BasketballUploadElement,
+  index: number
+): { x: number; y: number } {
+  const circle = shadow(element).querySelectorAll('.dot')[index];
+  if (!circle) throw new Error(`No dot ${index}`);
+
+  return {
+    x: Number(circle.getAttribute('cx')),
+    y: Number(circle.getAttribute('cy')),
+  };
 }
 
 describe('aiming', () => {
@@ -162,17 +192,14 @@ describe('shooting', () => {
     element.stage([pdf('bottom.pdf'), pdf('top.pdf')]);
     const [bottom, top] = shadow(element).querySelectorAll('.card');
 
-    bottom!.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
-    );
-    top!.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'a', bubbles: true })
-    );
+    bottom!.dispatchEvent(keyboard('keydown', 'Enter'));
+    bottom!.dispatchEvent(keyboard('keyup', 'Enter'));
+    top!.dispatchEvent(keyboard('keydown', 'a'));
+    top!.dispatchEvent(keyboard('keyup', 'a'));
     expect(element.matches(':state(flying)')).toBe(false);
 
-    top!.dispatchEvent(
-      new KeyboardEvent('keydown', { key: ' ', bubbles: true })
-    );
+    top!.dispatchEvent(keyboard('keydown', ' '));
+    top!.dispatchEvent(keyboard('keyup', ' '));
     expect(element.matches(':state(flying)')).toBe(true);
   });
 
@@ -183,7 +210,6 @@ describe('shooting', () => {
     const start = center(card);
     const shot = nextEvent<ShotEvent>(element, 'shot');
 
-    // Pulled up, the card is thrown into the floor.
     card.dispatchEvent(pointer('pointerdown', start));
     card.dispatchEvent(pointer('pointermove', { x: start.x, y: start.y - 60 }));
     card.dispatchEvent(pointer('pointerup', { x: start.x, y: start.y - 60 }));
@@ -217,6 +243,144 @@ describe('shooting', () => {
     expect(shot).not.toHaveBeenCalled();
     expect(element.items).toHaveLength(0);
   });
+});
+
+describe('aiming with the keyboard', () => {
+  it.each(['Enter', ' '])(
+    'aims while %j is held, and shoots on release',
+    (key) => {
+      const element = mount();
+      element.stage([pdf()]);
+      const card = query(element, '.card');
+
+      card.dispatchEvent(keyboard('keydown', key));
+
+      expect(element.matches(':state(aiming)')).toBe(true);
+      expect(element.matches(':state(flying)')).toBe(false);
+      expect(visibleDots(element)).toBeGreaterThan(5);
+
+      card.dispatchEvent(keyboard('keyup', key));
+
+      expect(element.matches(':state(aiming)')).toBe(false);
+      expect(element.matches(':state(flying)')).toBe(true);
+    }
+  );
+
+  it('turns the shot with the left and right arrows', () => {
+    const element = mount();
+    element.stage([pdf()]);
+    const card = query(element, '.card');
+    expect(card.dispatchEvent(keyboard('keydown', 'ArrowRight'))).toBe(true);
+    card.dispatchEvent(keyboard('keydown', 'Enter'));
+    const assisted = dot(element, 4).x;
+
+    const scrolled = card.dispatchEvent(keyboard('keydown', 'ArrowRight'));
+    const right = dot(element, 4).x;
+    card.dispatchEvent(keyboard('keydown', 'ArrowLeft'));
+    card.dispatchEvent(keyboard('keydown', 'ArrowLeft'));
+    const left = dot(element, 4).x;
+
+    expect(scrolled).toBe(false);
+    expect(right).toBeGreaterThan(assisted);
+    expect(left).toBeLessThan(assisted);
+  });
+
+  it('makes the shot stronger with the up arrow, and weaker with the down arrow', () => {
+    const element = mount();
+    const card = hold(element);
+    const assisted = dot(element, 4).y;
+
+    card.dispatchEvent(keyboard('keydown', 'ArrowUp'));
+    const stronger = dot(element, 4).y;
+    card.dispatchEvent(keyboard('keydown', 'ArrowDown'));
+    card.dispatchEvent(keyboard('keydown', 'ArrowDown'));
+    const weaker = dot(element, 4).y;
+
+    expect(stronger).toBeLessThan(assisted);
+    expect(weaker).toBeGreaterThan(assisted);
+  });
+
+  it('leans the card like the pointer would for the same pull', () => {
+    const element = mount();
+    const card = hold(element);
+
+    for (let press = 0; press < 10; press += 1) {
+      card.dispatchEvent(keyboard('keydown', 'ArrowLeft'));
+    }
+    const aimedLeft = parseFloat(card.style.rotate);
+    for (let press = 0; press < 20; press += 1) {
+      card.dispatchEvent(keyboard('keydown', 'ArrowRight'));
+    }
+    const aimedRight = parseFloat(card.style.rotate);
+
+    expect(aimedRight).toBeLessThan(aimedLeft);
+  });
+
+  it('shoots where the arrows aimed', async () => {
+    const element = mount();
+    const card = hold(element);
+    const shot = nextEvent<ShotEvent>(element, 'shot');
+
+    for (let press = 0; press < 15; press += 1) {
+      card.dispatchEvent(
+        keyboard('keydown', 'ArrowLeft', { repeat: press > 0 })
+      );
+    }
+    card.dispatchEvent(keyboard('keyup', 'Enter'));
+
+    expect((await shot).detail.result).toBe('miss');
+  });
+
+  it.each([
+    [
+      'Escape',
+      (card: HTMLElement) => card.dispatchEvent(keyboard('keydown', 'Escape')),
+    ],
+    ['the card losing focus', (card: HTMLElement) => card.blur()],
+  ])('puts the card back without shooting on %s', async (_, cancel) => {
+    const element = mount();
+    const shot = vi.fn();
+    element.addEventListener('shot', shot);
+    const card = hold(element);
+
+    cancel(card);
+
+    expect(element.matches(':state(aiming)')).toBe(false);
+    expect(visibleDots(element)).toBe(0);
+    card.dispatchEvent(keyboard('keyup', 'Enter'));
+    await wait(700);
+    expect(element.matches(':state(flying)')).toBe(false);
+    expect(shot).not.toHaveBeenCalled();
+    expect(card.style.translate).toBe('');
+  });
+
+  it('does not aim again while the key is still held after Escape', async () => {
+    const element = mount();
+    const card = hold(element);
+    card.dispatchEvent(keyboard('keydown', 'Escape'));
+    await wait(700);
+
+    card.dispatchEvent(keyboard('keydown', 'Enter', { repeat: true }));
+
+    expect(element.matches(':state(aiming)')).toBe(false);
+  });
+
+  it.each(['Enter', 'Space'])(
+    'does not open the file dialog when %s is held through the shot',
+    async (key) => {
+      const element = mount();
+      element.stage([pdf()]);
+      const picker = vi.fn((event: Event) => event.preventDefault());
+      query(element, 'input[type="file"]').addEventListener('click', picker);
+      query(element, '.card').focus();
+
+      await userEvent.keyboard(`{${key}>4}`);
+      await userEvent.keyboard(`{/${key}}`);
+
+      expect(element.matches(':state(flying)')).toBe(true);
+      expect(picker).not.toHaveBeenCalled();
+    }
+  );
 });
 
 describe('with reduced motion', () => {

@@ -148,7 +148,6 @@ describe('step', () => {
   });
 
   it('stays finite when a card lands exactly on an end of the rim', () => {
-    // Gravity cancels this velocity over one step: the card stays put.
     const still = -PHYSICS.gravity * court.unit * PHYSICS.step;
     const result = step(
       launch({ x: court.rim.left, y: court.rim.y }, { x: 0, y: still }),

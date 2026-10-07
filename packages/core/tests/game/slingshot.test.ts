@@ -3,11 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { PHYSICS } from '../../src/game/config.ts';
 import { launch, step, type Body } from '../../src/game/simulate.ts';
 import {
+  assistedPull,
   isPullEnough,
   launchPower,
   pullToVelocity,
   solveAssistedShot,
   spinFor,
+  steerPull,
   stretchPull,
 } from '../../src/game/slingshot.ts';
 import { length } from '../../src/game/vector.ts';
@@ -69,6 +71,30 @@ describe('pullToVelocity', () => {
   });
 });
 
+describe('steerPull', () => {
+  it('turns clockwise on screen, sending the shot to the right', () => {
+    const turned = steerPull({ x: 0, y: 0.5 * unit }, 90, 0, unit);
+
+    expect(turned.x).toBeCloseTo(-0.5 * unit);
+    expect(turned.y).toBeCloseTo(0);
+  });
+
+  it('lengthens and shortens the pull, in rim units', () => {
+    const pull = { x: 0, y: 0.5 * unit };
+
+    expect(steerPull(pull, 0, 0.1, unit).y).toBeCloseTo(0.6 * unit);
+    expect(steerPull(pull, 0, -0.1, unit).y).toBeCloseTo(0.4 * unit);
+  });
+
+  it('stays between the shortest and the longest pull', () => {
+    const longest = steerPull({ x: 0, y: 0.9 * unit }, 0, 0.5, unit);
+    const shortest = steerPull({ x: 0, y: 0.2 * unit }, 0, -0.5, unit);
+
+    expect(length(longest)).toBeCloseTo(PHYSICS.maxPull * unit);
+    expect(length(shortest)).toBeCloseTo(PHYSICS.minPull * unit);
+  });
+});
+
 describe('solveAssistedShot', () => {
   it('scores from anywhere on the court', () => {
     for (let x = 80; x <= 700; x += 40) {
@@ -97,9 +123,8 @@ describe('launchPower', () => {
   });
 
   it('can reproduce the assisted shot with a pull short of the maximum', () => {
-    const velocity = solveAssistedShot(court.rest, court);
     const power = launchPower(court);
-    const pull = { x: -velocity.x / power, y: -velocity.y / power };
+    const pull = assistedPull(court);
 
     expect(length(pull)).toBeLessThan(PHYSICS.maxPull * unit);
     expect(scores(launch(court.rest, pullToVelocity(pull, unit, power)))).toBe(

@@ -1,6 +1,6 @@
 import { PHYSICS } from './config.ts';
 import { rimCenter, type Court } from './court.ts';
-import { length, limit, scale, type Vector } from './vector.ts';
+import { length, limit, rotate, scale, type Vector } from './vector.ts';
 
 /**
  * Where the card is drawn while pulled: it follows the pointer up to the
@@ -32,6 +32,25 @@ export function pullToVelocity(
 }
 
 /**
+ * Aiming with the keyboard: `pull` turned by `degrees` (clockwise on screen)
+ * and lengthened by `extra` rim units, between the shortest and the longest pull.
+ */
+export function steerPull(
+  pull: Vector,
+  degrees: number,
+  extra: number,
+  unit: number
+): Vector {
+  const size = length(pull);
+  const steered = Math.min(
+    PHYSICS.maxPull * unit,
+    Math.max(PHYSICS.minPull * unit, size + extra * unit)
+  );
+
+  return scale(rotate(pull, degrees), steered / size);
+}
+
+/**
  * Velocity, in px/s, of a shot from `start` that peaks above the square and
  * comes down on the center of the rim. Used for keyboard shots, and to size
  * the slingshot to the layout.
@@ -51,6 +70,13 @@ export function solveAssistedShot(start: Vector, court: Court): Vector {
     x: (target.x - start.x) / time,
     y: -Math.sqrt(2 * gravity * rise),
   };
+}
+
+/**
+ * The pull that launches the assisted shot from where cards rest.
+ */
+export function assistedPull(court: Court): Vector {
+  return scale(solveAssistedShot(court.rest, court), -1 / launchPower(court));
 }
 
 /**

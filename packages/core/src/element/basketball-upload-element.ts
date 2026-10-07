@@ -736,7 +736,7 @@ export class BasketballUploadElement extends BaseElement {
       if (event.key !== 'Enter' && event.key !== ' ') return;
       event.preventDefault();
       if (!this.#isDisabled && this.#staged.at(-1) === card)
-        this.#shots.shoot(card);
+        this.#shots.hold(card, event);
     });
     element.addEventListener('click', (event) => event.preventDefault());
 

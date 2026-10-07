@@ -103,6 +103,20 @@ export function pointer(
   });
 }
 
+export function keyboard(
+  type: 'keydown' | 'keyup',
+  key: string,
+  overrides: KeyboardEventInit = {}
+): KeyboardEvent {
+  return new KeyboardEvent(type, {
+    key,
+    bubbles: true,
+    composed: true,
+    cancelable: true,
+    ...overrides,
+  });
+}
+
 /**
  * Resolves after `milliseconds`, for animations that must have ended.
  */
