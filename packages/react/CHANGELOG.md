@@ -1,5 +1,14 @@
 # @sehv-oss/basketball-upload-react
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [2060e49]
+- Updated dependencies [6df7084]
+- Updated dependencies [6df7084]
+  - @sehv-oss/basketball-upload@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
