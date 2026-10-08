@@ -12,7 +12,7 @@ A pnpm workspace in the layout of `sehv-oss/i18n`:
 
 ```text
 packages/core   @sehv-oss/basketball-upload         the element; no dependencies
-packages/react  @sehv-oss/basketball-upload-react   depends on the core (workspace:^), peer react >=19
+packages/react  @sehv-oss/basketball-upload-react   depends on the core (workspace:*), peer react >=19
 site            @sehv-oss/basketball-upload-site    private demo, deployed to GitHub Pages
 ```
 
@@ -21,6 +21,6 @@ Versions shared by the workspace live in the pnpm `catalog:` of `pnpm-workspace.
 ## Consequences
 
 - React users install one package; the element comes along. Users of anything else never download React bindings.
-- Each package has its own version and changelog; `updateInternalDependencies` bumps the React package when the core changes.
+- Each package has its own version and changelog. The React package depends on the exact version of the core (`workspace:*` is published as that version), so every release of the core leaves its range and Changesets releases the React package with it; a change to the React package alone releases only that package.
 - The React package type checks against the core's published declarations, so `pnpm build` must build the core first (it does).
 - Each package directory carries its own `LICENSE` and `NOTICE.md`, since npm only packs files inside it.

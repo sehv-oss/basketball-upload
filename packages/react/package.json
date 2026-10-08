@@ -41,7 +41,7 @@
     "node": ">=24 <27"
   },
   "dependencies": {
-    "@sehv-oss/basketball-upload": "workspace:^"
+    "@sehv-oss/basketball-upload": "workspace:*"
   },
   "peerDependencies": {
     "@types/react": ">=19",
