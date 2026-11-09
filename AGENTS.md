@@ -18,6 +18,8 @@ In the core, `game/`, `upload/` and `file-types/` are pure: they never touch the
 
 The layout follows `sehv-oss/i18n`, and the Web Component patterns (`cssText()`, SSR-safe registration, token pipeline, React adapter).
 
+The site is prerendered for search engines and link previews: `pnpm build` renders `<App />` into `index.html` (`site/src/prerender.tsx`) and `main.tsx` hydrates it. Its components render the same markup on the server and on their first render in the browser: browser APIs (`document`, `localStorage`…) go in effects and handlers. Its metadata (description, Open Graph, JSON-LD) is in `site/index.html`, and `site/public/` holds the sitemap and the social card.
+
 ## Commands
 
 Node.js 26 (`.nvmrc`) and pnpm through Corepack.
@@ -73,6 +75,7 @@ Tests live in each package's `tests/`, mirror the layout of `src/`, import from 
 
 - Commit messages and PR titles follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`…). PRs are squash merged, so the PR title becomes the commit message.
 - A change that affects a published package needs a changeset (`pnpm changeset`). The site is ignored by changesets.
+- The site deploys with each release. To deploy a change to the site alone, run the Publish workflow by hand (Actions → Publish → Run workflow on `main`): it deploys the site without publishing the packages. Do it only when `main` has no unreleased package changes, since the site runs the packages from `main`.
 - A change to the API or behavior of the element updates [`packages/core/README.md`](packages/core/README.md), which documents the whole API. A new attribute, property or event also goes in the props table of the [React README](packages/react/README.md).
 - A decision that shapes the packages gets a new ADR in `docs/adr`, listed in its README.
 - Visual changes are compared with the screenshots in [`docs/design/reference`](docs/design/reference), at `/basketball-upload/?reference` on the dev site, in both themes and with reduced motion.
