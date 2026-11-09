@@ -18,7 +18,7 @@ In the core, `game/`, `upload/` and `file-types/` are pure: they never touch the
 
 The layout follows `sehv-oss/i18n`, and the Web Component patterns (`cssText()`, SSR-safe registration, token pipeline, React adapter).
 
-The site is prerendered for search engines and link previews: `pnpm build` renders `<App />` into `index.html` (`site/src/prerender.tsx`) and `main.tsx` hydrates it. Its components render the same markup on the server and on their first render in the browser: browser APIs (`document`, `localStorage`…) go in effects and handlers. Its metadata (description, Open Graph, JSON-LD) is in `site/index.html`, and `site/public/` holds the sitemap and the social card.
+The site is prerendered for search engines and link previews: `pnpm build` renders `<App />` into `index.html` (`site/src/prerender.tsx`) and `main.tsx` hydrates it. Its components render the same markup on the server and on their first render in the browser: browser APIs (`document`, `localStorage`…) go in effects and handlers. Its metadata (description, Open Graph, JSON-LD) is in `site/index.html`, and `site/public/` holds the sitemap, the social card and `llms.txt`.
 
 ## Commands
 
@@ -77,6 +77,7 @@ Tests live in each package's `tests/`, mirror the layout of `src/`, import from 
 - A change that affects a published package needs a changeset (`pnpm changeset`). The site is ignored by changesets.
 - The site deploys with each release. To deploy a change to the site alone, run the Publish page workflow by hand (Actions → Publish page → Run workflow on `main`), when `main` has no unreleased package changes: the site runs the packages from `main`.
 - A change to the API or behavior of the element updates [`packages/core/README.md`](packages/core/README.md), which documents the whole API. A new attribute, property or event also goes in the props table of the [React README](packages/react/README.md).
+- [`site/public/llms.txt`](site/public/llms.txt) summarizes the packages for AI tools: a change to one of the facts it lists updates it.
 - A decision that shapes the packages gets a new ADR in `docs/adr`, listed in its README.
 - Visual changes are compared with the screenshots in [`docs/design/reference`](docs/design/reference), at `/basketball-upload/?reference` on the dev site, in both themes and with reduced motion.
 - The design is by Jorge Molina, and crediting him is a requirement: the READMEs, the `NOTICE.md` files, `docs/design/reference/README.md` and the site's credits keep the credit. `NOTICE.md` exists at the root and in each package, with the same content: keep the three in sync.
