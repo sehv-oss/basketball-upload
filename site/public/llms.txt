@@ -1,0 +1,30 @@
+# basketball-upload
+
+> A basketball-themed drag and drop file upload: `<basketball-upload>`, a Web Component with no dependencies, and `<BasketballUpload>`, a thin React 19 component around it. Files dropped on the dropzone, shaped like a backboard, go straight through the hoop; other files wait on the court as cards, to be pulled back like a slingshot and shot into the basket. Each file that scores is uploaded by an `uploader` function you provide.
+
+- Packages: `@sehv-oss/basketball-upload`, the Web Component (ESM only, no dependencies), and `@sehv-oss/basketball-upload-react`, which renders the element and is not a second implementation (React 19 or newer as a peer dependency).
+- Registration is explicit: call `registerBasketballUpload()`, as importing the package never defines the element. It does nothing on the server, so it is safe to call from any module.
+- The element owns no transport: set `uploader` to any `(file, { signal, onProgress }) => Promise`, or use `createXhrUploader({ url })` for multipart uploads with progress.
+- It is a form-associated custom element: with `name`, the files in the basket are submitted with their form, like `<input type="file" multiple>`, and `required` works.
+- Theming: `theme` is `light`, `dark` or `system`; `--basketball-upload-*` custom properties, `::part()` and `:state()` are its public styling API.
+- Keyboard: focus a card and hold Enter or Space to aim an assisted shot; the arrows turn it and change its strength.
+- In React, values are attributes (rendered on the server too), `uploader`, `messages` and `fileTypes` are properties, and events are `on*` callbacks that get the event `detail`.
+- Browsers released since mid 2024: Chrome and Edge 125, Firefox 129, Safari 17.5.
+- License: ISC. The design is by Jorge Molina, published on Figma Community; this project is an independent implementation, not affiliated with or endorsed by him.
+
+## Docs
+
+- [Web Component README](https://raw.githubusercontent.com/sehv-oss/basketball-upload/main/packages/core/README.md): the whole API, with attributes, properties, methods, events, messages, slots, uploads, forms, file types, theming tokens, parts, states, accessibility and server-side rendering
+- [React README](https://raw.githubusercontent.com/sehv-oss/basketball-upload/main/packages/react/README.md): `<BasketballUpload>`, its props and how they map to the element
+- [Project README](https://raw.githubusercontent.com/sehv-oss/basketball-upload/main/README.md): overview, quick start for both packages and development commands
+
+## Examples
+
+- [Live demo](https://sehv-oss.github.io/basketball-upload/): every feature running, next to its code: Web Component, React, theming, file types, forms, uploads and accessibility
+
+## Optional
+
+- [Architecture decision records](https://raw.githubusercontent.com/sehv-oss/basketball-upload/main/docs/adr/README.md): why a Web Component, Shadow DOM with cascade layers and tokens, a deterministic shot simulation, uploads through a function, and a file type registry
+- [Notice](https://raw.githubusercontent.com/sehv-oss/basketball-upload/main/NOTICE.md): the design credit, and what this implementation added to the design
+- [npm: @sehv-oss/basketball-upload](https://www.npmjs.com/package/@sehv-oss/basketball-upload)
+- [npm: @sehv-oss/basketball-upload-react](https://www.npmjs.com/package/@sehv-oss/basketball-upload-react)

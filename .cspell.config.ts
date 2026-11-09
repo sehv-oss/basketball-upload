@@ -10,6 +10,7 @@ export default defineConfig({
     'fuster',
     'jetbrains',
     'jorgemolinafuster',
+    'llms',
     'molina',
     'prerendered',
     'prerenders',
