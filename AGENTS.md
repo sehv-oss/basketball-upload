@@ -73,6 +73,7 @@ Tests live in each package's `tests/`, mirror the layout of `src/`, import from 
 
 - Commit messages and PR titles follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`…). PRs are squash merged, so the PR title becomes the commit message.
 - A change that affects a published package needs a changeset (`pnpm changeset`). The site is ignored by changesets.
+- The site deploys with each release, through the Publish page workflow. To deploy a change to the site alone, run it by hand (Actions → Publish page → Run workflow on `main`), when `main` has no unreleased package changes: the site runs the packages from `main`.
 - A change to the API or behavior of the element updates [`packages/core/README.md`](packages/core/README.md), which documents the whole API. A new attribute, property or event also goes in the props table of the [React README](packages/react/README.md).
 - A decision that shapes the packages gets a new ADR in `docs/adr`, listed in its README.
 - Visual changes are compared with the screenshots in [`docs/design/reference`](docs/design/reference), at `/basketball-upload/?reference` on the dev site, in both themes and with reduced motion.
