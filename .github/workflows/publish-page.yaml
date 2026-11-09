@@ -1,0 +1,21 @@
+name: Publish page
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  pages:
+    concurrency:
+      group: publish-page
+      cancel-in-progress: false
+    uses: sehv-oss/actions/.github/workflows/deploy-pages-node-pnpm.yaml@v1
+    with:
+      build-script: pnpm build
+      output-path: ./site/dist/
+    secrets: inherit

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,20 +17,16 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    if: "${{ (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || startsWith(github.event.head_commit.message, 'chore: release') }}"
+    if: "${{ startsWith(github.event.head_commit.message, 'chore: release') }}"
     steps:
       - run: echo "Conditions met. Proceeding with publish."
 
   packages:
     needs: check
-    if: "${{ github.event_name == 'push' }}"
     uses: sehv-oss/actions/.github/workflows/publish-node-pnpm.yaml@v1
     secrets: inherit
 
   pages:
     needs: check
-    uses: sehv-oss/actions/.github/workflows/deploy-pages-node-pnpm.yaml@v1
-    with:
-      build-script: pnpm build
-      output-path: ./site/dist/
+    uses: ./.github/workflows/publish-page.yaml
     secrets: inherit
