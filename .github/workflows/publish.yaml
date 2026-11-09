@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  # Deploys the site alone, for changes to the site between releases.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,12 +19,13 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    if: "${{ startsWith(github.event.head_commit.message, 'chore: release') }}"
+    if: "${{ (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || startsWith(github.event.head_commit.message, 'chore: release') }}"
     steps:
       - run: echo "Conditions met. Proceeding with publish."
 
   packages:
     needs: check
+    if: "${{ github.event_name == 'push' }}"
     uses: sehv-oss/actions/.github/workflows/publish-node-pnpm.yaml@v1
     secrets: inherit
 
