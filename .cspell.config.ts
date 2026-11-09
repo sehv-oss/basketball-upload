@@ -11,6 +11,8 @@ export default defineConfig({
     'jetbrains',
     'jorgemolinafuster',
     'molina',
+    'prerendered',
+    'prerenders',
     'presign',
     'sehv',
     'shiki',
@@ -19,5 +21,6 @@ export default defineConfig({
     'theming',
     'unstub',
     'uploaders',
+    'urlset',
   ],
 });

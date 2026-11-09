@@ -141,6 +141,13 @@
     inline-size: 754px;
     block-size: 887px;
   }
+
+  /* The prerendered page shows before the element is defined: it takes its
+     size already, so the page does not move when the scripts load. */
+  basketball-upload:not(:defined) {
+    display: block;
+    min-block-size: 36rem;
+  }
 }
 
 @layer layout {
@@ -637,7 +644,9 @@
     border-radius: 1.25rem;
     box-shadow: var(--site-shadow);
 
-    & basketball-upload {
+    /* Empty: the Web Component example appends its element after hydration. */
+    & basketball-upload,
+    &:empty {
       min-block-size: 46rem;
     }
   }
