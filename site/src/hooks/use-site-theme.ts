@@ -2,8 +2,6 @@ import * as React from 'react';
 
 export type SiteTheme = 'system' | 'light' | 'dark';
 
-// The script in index.html reads it too, to apply the theme before the first
-// paint: the prerendered page does not wait for this module.
 const STORAGE_KEY = 'basketball-upload:site-theme';
 
 const listeners = new Set<() => void>();
@@ -30,8 +28,6 @@ function getSnapshot(): SiteTheme {
   return current;
 }
 
-// The page is prerendered with the system theme. It hydrates with it, then
-// renders again with the stored one.
 function getServerSnapshot(): SiteTheme {
   return 'system';
 }

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  # Deploys the site alone, for changes to the site between releases.
   workflow_dispatch:
 
 concurrency:

@@ -56,12 +56,6 @@ interface PrerenderModule {
   prerender: () => string;
 }
 
-/**
- * Writes the page into `index.html` at build time, so crawlers and link
- * previews get its content without running scripts. It renders with Vite's SSR
- * loader and without the source aliases, so from the packages' `dist/`, like
- * the rest of the build.
- */
 function prerender(): Plugin {
   return {
     name: 'basketball-upload:prerender',

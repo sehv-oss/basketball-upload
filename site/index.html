@@ -89,16 +89,12 @@
     </script>
 
     <script>
-      // Applies the theme chosen on the site before the first paint, instead
-      // of when the scripts hydrate the page (src/hooks/use-site-theme.ts).
       try {
         const theme = localStorage.getItem('basketball-upload:site-theme');
         if (theme === 'light' || theme === 'dark') {
           document.documentElement.dataset.theme = theme;
         }
-      } catch {
-        // Private mode: the system theme.
-      }
+      } catch {}
     </script>
   </head>
   <body>
