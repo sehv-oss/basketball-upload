@@ -141,6 +141,11 @@
     inline-size: 754px;
     block-size: 887px;
   }
+
+  basketball-upload:not(:defined) {
+    display: block;
+    min-block-size: 36rem;
+  }
 }
 
 @layer layout {
@@ -637,7 +642,8 @@
     border-radius: 1.25rem;
     box-shadow: var(--site-shadow);
 
-    & basketball-upload {
+    & basketball-upload,
+    &:empty {
       min-block-size: 46rem;
     }
   }

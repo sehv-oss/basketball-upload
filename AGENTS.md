@@ -18,6 +18,8 @@ In the core, `game/`, `upload/` and `file-types/` are pure: they never touch the
 
 The layout follows `sehv-oss/i18n`, and the Web Component patterns (`cssText()`, SSR-safe registration, token pipeline, React adapter).
 
+The site is prerendered for search engines and link previews: `pnpm build` renders `<App />` into `index.html` (`site/src/prerender.tsx`) and `main.tsx` hydrates it. Its components render the same markup on the server and on their first render in the browser: browser APIs (`document`, `localStorage`…) go in effects and handlers. Its metadata (description, Open Graph, JSON-LD) is in `site/index.html`, and `site/public/` holds the sitemap and the social card.
+
 ## Commands
 
 Node.js 26 (`.nvmrc`) and pnpm through Corepack.

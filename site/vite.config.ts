@@ -1,9 +1,12 @@
 import { fileURLToPath } from 'node:url';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig, type Plugin } from 'vite';
+import { createServer, defineConfig, type Plugin } from 'vite';
 
+const site = fileURLToPath(new URL('./', import.meta.url));
 const packages = fileURLToPath(new URL('../packages/', import.meta.url));
+const base = '/basketball-upload/';
+const emptyRoot = '<div id="root"></div>';
 const coreSources = `${packages}core/src/`;
 
 function librarySources(): Plugin[] {
@@ -49,9 +52,47 @@ function librarySources(): Plugin[] {
   ];
 }
 
+interface PrerenderModule {
+  prerender: () => string;
+}
+
+function prerender(): Plugin {
+  return {
+    name: 'basketball-upload:prerender',
+    apply: 'build',
+    async transformIndexHtml(html) {
+      if (!html.includes(emptyRoot)) {
+        throw new Error(`index.html has no ${emptyRoot} to prerender into`);
+      }
+
+      const server = await createServer({
+        configFile: false,
+        root: site,
+        base,
+        mode: 'production',
+        logLevel: 'warn',
+        plugins: [react()],
+        server: { middlewareMode: true, hmr: false, ws: false },
+        appType: 'custom',
+        optimizeDeps: { noDiscovery: true },
+      });
+
+      try {
+        const { prerender: render } = (await server.ssrLoadModule(
+          '/src/prerender.tsx'
+        )) as PrerenderModule;
+        const page = render();
+        return html.replace(emptyRoot, () => `<div id="root">${page}</div>`);
+      } finally {
+        await server.close();
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  base: '/basketball-upload/',
-  plugins: [react(), librarySources()],
+  base,
+  plugins: [react(), librarySources(), prerender()],
   server: {
     open: true,
   },
