@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   pages:
-    if: "${{ github.ref == 'refs/heads/main' }}"
     concurrency:
       group: publish-page
       cancel-in-progress: false

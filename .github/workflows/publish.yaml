@@ -28,8 +28,5 @@ jobs:
 
   pages:
     needs: check
-    uses: sehv-oss/actions/.github/workflows/deploy-pages-node-pnpm.yaml@v1
-    with:
-      build-script: pnpm build
-      output-path: ./site/dist/
+    uses: ./.github/workflows/publish-page.yaml
     secrets: inherit
